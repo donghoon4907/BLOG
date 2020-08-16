@@ -43,7 +43,11 @@ const Title = styled.h3`
   }
 `;
 
-export default ({ searchKeyword, setSearch, setSearchKeyword }) => {
+export default function SearchResult({
+  searchKeyword,
+  setSearch,
+  setSearchKeyword
+}) {
   const { data, loading } = useQuery(keywordQuery, {
     variables: {
       searchKeyword
@@ -77,4 +81,4 @@ export default ({ searchKeyword, setSearch, setSearchKeyword }) => {
       </ol>
     </Container>
   );
-};
+}

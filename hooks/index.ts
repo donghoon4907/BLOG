@@ -1,7 +1,22 @@
-import { useState, useCallback, useEffect, ChangeEvent } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction
+} from "react";
 import axios from "axios";
 
-export const useInput: any = (defaultValue: string) => {
+export type UseInputProps = {
+  value: string;
+  onChange: (e: ChangeEvent<any>) => void;
+  setValue: Dispatch<SetStateAction<string>>;
+};
+
+export const useInput: (T: string) => UseInputProps = (
+  defaultValue: string
+) => {
   const [value, setValue] = useState<string>(defaultValue);
 
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -11,7 +26,13 @@ export const useInput: any = (defaultValue: string) => {
   return { value, onChange, setValue };
 };
 
-export const useDebounce: any = (defaultValue: string, delay: number) => {
+export const useDebounce: (
+  T: string,
+  K: number
+) => [string, Dispatch<SetStateAction<string>>] = (
+  defaultValue: string,
+  delay: number
+) => {
   const [value, setValue] = useState<string>("");
   const [state, setState] = useState<string>(defaultValue);
 

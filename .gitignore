@@ -1,5 +1,4 @@
 node_modules
 .vscode
-.next
 .env.development
 .env.production

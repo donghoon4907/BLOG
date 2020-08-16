@@ -1,7 +1,7 @@
 import Router from "next/router";
 import Link from "next/link";
-import React, { useState, useCallback, FC } from "react";
-import { useMutation } from "@apollo/client";
+import React, { useState, useCallback, FC, Fragment, useEffect } from "react";
+import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { Dropdown } from "react-bootstrap";
 import Input from "./Input";
@@ -9,7 +9,9 @@ import Avatar from "./Avatar";
 import { Label } from "./Form";
 import SearchResult from "./SearchResult";
 import { useDebounce } from "../../hooks";
-import { logOutMutation } from "../../graphql/auth/mutation/logout";
+import { removeAccessToken } from "../../lib/token";
+import { meQuery } from "../../graphql/auth/query/me";
+import { useVssDispatch, SET_ME } from "../../context";
 
 const Container = styled.header`
   height: 4rem;
@@ -28,9 +30,17 @@ const Wrapper = styled.div`
   align-items: center;
   margin: 0 auto;
 
-  ${props => props.theme.middleQuery`width:912px`}
-  ${props => props.theme.smallQuery`width:768px`}
-  ${props => props.theme.tabletQuery`width:calc(100% - 2rem)`}
+  ${props => props.theme.media.custom(1312)} {
+    width: 912px;
+  }
+
+  ${props => props.theme.media.desktop} {
+    width: 768px;
+  }
+
+  ${props => props.theme.media.tablet} {
+    width: calc(100% - 2rem);
+  }
 `;
 
 const Column = styled.div`
@@ -39,16 +49,21 @@ const Column = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
+const Title = styled.a`
   font-size: 24px;
   font-weight: 300;
   letter-spacing: 5px;
+  color: black;
+  cursor: pointer;
 `;
 
 const SearchForm = styled.form`
   width: 300px;
   position: relative;
-  ${props => props.theme.tabletQuery`width:150px`}
+
+  ${props => props.theme.media.tablet} {
+    width: 150px;
+  }
 `;
 
 const SearchInput = styled(Input)`
@@ -71,15 +86,16 @@ const StyledAvatar = styled(Avatar)`
 `;
 
 const Header: FC = () => {
+  const dispatch = useVssDispatch();
+  const { data, loading } = useQuery(meQuery, {
+    fetchPolicy: "network-only"
+  });
   const [search, setSearch] = useState(
-    ""
-    // Router.pathname === "/search"
-    //   ? decodeURIComponent(Router.query.keyword)
-    //   : ""
+    Router.pathname === "/search"
+      ? decodeURIComponent(Router.query.keyword as any)
+      : ""
   );
   const [searchKeyword, setSearchKeyword] = useDebounce("", 300);
-
-  const [logoutMutation] = useMutation(logOutMutation);
 
   const handleChangeSearch = useCallback(e => {
     setSearch(e.target.value);
@@ -96,16 +112,35 @@ const Header: FC = () => {
 
   const handleLogout = useCallback(() => {
     if (confirm("로그아웃 하시겠습니까?")) {
-      logoutMutation();
+      removeAccessToken();
+      Router.push("/login");
     }
   }, []);
+
+  useEffect(() => {
+    if (data && data.getMyProfile) {
+      const { id, nickname, email, avatar, isMaster } = data.getMyProfile;
+      dispatch({
+        type: SET_ME,
+        id,
+        nickname,
+        email,
+        avatar,
+        isMaster
+      });
+    }
+  }, [data && data.getMyProfile]);
+
+  if (loading) {
+    return <Fragment />;
+  }
 
   return (
     <Container>
       <Wrapper>
         <Column>
           <Link href="/">
-            <a>VSS</a>
+            <Title>VSS</Title>
           </Link>
         </Column>
         <Column>
@@ -130,9 +165,9 @@ const Header: FC = () => {
         </Column>
         <Column>
           <Dropdown>
-            {/* <StyledAvatar size="38" src={data.getMyProfile.avatar.url}>
+            <StyledAvatar size="38" src={data.getMyProfile.avatar.url}>
               <Dropdown.Toggle id="dropdown-custom-2" />
-            </StyledAvatar> */}
+            </StyledAvatar>
 
             <Dropdown.Menu>
               <Dropdown.Item

@@ -1,40 +1,24 @@
-import Link from "next/link";
-import Router from "next/router";
-import { NextFC } from "next";
-import React, { useEffect } from "react";
+import React, { FC, useEffect, useState, Fragment } from "react";
 import Layout from "../components/common/Layout";
+import Feed from "../components/feed/FeedContainer";
 import isAuthenticated from "../lib/isAuthenticated";
 
-type Props = {
-  isLoggedIn: boolean;
-};
-
-const Index: NextFC<Props> = ({ isLoggedIn }) => {
+const Index: FC = () => {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (!isLoggedIn) Router.push("/login");
+    isAuthenticated();
+    setLoading(false);
   }, []);
+
+  if (loading) {
+    return <Fragment />;
+  }
+
   return (
-    <Layout title="로그인">
-      <h1>hello Next.js 👋</h1>
-      <p>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
-      </p>
+    <Layout>
+      <Feed />
     </Layout>
   );
-};
-
-Index.getInitialProps = async (context: any) => {
-  const { data } = await isAuthenticated(context);
-  if (data) {
-    return {
-      isLoggedIn: true
-    };
-  }
-  return {
-    isLoggedIn: false
-  };
 };
 
 export default Index;

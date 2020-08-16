@@ -1,6 +1,6 @@
 import Router from "next/router";
 
-export default (ctx: any, target: string) => {
+export default function redirect(ctx: any, target: string) {
   if (ctx.res) {
     // server
     // 303: "See other"
@@ -10,4 +10,4 @@ export default (ctx: any, target: string) => {
     // In the browser, we just pretend like this never even happened ;)
     Router.replace(target);
   }
-};
+}

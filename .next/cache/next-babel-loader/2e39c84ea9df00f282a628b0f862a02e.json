@@ -1,0 +1,1 @@
+{"ast":null,"code":"var __jsx = React.createElement;\nimport React from \"react\";\nimport { CircleToBlockLoading } from \"react-loadingg\";\n\nconst Loader = () => __jsx(CircleToBlockLoading, {\n  color: \"#3897f0\"\n});\n\nexport default Loader;","map":null,"metadata":{},"sourceType":"module"}

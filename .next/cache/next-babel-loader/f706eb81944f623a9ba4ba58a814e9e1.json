@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const logOutMutation = gql`\n  mutation logOut {\n    logOut\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}
