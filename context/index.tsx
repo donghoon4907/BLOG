@@ -77,7 +77,7 @@ export function VssProvider({ children }) {
   );
 }
 
-// state 와 dispatch 를 쉽게 사용하기 위한 커스텀 Hooks
+// for hooks
 export function useVssState() {
   const state = useContext(VssContext);
   if (!state) throw new Error("not found provider");
