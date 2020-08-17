@@ -14,17 +14,19 @@ const SignInContainer: FC = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (loading) return;
+      if (loading) {
+        return alert("요청 중입니다. 잠시만 기다려주세요.");
+      }
       try {
-        await login({
-          variables: { email: email.value, pwd: pwd.value },
-          update: (_, { data }) => {
-            if (data && data.logIn) {
-              setAccessToken(data.logIn);
-              Router.push("/");
-            }
-          }
+        const {
+          data: { logIn }
+        } = await login({
+          variables: { email: email.value, pwd: pwd.value }
         });
+        if (logIn) {
+          setAccessToken(logIn);
+          Router.push("/");
+        }
       } catch (error) {
         const { message } = JSON.parse(error.message);
         alert(message);

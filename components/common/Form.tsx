@@ -13,18 +13,6 @@ export const FormWrapper = styled(Box)`
   width: 500px;
   background: rgba(0, 0, 0, 0.03);
 
-  form {
-    width: 100%;
-    input {
-      width: 100%;
-      &:not(last-child) {
-        margin-bottom: 10px;
-      }
-    }
-    button {
-      margin-top: 10px;
-    }
-  }
   ${props => props.theme.media.phone} {
     width: 300px;
   }
@@ -32,6 +20,7 @@ export const FormWrapper = styled(Box)`
 
 export const InputWrapper = styled.div`
   position: relative;
+  margin-bottom: 10px;
 `;
 
 export const Label = styled.label<{ val?: string }>`
@@ -50,5 +39,30 @@ export const StateChanger = styled(Box)`
 
   &:link {
     margin-left: 523px;
+  }
+`;
+
+export const TextArea = styled.textarea`
+  ${props => props.theme.whiteBox};
+  width: 100%;
+  height: 300px;
+  resize: none;
+  font-size: 12px;
+  overflow: auto;
+  background: ${props => props.theme.bgColor};
+  padding: 15px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const Select = styled.select`
+  ${props => props.theme.whiteBox};
+  display: block;
+  width: 100%;
+  height: 35px;
+  font-size: 14px;
+  &:focus {
+    outline: none;
   }
 `;

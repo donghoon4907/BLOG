@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "github-markdown-css/github-markdown.css";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import App from "next/app";
 import React from "react";

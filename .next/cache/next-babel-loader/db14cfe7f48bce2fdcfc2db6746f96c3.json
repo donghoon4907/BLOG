@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const meQuery = gql`\n  query me {\n    getMyProfile {\n      id\n      nickname\n      email\n      avatar {\n        url\n      }\n      isMaster\n      followedBy {\n        id\n      }\n      following {\n        id\n      }\n    }\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

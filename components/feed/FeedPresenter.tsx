@@ -4,12 +4,13 @@ import { Carousel } from "react-bootstrap";
 import PostContainer from "../post/PostContainer";
 import CarouselContainer from "../common/Carousel";
 import SetNoticeModal from "../modal/SetNoticeContainer";
+import SetPostModal from "../modal/SetPostContainer";
 import Section from "../common/Section";
 import Timestamp from "../common/Timestamp";
-import Loader from "../common/Loader";
-import MoreLoader from "../common/MoreLoader";
 import { Add } from "../icon";
 import { NoticeProps } from "./FeedContainer";
+import Loader from "../common/Loader";
+import AddPostBtn from "../common/AddPostBtn";
 
 const PostWrap = styled.div`
   width: 600px;
@@ -74,29 +75,32 @@ const NoticeWrapper = styled.div`
 `;
 
 type Props = {
+  loading: boolean;
   posts: any;
   notices: any;
-  loading: boolean;
   isMaster: boolean;
   notice: NoticeProps;
   isShowNoticeModal: boolean;
+  isShowAddPostModal: boolean;
   onShowNotice: any;
   onAddNotice: any;
   recommandUserEl: any;
 };
 
 const FeedPresenter: FC<Props> = ({
+  loading,
   posts: { getPosts },
   notices: { getNotices },
-  loading,
   isMaster,
   notice,
   isShowNoticeModal,
+  isShowAddPostModal,
   onShowNotice,
   onAddNotice,
   recommandUserEl
 }) => (
   <Section flexDirection="row">
+    {loading && <Loader />}
     <PostWrap>
       <Subject>최근 업로드</Subject>
       {getPosts.length > 0 ? (
@@ -106,7 +110,6 @@ const FeedPresenter: FC<Props> = ({
           <h1>게시글이 없습니다.</h1>
         </NoData>
       )}
-      {loading && <MoreLoader />}
     </PostWrap>
     <UserWrap ref={recommandUserEl}>
       <aside>
@@ -145,6 +148,8 @@ const FeedPresenter: FC<Props> = ({
       </aside>
     </UserWrap>
     {isShowNoticeModal && <SetNoticeModal {...notice} isMaster={isMaster} />}
+    {isShowAddPostModal && <SetPostModal />}
+    <AddPostBtn />
   </Section>
 );
 

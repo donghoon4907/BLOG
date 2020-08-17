@@ -26,6 +26,7 @@ const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => {
             placeholder="이메일"
             name="email"
             autoComplete="off"
+            required
             {...email}
           />
         </InputWrapper>
@@ -33,7 +34,13 @@ const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => {
           <Label htmlFor="password" val={pwd.value}>
             암호
           </Label>
-          <Input type="password" placeholder="암호" name="password" {...pwd} />
+          <Input
+            type="password"
+            placeholder="암호"
+            name="password"
+            required
+            {...pwd}
+          />
         </InputWrapper>
         <Button text="로그인" />
       </form>

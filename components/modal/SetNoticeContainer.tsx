@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, FC } from "react";
+import React, { useCallback, useState, useEffect, FC, FormEvent } from "react";
 import { useMutation } from "@apollo/client";
 import { addNoticeMutation } from "../../graphql/notice/mutation/add";
 import { updateNoticeMutation } from "../../graphql/notice/mutation/update";
@@ -28,17 +28,15 @@ const SetNoticeContainer: FC<Props> = ({
   const { loading, call } = useLazyAxios();
   const modalTitle = useInput(title);
   const modalDescription = useInput(description);
-  const [mdDescription, setMdDescription] = useState("");
-  const [preview, setPreview] = useState("");
-  const [modalAction, setModalAction] = useState({
+  const [mdDescription, setMdDescription] = useState<string>("");
+  const [preview, setPreview] = useState<string>("");
+  const [modalAction, setModalAction] = useState<any>({
     code: action,
     modalTitle: actionText
   }); // readonly, modifiable, modify, add
 
-  const [add, { loading: addNoticeLoading }] = useMutation(addNoticeMutation);
-
-  const [update, { loading: updateNoticeLoading }] = useMutation(
-    updateNoticeMutation
+  const [set, { loading: setNoticeLoading }] = useMutation(
+    noticeId ? updateNoticeMutation : addNoticeMutation
   );
 
   const [remove, { loading: removeNoticeLoading }] = useMutation(
@@ -46,8 +44,6 @@ const SetNoticeContainer: FC<Props> = ({
   );
 
   const convertTextIntoMd = async text => {
-    if (!text) return alert("내용을 입력하세요.");
-
     const { data, error } = await call({
       method: "post",
       url: process.env.MDAPI_PATH,
@@ -62,16 +58,23 @@ const SetNoticeContainer: FC<Props> = ({
       return doc.body.innerHTML;
     } else if (error) {
       return null;
+    } else {
+      throw new Error("please, check useLazyAxios");
     }
   };
 
   const handlePreView = useCallback(async () => {
     if (loading) return;
-    const md = await convertTextIntoMd(modalDescription.value);
+    if (!modalDescription.value) {
+      return alert("내용을 입력하세요.");
+    }
+    try {
+      const md = await convertTextIntoMd(modalDescription.value);
 
-    if (md) {
-      setPreview(md);
-    } else {
+      if (md) {
+        setPreview(md);
+      }
+    } catch {
       alert("미리보기 로드에 실패했습니다.");
     }
   }, [modalDescription.value]);
@@ -83,7 +86,7 @@ const SetNoticeContainer: FC<Props> = ({
   const handleClose = useCallback(() => {
     dispatch({
       type: SET_NOTICE_MODAL,
-      isShowNoticeModal: false
+      payload: false
     });
   }, []);
 
@@ -95,75 +98,75 @@ const SetNoticeContainer: FC<Props> = ({
   }, []);
 
   const handleDelete = useCallback(async () => {
-    if (removeNoticeLoading) return alert("요청 중입니다.");
-
-    const {
-      data: { deleteNotice }
-    } = await remove({
-      variables: {
-        noticeId
-      }
-    });
-    if (deleteNotice) {
-      alert("공지사항이 삭제되었습니다.");
-      window.location.reload();
-    }
-  }, [removeNoticeLoading]);
-
-  const handleSubmit = useCallback(async () => {
-    if (!modalTitle.value) {
-      return alert("제목을 입력하세요.");
+    if (removeNoticeLoading) {
+      return alert("요청 중입니다. 잠시만 기다려주세요.");
     }
 
-    if (!modalDescription.value) {
-      return alert("내용을 입력하세요.");
-    }
+    const tf = confirm("공지사항을 삭제하시겠어요?");
 
-    if (modalAction.code === "add") {
-      if (addNoticeLoading) return alert("요청 중입니다.");
-
+    if (tf) {
       const {
-        data: { addNotice }
-      } = await add({
+        data: { deleteNotice }
+      } = await remove({
         variables: {
-          title: modalTitle.value,
-          description: modalDescription.value
-        }
-      });
-      if (addNotice) {
-        alert("공지사항이 등록되었습니다.");
-        window.location.reload();
-      }
-    } else if (modalAction.code === "modify") {
-      if (updateNoticeLoading) return alert("요청 중입니다.");
-
-      const {
-        data: { updateNotice }
-      } = await update({
-        variables: {
-          title: modalTitle.value,
-          description: modalDescription.value,
           noticeId
         }
       });
-      if (updateNotice) {
-        alert("공지사항이 수정되었습니다.");
+      if (deleteNotice) {
+        alert("공지사항이 삭제되었습니다.");
         window.location.reload();
       }
     }
-  }, [
-    modalAction.code,
-    modalTitle.value,
-    modalDescription.value,
-    addNoticeLoading,
-    updateNoticeLoading
-  ]);
+  }, [removeNoticeLoading]);
+
+  const handleSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (setNoticeLoading) {
+        return alert("요청 중입니다. 잠시만 기다려주세요.");
+      }
+
+      const tf = confirm(
+        `입력한 내용으로 ${
+          modalAction.code === "add" ? "등록" : "수정"
+        }하시겠어요?`
+      );
+
+      if (tf) {
+        try {
+          const {
+            data: { addNotice, updateNotice }
+          } = await set({
+            variables: {
+              title: modalTitle.value,
+              description: modalDescription.value,
+              noticeId
+            }
+          });
+          if (updateNotice) {
+            alert("공지사항이 수정되었습니다.");
+            window.location.reload();
+          } else if (addNotice) {
+            alert("공지사항이 등록되었습니다.");
+            window.location.reload();
+          }
+        } catch (error) {
+          const { message } = JSON.parse(error.message);
+          alert(message);
+        }
+      }
+    },
+    [
+      modalAction.code,
+      modalTitle.value,
+      modalDescription.value,
+      setNoticeLoading
+    ]
+  );
 
   useEffect(() => {
     async function loadDescription(value) {
-      console.log(value);
       const md = await convertTextIntoMd(value);
-      console.log(md);
       if (md) {
         setMdDescription(md);
       }
@@ -175,6 +178,9 @@ const SetNoticeContainer: FC<Props> = ({
 
   return (
     <SetNoticePresenter
+      loading={loading}
+      removeNoticeLoading={removeNoticeLoading}
+      setNoticeLoading={setNoticeLoading}
       action={modalAction}
       isMaster={isMaster}
       title={modalTitle}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import Router from \"next/router\";\nimport { getAccessToken } from \"../lib/token\";\nexport default function isAuthenticated() {\n  const token = getAccessToken();\n\n  if (!token) {\n    alert(\"세션이 만료되었습니다. 로그인 페이지로 이동합니다.\");\n    Router.push(\"/login\");\n  }\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -113,7 +113,6 @@ const MoreWrapper = styled.div`
 `;
 
 type Props = {
-  id: string;
   title: string;
   description: string;
   status: string;
@@ -123,13 +122,13 @@ type Props = {
   isLiked: boolean;
   likeCount: number;
   isMyPost: boolean;
-  onClickLike: any;
-  onClickRoom: any;
-  onClickDelete: any;
+  onLike: any;
+  onUpdate: any;
+  onRoom: any;
+  onDelete: any;
 };
 
 const PostPresenter: FC<Props> = ({
-  id,
   title,
   description,
   status,
@@ -139,9 +138,10 @@ const PostPresenter: FC<Props> = ({
   isLiked,
   likeCount,
   isMyPost,
-  onClickLike,
-  onClickRoom,
-  onClickDelete
+  onLike,
+  onUpdate,
+  onRoom,
+  onDelete
 }) => (
   <Container>
     <Header>
@@ -170,9 +170,9 @@ const PostPresenter: FC<Props> = ({
             </MoreWrapper>
 
             <Dropdown.Menu>
-              <Dropdown.Item href={`/post/${id}`}>포스트 수정</Dropdown.Item>
+              <Dropdown.Item onClick={onUpdate}>포스트 수정</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item onClick={onClickDelete}>포스트 삭제</Dropdown.Item>
+              <Dropdown.Item onClick={onDelete}>포스트 삭제</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         )}
@@ -186,14 +186,14 @@ const PostPresenter: FC<Props> = ({
     <Footer>
       <IconWrapper>
         <div>
-          <Icon onClick={onClickLike}>
+          <Icon onClick={onLike}>
             {isLiked ? <HeartFull /> : <HeartEmpty />}
           </Icon>
           <Icon>{likeCount.toLocaleString()}</Icon>
           {status === "PUBLIC" && (
             <Fragment>
               <Icon>
-                <Room onClick={onClickRoom} />
+                <Room onClick={onRoom} />
               </Icon>
 
               <OverlayTrigger

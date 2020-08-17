@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const noticesQuery = gql`\n  query getNotices($skip: Int, $first: Int, $orderBy: String) {\n    getNotices(skip: $skip, first: $first, orderBy: $orderBy) {\n      id\n      title\n      description\n      createdAt\n      updatedAt\n    }\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

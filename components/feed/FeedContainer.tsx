@@ -15,7 +15,7 @@ export type NoticeProps = {
 };
 
 const FeedContainer: FC = () => {
-  const { isMaster, isShowNoticeModal } = useVssState();
+  const { isMaster, isShowNoticeModal, isShowAddPostModal } = useVssState();
   const dispatch = useVssDispatch();
   const recommandUserEl = useRef(null);
   const [notice, setNotice] = useState<NoticeProps>({
@@ -83,7 +83,7 @@ const FeedContainer: FC = () => {
     });
     dispatch({
       type: SET_NOTICE_MODAL,
-      isShowNoticeModal: true
+      payload: true
     });
   }, []);
 
@@ -98,7 +98,7 @@ const FeedContainer: FC = () => {
       });
       dispatch({
         type: SET_NOTICE_MODAL,
-        isShowNoticeModal: true
+        payload: true
       });
     },
     [isMaster]
@@ -127,12 +127,13 @@ const FeedContainer: FC = () => {
 
   return (
     <FeedPresenter
+      loading={loadPostLoading}
       posts={posts}
       notices={notices}
-      loading={loadPostLoading}
       isMaster={isMaster}
       notice={notice}
       isShowNoticeModal={isShowNoticeModal}
+      isShowAddPostModal={isShowAddPostModal}
       onShowNotice={handleShowNotice}
       onAddNotice={handleAddNotice}
       recommandUserEl={recommandUserEl}

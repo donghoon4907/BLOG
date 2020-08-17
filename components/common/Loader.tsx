@@ -1,18 +1,28 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { CircleToBlockLoading } from "react-loadingg";
+import Spinner from "react-loader-spinner";
 
 export const Container = styled.div`
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 10000;
 `;
 
 const Loader: FC = () => (
   <Container>
-    <CircleToBlockLoading color="#3897f0" style={{ zIndex: 10000 }} />
+    <Spinner
+      type="ThreeDots"
+      color="#358597"
+      height={80}
+      width={80}
+      visible={true}
+    />
   </Container>
 );
 

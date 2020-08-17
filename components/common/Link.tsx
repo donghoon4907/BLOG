@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const Container = styled.a`
   color: black;
+  cursor: pointer;
 
   &:hover {
     color: black;

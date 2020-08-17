@@ -4,6 +4,18 @@ type Avatar = {
   url: string;
 };
 
+type ActivePost = {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  url: string;
+};
+
+type ActiveRoom = {
+  id: string;
+};
+
 // type for state
 type State = {
   id: string;
@@ -12,7 +24,17 @@ type State = {
   avatar: Avatar;
   isMaster: boolean;
   isShowNoticeModal: boolean;
+  isShowAddPostModal: boolean;
+  activePost: ActivePost;
+  activeRoom: ActiveRoom[];
 };
+
+export const SET_ME = "SET_ME";
+export const SET_NOTICE_MODAL = "SET_NOTICE_MODAL";
+export const SHOW_POST_MODAL = "SHOW_POST_MODAL";
+export const HIDE_POST_MODAL = "HIDE_POST_MODAL";
+export const ADD_ROOM = "ADD_ROOM";
+export const REMOVE_ROOM = "REMOVE_ROOM";
 
 // type for action
 type Action =
@@ -24,10 +46,19 @@ type Action =
       avatar: Avatar;
       isMaster: boolean;
     }
-  | { type: "SET_NOTICE_MODAL"; isShowNoticeModal: boolean };
-
-export const SET_ME = "SET_ME";
-export const SET_NOTICE_MODAL = "SET_NOTICE_MODAL";
+  | { type: "SET_NOTICE_MODAL"; payload: boolean }
+  | {
+      type: "SHOW_POST_MODAL";
+      isShow: boolean;
+      id?: string;
+      title?: string;
+      description?: string;
+      status?: string;
+      url?: string;
+    }
+  | { type: "HIDE_POST_MODAL"; payload: boolean }
+  | { type: "ADD_ROOM"; payload: string }
+  | { type: "REMOVE_ROOM"; payload: string };
 
 // type for dispatch
 type VssDispatch = Dispatch<Action>;
@@ -51,22 +82,69 @@ function reducer(state, action) {
     case "SET_NOTICE_MODAL":
       return {
         ...state,
-        isShowNoticeModal: action.isShowNoticeModal
+        isShowNoticeModal: action.payload
+      };
+    case "SHOW_POST_MODAL":
+      return {
+        ...state,
+        isShowAddPostModal: action.isShow,
+        activePost: {
+          id: action.id ? action.id : "",
+          title: action.title ? action.title : "",
+          description: action.description ? action.description : "",
+          status: action.status ? action.status : "",
+          url: action.url ? action.url : ""
+        }
+      };
+    case "HIDE_POST_MODAL":
+      return {
+        ...state,
+        isShowAddPostModal: action.payload,
+        activePost: {
+          id: "",
+          title: "",
+          description: "",
+          status: "",
+          url: ""
+        }
+      };
+    case "ADD_ROOM":
+      return {
+        ...state,
+        activeRoom: state.activeRoom.concat([action.payload])
+      };
+    case "REMOVE_ROOM":
+      return {
+        ...state,
+        activeRoom: state.activeRoom.filter(v => v.id !== action.payload)
       };
     default:
       return { ...state };
   }
 }
 
+const initialState: State = {
+  id: "",
+  nickname: "",
+  email: "",
+  avatar: {
+    url: ""
+  },
+  isMaster: false,
+  isShowNoticeModal: false,
+  isShowAddPostModal: false,
+  activePost: {
+    id: "",
+    title: "",
+    description: "",
+    status: "",
+    url: ""
+  },
+  activeRoom: []
+};
+
 export function VssProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, {
-    id: null,
-    nickname: null,
-    email: null,
-    avatar: null,
-    isMaster: false,
-    isShowNoticeModal: false
-  });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <VssContext.Provider value={state}>

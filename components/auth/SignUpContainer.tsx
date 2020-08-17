@@ -25,7 +25,7 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
   const pwd = useInput("");
   const [confirmPwd, setConfirmPwd] = useState("");
   const [preview, setPreview] = useState<string>("");
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState<string>("");
 
   const [signUp, { loading: signUpLoading }] = useMutation(signUpMutation);
 
@@ -94,23 +94,32 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (signUpLoading) return;
+      if (signUpLoading) {
+        return alert("요청 중입니다. 잠시만 기다려주세요.");
+      }
 
-      const {
-        data: { addUser }
-      } = await signUp({
-        variables: {
-          email: email.value,
-          pwd: pwd.value,
-          nickname: nickname.value,
-          file: file ? file : process.env.DEFAULT_AVATAR
+      const tf = confirm("입력한 내용으로 회원가입 하시겠어요?");
+
+      if (tf) {
+        try {
+          const {
+            data: { addUser }
+          } = await signUp({
+            variables: {
+              email: email.value,
+              pwd: pwd.value,
+              nickname: nickname.value,
+              file: file ? file : process.env.DEFAULT_AVATAR
+            }
+          });
+          if (addUser) {
+            setAction("login");
+            alert("회원가입이 정상처리되었습니다.");
+          }
+        } catch (error) {
+          const { message } = JSON.parse(error.message);
+          alert(message);
         }
-      });
-      if (addUser) {
-        setAction("login");
-        alert("회원가입이 정상처리되었습니다.");
-      } else {
-        alert("요청 중 오류가 발생했습니다.");
       }
     },
     [email.value, pwd.value, nickname.value, file, signUpLoading]

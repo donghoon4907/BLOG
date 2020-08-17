@@ -1,38 +1,56 @@
 {
-  "./dev/noop": [
-    {
-      "id": "./node_modules/next/dist/client/dev/noop.js",
-      "file": "static/chunks/1.js"
-    }
-  ],
   "@apollo/react-ssr": [
     {
-      "id": "./node_modules/@apollo/client/react/ssr/RenderPromises.js",
-      "file": "static/chunks/0.js"
+      "id": "+wdc",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
     },
     {
-      "id": "./node_modules/@apollo/client/react/ssr/getDataFromTree.js",
-      "file": "static/chunks/0.js"
+      "id": "16Al",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
     },
     {
-      "id": "./node_modules/@apollo/client/react/ssr/index.js",
-      "file": "static/chunks/0.js"
+      "id": "17x9",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
     },
     {
-      "id": "./node_modules/@apollo/client/react/ssr/renderToStringWithData.js",
-      "file": "static/chunks/0.js"
+      "id": "IDhZ",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
     },
     {
-      "id": "./node_modules/@apollo/react-ssr/index.js",
-      "file": "static/chunks/0.js"
+      "id": "KAy6",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
     },
     {
-      "id": "./node_modules/react-dom/cjs/react-dom-server.browser.development.js",
-      "file": "static/chunks/0.js"
+      "id": "QCnb",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
     },
     {
-      "id": "./node_modules/react-dom/server.browser.js",
-      "file": "static/chunks/0.js"
+      "id": "WbBG",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
+    },
+    {
+      "id": "i8i4",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
+    },
+    {
+      "id": "q1tI",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
+    },
+    {
+      "id": "viRO",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
+    },
+    {
+      "id": "yl30",
+      "file": "static/chunks/framework.7436aa7551d5ddeb7fae.js"
+    },
+    {
+      "id": "89Zu",
+      "file": "static/chunks/14.42d988f19139c8371e9a.js"
+    },
+    {
+      "id": "ShjV",
+      "file": "static/chunks/14.42d988f19139c8371e9a.js"
     }
   ]
 }

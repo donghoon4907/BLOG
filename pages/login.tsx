@@ -1,6 +1,6 @@
-import Router from "next/router";
 import React, { useState, FC } from "react";
 import styled from "styled-components";
+import Layout from "../components/common/Layout";
 import SignIn from "../components/auth/SignInContainer";
 import SignUp from "../components/auth/SignUpContainer";
 import { StateChanger } from "../components/common/Form";
@@ -26,25 +26,27 @@ const Login: FC = () => {
   const [action, setAction] = useState<string>("login");
 
   return (
-    <Container>
-      <Wrapper>
-        {action === "signup" ? <SignUp setAction={setAction} /> : <SignIn />}
-        <StateChanger>
-          {action === "login" && (
-            <div>
-              계정이 없다면&nbsp;
-              <Link onClick={() => setAction("signup")}>회원가입</Link>
-            </div>
-          )}
-          {action === "signup" && (
-            <div>
-              계정이 있다면&nbsp;
-              <Link onClick={() => setAction("login")}>로그인</Link>
-            </div>
-          )}
-        </StateChanger>
-      </Wrapper>
-    </Container>
+    <Layout title="로그인">
+      <Container>
+        <Wrapper>
+          {action === "signup" ? <SignUp setAction={setAction} /> : <SignIn />}
+          <StateChanger>
+            {action === "login" && (
+              <div>
+                계정이 없다면&nbsp;
+                <Link onClick={() => setAction("signup")}>회원가입</Link>
+              </div>
+            )}
+            {action === "signup" && (
+              <div>
+                계정이 있다면&nbsp;
+                <Link onClick={() => setAction("login")}>로그인</Link>
+              </div>
+            )}
+          </StateChanger>
+        </Wrapper>
+      </Container>
+    </Layout>
   );
 };
 

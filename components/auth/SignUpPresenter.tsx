@@ -77,13 +77,26 @@ const SignUpPresenter: FC<Props> = ({
           <Label htmlFor="email" val={email.value}>
             이메일
           </Label>
-          <Input type="email" placeholder="이메일" name="email" {...email} />
+          <Input
+            type="email"
+            placeholder="이메일"
+            name="email"
+            autoComplete="off"
+            required
+            {...email}
+          />
         </InputWrapper>
         <InputWrapper>
           <Label htmlFor="password" val={pwd.value}>
             암호
           </Label>
-          <Input type="password" placeholder="암호" name="password" {...pwd} />
+          <Input
+            type="password"
+            placeholder="암호"
+            name="password"
+            required
+            {...pwd}
+          />
         </InputWrapper>
         <InputWrapper>
           <Label htmlFor="conform_password" val={confirmPwd}>
@@ -93,6 +106,7 @@ const SignUpPresenter: FC<Props> = ({
             type="password"
             placeholder="암호 확인"
             name="conform_password"
+            required
             value={confirmPwd}
             onChange={onChangeConfirmPwd}
             ref={confirmPwdEl}
@@ -102,7 +116,13 @@ const SignUpPresenter: FC<Props> = ({
           <Label htmlFor="nickname" val={nickname.value}>
             닉네임
           </Label>
-          <Input placeholder="닉네임" name="nickname" {...nickname} />
+          <Input
+            placeholder="닉네임"
+            required
+            name="nickname"
+            {...nickname}
+            autoComplete="off"
+          />
         </InputWrapper>
         <Button text="회원가입" />
       </form>

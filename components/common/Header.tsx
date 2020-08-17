@@ -1,5 +1,4 @@
 import Router from "next/router";
-import Link from "next/link";
 import React, { useState, useCallback, FC, Fragment, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
@@ -12,6 +11,7 @@ import { useDebounce } from "../../hooks";
 import { removeAccessToken } from "../../lib/token";
 import { meQuery } from "../../graphql/auth/query/me";
 import { useVssDispatch, SET_ME } from "../../context";
+import Link from "./Link";
 
 const Container = styled.header`
   height: 4rem;
@@ -30,10 +30,6 @@ const Wrapper = styled.div`
   align-items: center;
   margin: 0 auto;
 
-  ${props => props.theme.media.custom(1312)} {
-    width: 912px;
-  }
-
   ${props => props.theme.media.desktop} {
     width: 768px;
   }
@@ -49,7 +45,7 @@ const Column = styled.div`
   align-items: center;
 `;
 
-const Title = styled.a`
+const Logo = styled.span`
   font-size: 24px;
   font-weight: 300;
   letter-spacing: 5px;
@@ -58,7 +54,7 @@ const Title = styled.a`
 `;
 
 const SearchForm = styled.form`
-  width: 300px;
+  width: 200px;
   position: relative;
 
   ${props => props.theme.media.tablet} {
@@ -140,7 +136,7 @@ const Header: FC = () => {
       <Wrapper>
         <Column>
           <Link href="/">
-            <Title>VSS</Title>
+            <Logo>VSS</Logo>
           </Link>
         </Column>
         <Column>
@@ -153,6 +149,7 @@ const Header: FC = () => {
               name="search"
               value={search}
               onChange={handleChangeSearch}
+              autoComplete="off"
             />
             {searchKeyword && (
               <SearchResult
@@ -170,14 +167,7 @@ const Header: FC = () => {
             </StyledAvatar>
 
             <Dropdown.Menu>
-              <Dropdown.Item
-                eventKey="1"
-                onClick={() => Router.push("/post/new")}
-              >
-                포스트 등록
-              </Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item eventKey="2" onClick={handleLogout}>
+              <Dropdown.Item eventKey="1" onClick={handleLogout}>
                 로그아웃
               </Dropdown.Item>
             </Dropdown.Menu>

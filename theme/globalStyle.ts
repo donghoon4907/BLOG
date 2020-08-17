@@ -9,8 +9,6 @@ export default createGlobalStyle`
   }
 
   svg {
-    width: 24px;
-    height: 24px;
     cursor: pointer;
 
     &:hover {

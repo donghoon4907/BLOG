@@ -1,5 +1,12 @@
 import Router from "next/router";
-import React, { useCallback, Fragment } from "react";
+import React, {
+  useCallback,
+  Fragment,
+  Dispatch,
+  SetStateAction,
+  FC,
+  memo
+} from "react";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { keywordQuery } from "../../graphql/search/query/keyword";
@@ -13,6 +20,7 @@ const Container = styled.div`
   top: 37px;
   left: 0;
   height: auto;
+  overflow: hidden;
 `;
 
 const ContentType = styled.div`
@@ -23,36 +31,35 @@ const ContentType = styled.div`
 `;
 
 const Item = styled.li`
-  display: flex;
-  justify-content: flex-start
-  align-items: center;
   padding: 5px;
   font-size: 12px;
   overflow: hidden;
-  cursor: pointer;
-`;
-
-const Title = styled.h3`
-  width: 240px;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+  width: 240px;
 
-  ${props => props.theme.tablet} {
+  ${props => props.theme.media.tablet} {
     width: 100px;
   }
 `;
 
-export default function SearchResult({
+type Props = {
+  searchKeyword: string;
+  setSearch: Dispatch<SetStateAction<string>>;
+  setSearchKeyword: Dispatch<SetStateAction<string>>;
+};
+
+const SearchResult: FC<Props> = ({
   searchKeyword,
   setSearch,
   setSearchKeyword
-}) {
+}) => {
   const { data, loading } = useQuery(keywordQuery, {
     variables: {
       searchKeyword
     },
-    fetchPolicy: "no-cache"
+    notifyOnNetworkStatusChange: true
   });
 
   const handleClickItem = useCallback(keyword => {
@@ -61,7 +68,7 @@ export default function SearchResult({
     setSearchKeyword("");
   }, []);
 
-  if (loading) {
+  if (loading || data.getSearchKeyword.length === 0) {
     return <Fragment />;
   }
 
@@ -69,16 +76,14 @@ export default function SearchResult({
     <Container>
       <ContentType>연관 검색어</ContentType>
       <ol>
-        {data.getSearchKeyword.length > 0 ? (
-          data.getSearchKeyword.map(({ id, keyword }) => (
-            <Item key={id} onClick={() => handleClickItem(keyword)}>
-              <Title>{keyword}</Title>
-            </Item>
-          ))
-        ) : (
-          <Item>검색결과가 없습니다.</Item>
-        )}
+        {data.getSearchKeyword.map(({ id, keyword }) => (
+          <Item key={id} onClick={() => handleClickItem(keyword)}>
+            {keyword}
+          </Item>
+        ))}
       </ol>
     </Container>
   );
-}
+};
+
+export default memo(SearchResult);

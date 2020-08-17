@@ -2,27 +2,9 @@ import React, { Fragment, FC } from "react";
 import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
 import Input from "../common/Input";
-import { Label } from "../common/Form";
+import { InputWrapper, Label, TextArea } from "../common/Form";
 import { UseInputProps } from "../../hooks";
-
-const InputWrapper = styled.div`
-  position: relative;
-  margin-bottom: 10px;
-`;
-
-const TextArea = styled.textarea`
-  ${props => props.theme.whiteBox};
-  width: 100%;
-  height: 300px;
-  resize: none;
-  font-size: 12px;
-  overflow: auto;
-  background: ${props => props.theme.bgColor};
-  padding: 15px;
-  &:focus {
-    outline: none;
-  }
-`;
+import Loader from "../common/Loader";
 
 const ReadOnlyDescription = styled.div`
   ${props => props.theme.whiteBox};
@@ -48,6 +30,9 @@ const PreviewWrap = styled(ReadOnlyDescription)`
 `;
 
 type Props = {
+  loading: boolean;
+  setNoticeLoading: boolean;
+  removeNoticeLoading: boolean;
   action: any;
   isMaster: boolean;
   title: UseInputProps;
@@ -63,6 +48,9 @@ type Props = {
 };
 
 const SetNoticePresenter: FC<Props> = ({
+  loading,
+  setNoticeLoading,
+  removeNoticeLoading,
   action,
   isMaster,
   title,
@@ -76,81 +64,100 @@ const SetNoticePresenter: FC<Props> = ({
   onDelete,
   onSubmit
 }) => (
-  <Modal onHide={onClose} animation={true} show>
-    <Modal.Header closeButton>
-      <Modal.Title>
-        {action.code === "readonly" || action.code === "modifiable"
-          ? title.value
-          : `공지사항 ${action.modalTitle}`}
-      </Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      <InputWrapper>
-        {(action.code === "add" || action.code === "modify") && (
-          <Fragment>
-            <Label htmlFor="title" val={title.value}>
-              제목을 입력하세요.
+  <Fragment>
+    {(loading || setNoticeLoading || removeNoticeLoading) && <Loader />}
+    <Modal onHide={onClose} show animation={false}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          {action.code === "readonly" || action.code === "modifiable"
+            ? title.value
+            : `공지사항 ${action.modalTitle}`}
+        </Modal.Title>
+      </Modal.Header>
+      <form onSubmit={onSubmit}>
+        <Modal.Body>
+          <InputWrapper>
+            {(action.code === "add" || action.code === "modify") && (
+              <Fragment>
+                <Label htmlFor="title" val={title.value}>
+                  제목을 입력하세요.
+                </Label>
+                <Input
+                  placeholder="제목을 입력하세요."
+                  name="title"
+                  required
+                  autoComplete="off"
+                  {...title}
+                />
+              </Fragment>
+            )}
+          </InputWrapper>
+          <InputWrapper>
+            <Label htmlFor="description" val={description.value}>
+              내용을 입력하세요.
             </Label>
-            <Input placeholder="제목을 입력하세요." name="title" {...title} />
-          </Fragment>
-        )}
-      </InputWrapper>
-      <InputWrapper>
-        <Label htmlFor="description" val={description.value}>
-          내용을 입력하세요.
-        </Label>
-        <TextArea
-          placeholder="내용을 입력하세요."
-          name="description"
-          {...description}
-        />
-        {(action.code === "readonly" || action.code === "modifiable") && (
-          <ReadOnlyDescription
-            dangerouslySetInnerHTML={{ __html: mdDescription }}
-            className="markdown-body"
-          ></ReadOnlyDescription>
-        )}
-        {preview && (
-          <PreviewWrap>
-            <div
-              dangerouslySetInnerHTML={{ __html: preview }}
-              className="markdown-body"
-            ></div>
-            <span aria-hidden="true" onClick={onRefreshPreview}>
-              ×
-            </span>
-          </PreviewWrap>
-        )}
-      </InputWrapper>
-    </Modal.Body>
-    <Modal.Footer>
-      {(action.code === "readonly" || action.code === "modifiable") && (
-        <Fragment>
-          {isMaster && (
-            <Button variant="danger" onClick={onDelete}>
-              삭제
-            </Button>
+            <TextArea
+              placeholder="내용을 입력하세요."
+              name="description"
+              required
+              autoComplete="off"
+              {...description}
+            />
+            {(action.code === "readonly" || action.code === "modifiable") && (
+              <ReadOnlyDescription
+                dangerouslySetInnerHTML={{ __html: mdDescription }}
+                className="markdown-body"
+              ></ReadOnlyDescription>
+            )}
+            {preview && (
+              <PreviewWrap>
+                <div
+                  dangerouslySetInnerHTML={{ __html: preview }}
+                  className="markdown-body"
+                ></div>
+                <span aria-hidden="true" onClick={onRefreshPreview}>
+                  ×
+                </span>
+              </PreviewWrap>
+            )}
+          </InputWrapper>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onClose}>
+            취소
+          </Button>
+          {(action.code === "readonly" || action.code === "modifiable") && (
+            <Fragment>
+              {isMaster && (
+                <Button variant="danger" onClick={onDelete}>
+                  삭제
+                </Button>
+              )}
+              <Button
+                variant="primary"
+                onClick={isMaster ? onShowEdit : onClose}
+              >
+                {isMaster ? "수정" : "확인"}
+              </Button>
+            </Fragment>
           )}
-          <Button variant="info" onClick={isMaster ? onShowEdit : onClose}>
-            {isMaster ? "수정" : "확인"}
-          </Button>
-        </Fragment>
-      )}
-      {(action.code === "modify" || action.code === "add") && (
-        <Fragment>
-          <Button
-            variant="info"
-            onClick={preview ? onRefreshPreview : onPreview}
-          >
-            {preview ? "미리보기 취소" : "미리보기"}
-          </Button>
-          <Button variant="primary" onClick={onSubmit}>
-            {action.code === "add" ? "등록" : "수정"}
-          </Button>
-        </Fragment>
-      )}
-    </Modal.Footer>
-  </Modal>
+          {(action.code === "modify" || action.code === "add") && (
+            <Fragment>
+              <Button
+                variant="info"
+                onClick={preview ? onRefreshPreview : onPreview}
+              >
+                {preview ? "미리보기 취소" : "미리보기"}
+              </Button>
+              <Button variant="primary" type="submit">
+                {action.code === "add" ? "등록" : "수정"}
+              </Button>
+            </Fragment>
+          )}
+        </Modal.Footer>
+      </form>
+    </Modal>
+  </Fragment>
 );
 
 export default SetNoticePresenter;
