@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const addNoticeMutation = gql`\n  mutation addNotice($title: String!, $description: String!) {\n    addNotice(title: $title, description: $description)\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}
