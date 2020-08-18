@@ -121,7 +121,7 @@ type Props = {
   video: any;
   isLiked: boolean;
   likeCount: number;
-  isMyPost: boolean;
+  isMyPost: string | boolean;
   onLike: any;
   onUpdate: any;
   onRoom: any;

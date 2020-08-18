@@ -20,7 +20,6 @@ export const postsQuery = gql`
       user {
         id
         nickname
-        isFollowing
         avatar {
           url
         }
@@ -28,10 +27,12 @@ export const postsQuery = gql`
       video {
         url
       }
+      likes {
+        user {
+          id
+        }
+      }
       status
-      isLiked
-      likeCount
-      isMyPost
       room {
         id
       }

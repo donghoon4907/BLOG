@@ -2,7 +2,7 @@ const BOX_BORDER = "1px solid #e6e6e6";
 const BORDER_RADIUS = "4px";
 
 const customMediaQuery = (maxWidth: string | number) =>
-  `@media (max-width: ${maxWidth}px)`;
+  `@media only screen and (max-width: ${maxWidth}px)`;
 
 const media = {
   custom: customMediaQuery,

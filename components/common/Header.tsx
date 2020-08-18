@@ -1,22 +1,21 @@
 import Router from "next/router";
-import React, { useState, useCallback, FC, Fragment, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import React, { useState, useCallback, FC, useEffect } from "react";
 import styled from "styled-components";
-import { Dropdown } from "react-bootstrap";
 import Input from "./Input";
 import Avatar from "./Avatar";
 import { Label } from "./Form";
 import SearchResult from "./SearchResult";
 import { useDebounce } from "../../hooks";
-import { removeAccessToken } from "../../lib/token";
-import { meQuery } from "../../graphql/auth/query/me";
-import { useVssDispatch, SET_ME } from "../../context";
+import { useVssState } from "../../context";
 import Link from "./Link";
+import AddPostButton from "../common/AddPostButton";
+import ProfileButton from "../common/ProfileButton";
+import SearchButton from "../common/SearchButton";
 
 const Container = styled.header`
   height: 4rem;
   width: 100%;
-  background: white;
+  background: #f7f7f7;
   position: fixed;
   border-bottom: ${props => props.theme.boxBorder};
   z-index: 1;
@@ -29,6 +28,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
+  padding: 0 10px;
 
   ${props => props.theme.media.desktop} {
     width: 768px;
@@ -43,19 +43,25 @@ const Column = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  & > div {
+    margin-left: 10px;
+  }
 `;
 
 const Logo = styled.span`
   font-size: 24px;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 5px;
   color: black;
   cursor: pointer;
 `;
 
-const SearchForm = styled.form`
-  width: 200px;
+const SearchForm = styled.form<{ isShowSearchBar: boolean }>`
+  width: ${props => (props.isShowSearchBar ? 200 : 0)}px;
+  opacity: ${props => (props.isShowSearchBar ? 1 : 0)};
   position: relative;
+  transition: width 1s;
 
   ${props => props.theme.media.tablet} {
     width: 150px;
@@ -75,22 +81,10 @@ const SearchInput = styled(Input)`
   }
 `;
 
-const StyledAvatar = styled(Avatar)`
-  & #dropdown-custom-2 {
-    opacity: 0;
-  }
-`;
-
 const Header: FC = () => {
-  const dispatch = useVssDispatch();
-  const { data, loading } = useQuery(meQuery, {
-    fetchPolicy: "network-only"
-  });
-  const [search, setSearch] = useState(
-    Router.pathname === "/search"
-      ? decodeURIComponent(Router.query.keyword as any)
-      : ""
-  );
+  const { isShowSearchBar } = useVssState();
+
+  const [search, setSearch] = useState("");
   const [searchKeyword, setSearchKeyword] = useDebounce("", 300);
 
   const handleChangeSearch = useCallback(e => {
@@ -106,30 +100,13 @@ const Header: FC = () => {
     [search]
   );
 
-  const handleLogout = useCallback(() => {
-    if (confirm("로그아웃 하시겠습니까?")) {
-      removeAccessToken();
-      Router.push("/login");
-    }
-  }, []);
-
   useEffect(() => {
-    if (data && data.getMyProfile) {
-      const { id, nickname, email, avatar, isMaster } = data.getMyProfile;
-      dispatch({
-        type: SET_ME,
-        id,
-        nickname,
-        email,
-        avatar,
-        isMaster
-      });
-    }
-  }, [data && data.getMyProfile]);
-
-  if (loading) {
-    return <Fragment />;
-  }
+    setSearch(
+      Router.pathname === "/search"
+        ? decodeURIComponent(Router.query.keyword as any)
+        : ""
+    );
+  }, []);
 
   return (
     <Container>
@@ -140,7 +117,10 @@ const Header: FC = () => {
           </Link>
         </Column>
         <Column>
-          <SearchForm onSubmit={handleSearchSubmit}>
+          <SearchForm
+            onSubmit={handleSearchSubmit}
+            isShowSearchBar={isShowSearchBar}
+          >
             <Label htmlFor="search" val={search}>
               검색어를 입력하세요.
             </Label>
@@ -159,19 +139,9 @@ const Header: FC = () => {
               />
             )}
           </SearchForm>
-        </Column>
-        <Column>
-          <Dropdown>
-            <StyledAvatar size="38" src={data.getMyProfile.avatar.url}>
-              <Dropdown.Toggle id="dropdown-custom-2" />
-            </StyledAvatar>
-
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="1" onClick={handleLogout}>
-                로그아웃
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <SearchButton />
+          <AddPostButton />
+          <ProfileButton />
         </Column>
       </Wrapper>
     </Container>

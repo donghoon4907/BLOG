@@ -25,6 +25,7 @@ type State = {
   isMaster: boolean;
   isShowNoticeModal: boolean;
   isShowAddPostModal: boolean;
+  isShowSearchBar: boolean;
   activePost: ActivePost;
   activeRoom: ActiveRoom[];
 };
@@ -35,6 +36,7 @@ export const SHOW_POST_MODAL = "SHOW_POST_MODAL";
 export const HIDE_POST_MODAL = "HIDE_POST_MODAL";
 export const ADD_ROOM = "ADD_ROOM";
 export const REMOVE_ROOM = "REMOVE_ROOM";
+export const SET_SEARCH_BAR = "SET_SEARCH_BAR";
 
 // type for action
 type Action =
@@ -58,7 +60,8 @@ type Action =
     }
   | { type: "HIDE_POST_MODAL"; payload: boolean }
   | { type: "ADD_ROOM"; payload: string }
-  | { type: "REMOVE_ROOM"; payload: string };
+  | { type: "REMOVE_ROOM"; payload: string }
+  | { type: "SET_SEARCH_BAR"; payload: boolean };
 
 // type for dispatch
 type VssDispatch = Dispatch<Action>;
@@ -68,7 +71,7 @@ const VssContext = createContext<State | null>(null);
 const VssDispatchContext = createContext<VssDispatch | null>(null);
 
 // define reducer
-function reducer(state, action) {
+function reducer(state: any, action: any) {
   switch (action.type) {
     case "SET_ME":
       return {
@@ -111,12 +114,17 @@ function reducer(state, action) {
     case "ADD_ROOM":
       return {
         ...state,
-        activeRoom: state.activeRoom.concat([action.payload])
+        activeRoom: state.activeRoom.concat([action.payload] as any)
       };
     case "REMOVE_ROOM":
       return {
         ...state,
         activeRoom: state.activeRoom.filter(v => v.id !== action.payload)
+      };
+    case "SET_SEARCH_BAR":
+      return {
+        ...state,
+        isShowSearchBar: action.payload
       };
     default:
       return { ...state };
@@ -133,6 +141,7 @@ const initialState: State = {
   isMaster: false,
   isShowNoticeModal: false,
   isShowAddPostModal: false,
+  isShowSearchBar: false,
   activePost: {
     id: "",
     title: "",

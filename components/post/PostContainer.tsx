@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import PostPresenter from "./PostPresenter";
 import { removePostMutation } from "../../graphql/post/mutation/remove";
 import { likeMutation } from "../../graphql/post/mutation/like";
-import { useVssDispatch, SHOW_POST_MODAL } from "../../context";
+import { useVssState, useVssDispatch, SHOW_POST_MODAL } from "../../context";
 
 export type PostProps = {
   id: string;
@@ -16,9 +16,6 @@ export type PostProps = {
   createdAt: string;
   updatedAt: string;
   status: string;
-  isLiked: boolean;
-  likeCount: number;
-  isMyPost: boolean;
   room: any;
 };
 
@@ -29,15 +26,18 @@ const PostContainer: FC<PostProps> = ({
   createdAt,
   user,
   video,
-  isLiked,
-  likeCount,
-  isMyPost,
   status,
+  likes,
   room
 }) => {
+  const { id: userId } = useVssState();
   const dispatch = useVssDispatch();
-  const [ctrlIsLiked, setCtrlIsLiked] = useState(isLiked);
-  const [ctrlLikeCount, setCtrlLikeCount] = useState(likeCount);
+
+  const isMyPost = userId || userId === user.id;
+  const [ctrlIsLiked, setCtrlIsLiked] = useState<boolean>(
+    likes.some((v: any) => v.user.id === userId)
+  );
+  const [ctrlLikeCount, setCtrlLikeCount] = useState<number>(likes.length);
 
   const [like, { loading: likeLoading }] = useMutation(likeMutation);
   const [remove, { loading: removeLoading }] = useMutation(removePostMutation);

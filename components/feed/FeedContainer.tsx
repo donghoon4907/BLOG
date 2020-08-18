@@ -1,10 +1,9 @@
 import React, { useState, useCallback, useEffect, useRef, FC } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, NetworkStatus } from "@apollo/client";
 import FeedPresenter from "./FeedPresenter";
 import { postsQuery } from "../../graphql/post/query";
 import { noticesQuery } from "../../graphql/notice/query";
 import { useVssState, useVssDispatch, SET_NOTICE_MODAL } from "../../context";
-import Loader from "../common/Loader";
 
 export type NoticeProps = {
   action: string;
@@ -26,7 +25,7 @@ const FeedContainer: FC = () => {
     noticeId: ""
   });
 
-  const { data: posts, loading: loadPostLoading, fetchMore } = useQuery(
+  const { data: posts, loading, fetchMore, networkStatus } = useQuery(
     postsQuery,
     {
       variables: {
@@ -36,15 +35,17 @@ const FeedContainer: FC = () => {
     }
   );
 
-  const { data: notices, loading: loadNoticeLoading } = useQuery(noticesQuery, {
+  const { data: notices } = useQuery(noticesQuery, {
     variables: {
       first: 10
     },
-    fetchPolicy: "network-only"
+    notifyOnNetworkStatusChange: true
   });
 
+  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore;
+
   const handleScrollFetchMore = () => {
-    if (loadPostLoading) return;
+    if (loading) return;
     const { scrollHeight, clientHeight, scrollTop } = document.documentElement;
     if (posts && posts.getPosts) {
       if (scrollTop + clientHeight === scrollHeight) {
@@ -52,20 +53,6 @@ const FeedContainer: FC = () => {
           fetchMore({
             variables: {
               skip: posts.getPosts.length
-            },
-            updateQuery: (
-              prev,
-              { fetchMoreResult }: { fetchMoreResult?: any }
-            ) => {
-              if (!fetchMoreResult) return prev;
-
-              if (fetchMoreResult.getPosts.length === 0) {
-                window.removeEventListener("scroll", handleScrollFetchMore);
-              }
-
-              return Object.assign({}, prev, {
-                getPosts: [...prev.getPosts, ...fetchMoreResult.getPosts]
-              });
             }
           });
         }
@@ -119,17 +106,14 @@ const FeedContainer: FC = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [posts && posts.getPosts, loadPostLoading]);
-
-  if ((loadPostLoading && !posts) || (loadNoticeLoading && !notices)) {
-    return <Loader />;
-  }
+  }, [posts && posts.getPosts, loading]);
 
   return (
     <FeedPresenter
-      loading={loadPostLoading}
-      posts={posts}
-      notices={notices}
+      loading={loading}
+      loadingMorePosts={loadingMorePosts}
+      posts={posts.getPosts}
+      notices={notices.getNotices}
       isMaster={isMaster}
       notice={notice}
       isShowNoticeModal={isShowNoticeModal}

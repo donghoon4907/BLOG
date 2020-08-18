@@ -1,17 +1,30 @@
 import Document from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
-export default class DocumentComponent extends Document {
-  static async getInitialProps(context: any) {
-    // styled-components ssr set up
+export default class MyDocument extends Document {
+  static async getInitialProps(ctx: any) {
     const sheet = new ServerStyleSheet();
+    const originalRenderPage = ctx.renderPage;
 
-    const page = context.renderPage(App => props =>
-      sheet.collectStyles(<App {...props} />)
-    );
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App: any) => (props: any) =>
+            sheet.collectStyles(<App {...props} />)
+        });
 
-    const styleTags = sheet.getStyleElement();
-
-    return { ...page, styleTags };
+      const initialProps = await Document.getInitialProps(ctx);
+      return {
+        ...initialProps,
+        styles: (
+          <>
+            {initialProps.styles as any}
+            {sheet.getStyleElement()}
+          </>
+        )
+      };
+    } finally {
+      sheet.seal();
+    }
   }
 }

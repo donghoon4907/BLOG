@@ -20,7 +20,7 @@ const Layout: FC<Props> = ({ children, title = "VSS" }) => (
       <title>{title}</title>
     </Head>
 
-    {title !== "로그인" && <Header />}
+    <Header />
     {children}
   </div>
 );

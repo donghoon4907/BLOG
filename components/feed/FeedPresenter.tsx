@@ -10,7 +10,6 @@ import Timestamp from "../common/Timestamp";
 import { Add } from "../icon";
 import { NoticeProps } from "./FeedContainer";
 import Loader from "../common/Loader";
-import AddPostBtn from "../common/AddPostBtn";
 
 const PostWrap = styled.div`
   width: 600px;
@@ -76,6 +75,7 @@ const NoticeWrapper = styled.div`
 
 type Props = {
   loading: boolean;
+  loadingMorePosts: boolean;
   posts: any;
   notices: any;
   isMaster: boolean;
@@ -89,8 +89,9 @@ type Props = {
 
 const FeedPresenter: FC<Props> = ({
   loading,
-  posts: { getPosts },
-  notices: { getNotices },
+  loadingMorePosts,
+  posts,
+  notices,
   isMaster,
   notice,
   isShowNoticeModal,
@@ -100,11 +101,11 @@ const FeedPresenter: FC<Props> = ({
   recommandUserEl
 }) => (
   <Section flexDirection="row">
-    {loading && <Loader />}
+    {loading && !loadingMorePosts && <Loader />}
     <PostWrap>
       <Subject>최근 업로드</Subject>
-      {getPosts.length > 0 ? (
-        getPosts.map(post => <PostContainer key={post.id} {...post} />)
+      {posts.length > 0 ? (
+        posts.map(post => <PostContainer key={post.id} {...post} />)
       ) : (
         <NoData>
           <h1>게시글이 없습니다.</h1>
@@ -125,9 +126,9 @@ const FeedPresenter: FC<Props> = ({
                 )}
               </div>
             </Subject>
-            {getNotices.length > 0 ? (
+            {notices.length > 0 ? (
               <CarouselContainer>
-                {getNotices.map(({ id, title, description, updatedAt }) => (
+                {notices.map(({ id, title, description, updatedAt }) => (
                   <Carousel.Item key={id}>
                     <NoticeWrapper
                       onClick={() => onShowNotice(title, description, id)}
@@ -149,7 +150,6 @@ const FeedPresenter: FC<Props> = ({
     </UserWrap>
     {isShowNoticeModal && <SetNoticeModal {...notice} isMaster={isMaster} />}
     {isShowAddPostModal && <SetPostModal />}
-    <AddPostBtn />
   </Section>
 );
 
