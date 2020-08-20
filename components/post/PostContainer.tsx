@@ -4,7 +4,13 @@ import { useMutation } from "@apollo/client";
 import PostPresenter from "./PostPresenter";
 import { removePostMutation } from "../../graphql/post/mutation/remove";
 import { likeMutation } from "../../graphql/post/mutation/like";
-import { useVssState, useVssDispatch, SHOW_POST_MODAL } from "../../context";
+import {
+  useVssState,
+  useVssDispatch,
+  SHOW_POST_MODAL,
+  SET_LOGIN_MODAL
+} from "../../context";
+import { getAccessToken } from "../../lib/token";
 
 export type PostProps = {
   id: string;
@@ -44,7 +50,15 @@ const PostContainer: FC<PostProps> = ({
 
   // 포스트 채팅방 접근 이벤트
   const handleRoom = useCallback(() => {
-    Router.push(`/room/${room.id}`);
+    const token = getAccessToken();
+    if (token) {
+      //Router.push(`/room/${room.id}`);
+    } else {
+      dispatch({
+        type: SET_LOGIN_MODAL,
+        payload: true
+      });
+    }
   }, []);
 
   // 포스트 수정 이벤트
@@ -62,20 +76,27 @@ const PostContainer: FC<PostProps> = ({
 
   // 좋아요 / 좋아요 취소 이벤트
   const handleLike = useCallback(async () => {
-    if (likeLoading) {
-      return alert("요청중입니다. 잠시만 기다려주세요.");
-    }
+    const token = getAccessToken();
+    if (token) {
+      if (likeLoading) {
+        return alert("요청중입니다. 잠시만 기다려주세요.");
+      }
+      setCtrlIsLiked(!ctrlIsLiked);
+      setCtrlLikeCount(ctrlIsLiked ? ctrlLikeCount - 1 : ctrlLikeCount + 1);
 
-    setCtrlIsLiked(!ctrlIsLiked);
-    setCtrlLikeCount(ctrlIsLiked ? ctrlLikeCount - 1 : ctrlLikeCount + 1);
-
-    try {
-      await like({
-        variables: { postId: id }
+      try {
+        await like({
+          variables: { postId: id }
+        });
+      } catch (error) {
+        const { message } = JSON.parse(error.message);
+        alert(message);
+      }
+    } else {
+      dispatch({
+        type: SET_LOGIN_MODAL,
+        payload: true
       });
-    } catch (error) {
-      const { message } = JSON.parse(error.message);
-      alert(message);
     }
   }, [ctrlIsLiked, ctrlLikeCount, likeLoading]);
 

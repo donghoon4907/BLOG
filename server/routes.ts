@@ -5,4 +5,4 @@ export const routes = nextRoutes();
 export const Router = routes.Router;
 export const Link = routes.Link;
 
-// routes.add("search", "/search/:keyword");
+routes.add("search", "/search/:keyword");

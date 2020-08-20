@@ -14,7 +14,12 @@ export type NoticeProps = {
 };
 
 const FeedContainer: FC = () => {
-  const { isMaster, isShowNoticeModal, isShowAddPostModal } = useVssState();
+  const {
+    isMaster,
+    isShowNoticeModal,
+    isShowAddPostModal,
+    isShowLoginModal
+  } = useVssState();
   const dispatch = useVssDispatch();
   const recommandUserEl = useRef(null);
   const [notice, setNotice] = useState<NoticeProps>({
@@ -118,6 +123,7 @@ const FeedContainer: FC = () => {
       notice={notice}
       isShowNoticeModal={isShowNoticeModal}
       isShowAddPostModal={isShowAddPostModal}
+      isShowLoginModal={isShowLoginModal}
       onShowNotice={handleShowNotice}
       onAddNotice={handleAddNotice}
       recommandUserEl={recommandUserEl}

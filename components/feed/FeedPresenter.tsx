@@ -5,6 +5,7 @@ import PostContainer from "../post/PostContainer";
 import CarouselContainer from "../common/Carousel";
 import SetNoticeModal from "../modal/SetNoticeContainer";
 import SetPostModal from "../modal/SetPostContainer";
+import AuthModal from "../modal/Auth";
 import Section from "../common/Section";
 import Timestamp from "../common/Timestamp";
 import { Add } from "../icon";
@@ -82,6 +83,7 @@ type Props = {
   notice: NoticeProps;
   isShowNoticeModal: boolean;
   isShowAddPostModal: boolean;
+  isShowLoginModal: boolean;
   onShowNotice: any;
   onAddNotice: any;
   recommandUserEl: any;
@@ -96,6 +98,7 @@ const FeedPresenter: FC<Props> = ({
   notice,
   isShowNoticeModal,
   isShowAddPostModal,
+  isShowLoginModal,
   onShowNotice,
   onAddNotice,
   recommandUserEl
@@ -150,6 +153,7 @@ const FeedPresenter: FC<Props> = ({
     </UserWrap>
     {isShowNoticeModal && <SetNoticeModal {...notice} isMaster={isMaster} />}
     {isShowAddPostModal && <SetPostModal />}
+    {isShowLoginModal && <AuthModal />}
   </Section>
 );
 

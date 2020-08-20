@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { FormWrapper, Label, InputWrapper } from "../common/Form";
+import { Label, InputWrapper } from "../common/Form";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import Loader from "../common/Loader";
@@ -55,7 +55,7 @@ const SignUpPresenter: FC<Props> = ({
   onSubmit
 }) => {
   return (
-    <FormWrapper>
+    <>
       {(loading || signUpLoading) && <Loader />}
       <form onSubmit={onSubmit}>
         <UploadWrapper onClick={onClickUpload}>
@@ -126,7 +126,7 @@ const SignUpPresenter: FC<Props> = ({
         </InputWrapper>
         <Button text="회원가입" />
       </form>
-    </FormWrapper>
+    </>
   );
 };
 

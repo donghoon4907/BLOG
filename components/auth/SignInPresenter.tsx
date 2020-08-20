@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { FormWrapper, InputWrapper, Label } from "../common/Form";
+import { InputWrapper, Label } from "../common/Form";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import Loader from "../common/Loader";
@@ -14,7 +14,7 @@ type Props = {
 
 const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => {
   return (
-    <FormWrapper>
+    <>
       {loading && <Loader />}
       <form onSubmit={onSubmit}>
         <InputWrapper>
@@ -44,7 +44,7 @@ const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => {
         </InputWrapper>
         <Button text="로그인" />
       </form>
-    </FormWrapper>
+    </>
   );
 };
 

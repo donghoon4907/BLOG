@@ -15,7 +15,7 @@ import SearchButton from "../common/SearchButton";
 const Container = styled.header`
   height: 4rem;
   width: 100%;
-  background: #f7f7f7;
+  background: white;
   position: fixed;
   border-bottom: ${props => props.theme.boxBorder};
   z-index: 1;
@@ -95,7 +95,7 @@ const Header: FC = () => {
   const handleSearchSubmit = useCallback(
     e => {
       e.preventDefault();
-      Router.push(`/search?keyword=${search}`);
+      Router.push(`/search/${search}`);
     },
     [search]
   );

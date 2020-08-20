@@ -43,7 +43,7 @@ const SetNoticeContainer: FC<Props> = ({
     removeNoticeMutation
   );
 
-  const convertTextIntoMd = async text => {
+  const convertTextIntoMd = async (text: string) => {
     const { data, error } = await call({
       method: "post",
       url: process.env.MDAPI_PATH,

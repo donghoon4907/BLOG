@@ -32,14 +32,10 @@ export const Label = styled.label<{ val?: string }>`
   animation: opacity 2s slidein;
 `;
 
-export const StateChanger = styled(Box)`
+export const StateChanger = styled.div`
   text-align: center;
   padding: 20px 0px;
   background: rgba(0, 0, 0, 0.03);
-
-  &:link {
-    margin-left: 523px;
-  }
 `;
 
 export const TextArea = styled.textarea`

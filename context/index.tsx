@@ -21,11 +21,12 @@ type State = {
   id: string;
   nickname: string;
   email: string;
-  avatar: Avatar;
+  avatar: Avatar | null;
   isMaster: boolean;
   isShowNoticeModal: boolean;
   isShowAddPostModal: boolean;
   isShowSearchBar: boolean;
+  isShowLoginModal: boolean;
   activePost: ActivePost;
   activeRoom: ActiveRoom[];
 };
@@ -34,6 +35,7 @@ export const SET_ME = "SET_ME";
 export const SET_NOTICE_MODAL = "SET_NOTICE_MODAL";
 export const SHOW_POST_MODAL = "SHOW_POST_MODAL";
 export const HIDE_POST_MODAL = "HIDE_POST_MODAL";
+export const SET_LOGIN_MODAL = "SET_LOGIN_MODAL";
 export const ADD_ROOM = "ADD_ROOM";
 export const REMOVE_ROOM = "REMOVE_ROOM";
 export const SET_SEARCH_BAR = "SET_SEARCH_BAR";
@@ -45,7 +47,7 @@ type Action =
       id: string;
       nickname: string;
       email: string;
-      avatar: Avatar;
+      avatar: Avatar | null;
       isMaster: boolean;
     }
   | { type: "SET_NOTICE_MODAL"; payload: boolean }
@@ -61,7 +63,8 @@ type Action =
   | { type: "HIDE_POST_MODAL"; payload: boolean }
   | { type: "ADD_ROOM"; payload: string }
   | { type: "REMOVE_ROOM"; payload: string }
-  | { type: "SET_SEARCH_BAR"; payload: boolean };
+  | { type: "SET_SEARCH_BAR"; payload: boolean }
+  | { type: "SET_LOGIN_MODAL"; payload: boolean };
 
 // type for dispatch
 type VssDispatch = Dispatch<Action>;
@@ -126,6 +129,11 @@ function reducer(state: any, action: any) {
         ...state,
         isShowSearchBar: action.payload
       };
+    case "SET_LOGIN_MODAL":
+      return {
+        ...state,
+        isShowLoginModal: action.payload
+      };
     default:
       return { ...state };
   }
@@ -135,13 +143,12 @@ const initialState: State = {
   id: "",
   nickname: "",
   email: "",
-  avatar: {
-    url: ""
-  },
+  avatar: null,
   isMaster: false,
   isShowNoticeModal: false,
   isShowAddPostModal: false,
   isShowSearchBar: false,
+  isShowLoginModal: false,
   activePost: {
     id: "",
     title: "",

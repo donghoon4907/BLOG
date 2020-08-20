@@ -1,12 +1,13 @@
-import Router from "next/router";
 import React, { useCallback, FormEvent, FC } from "react";
 import { useMutation } from "@apollo/client";
 import { useInput } from "../../hooks";
 import { logInMutation } from "../../graphql/auth/mutation/login";
 import SignInPresenter from "./SignInPresenter";
 import { setAccessToken } from "../../lib/token";
+import { useVssDispatch, SET_LOGIN_MODAL } from "../../context";
 
 const SignInContainer: FC = () => {
+  const dispatch = useVssDispatch();
   const [login, { loading }] = useMutation(logInMutation);
   const email = useInput("");
   const pwd = useInput("");
@@ -25,7 +26,10 @@ const SignInContainer: FC = () => {
         });
         if (logIn) {
           setAccessToken(logIn);
-          Router.push("/");
+          dispatch({
+            type: SET_LOGIN_MODAL,
+            payload: false
+          });
         }
       } catch (error) {
         const { message } = JSON.parse(error.message);
