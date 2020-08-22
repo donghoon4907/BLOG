@@ -1,16 +1,16 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { Carousel } from "react-bootstrap";
 import PostContainer from "../post/PostContainer";
-import CarouselContainer from "../common/Carousel";
 import SetNoticeModal from "../modal/SetNoticeContainer";
 import SetPostModal from "../modal/SetPostContainer";
 import AuthModal from "../modal/Auth";
 import Section from "../common/Section";
-import Timestamp from "../common/Timestamp";
 import { Add } from "../icon";
-import { NoticeProps } from "./FeedContainer";
 import Loader from "../common/Loader";
+import { Notice } from "../../interfaces";
+import NoticeList from "./NoticeList";
+import Subject from "../common/Subject";
+import NoData from "../common/NoData";
 
 const PostWrap = styled.div`
   width: 600px;
@@ -41,50 +41,15 @@ const StickyWrap = styled.div`
   top: 80px;
 `;
 
-const Subject = styled.div<{ activeBorder?: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: ${props => props.activeBorder && "2px solid black"};
-  padding: 8px 5px;
-  font-size: 20px;
-  margin-bottom: 10px;
-  font-weight: 500;
-
-  & svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
-const NoData = styled.div`
-  width: 100%;
-  text-align: center;
-`;
-
-const NoticeWrapper = styled.div`
-  height: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 15%;
-  margin-left: 15%;
-  padding: 5px;
-  text-align: center;
-  cursor: pointer;
-`;
-
 type Props = {
   loading: boolean;
   loadingMorePosts: boolean;
   posts: any;
-  notices: any;
+  notices: Notice[];
   isMaster: boolean;
-  notice: NoticeProps;
   isShowNoticeModal: boolean;
   isShowAddPostModal: boolean;
   isShowLoginModal: boolean;
-  onShowNotice: any;
   onAddNotice: any;
   recommandUserEl: any;
 };
@@ -95,18 +60,16 @@ const FeedPresenter: FC<Props> = ({
   posts,
   notices,
   isMaster,
-  notice,
   isShowNoticeModal,
   isShowAddPostModal,
   isShowLoginModal,
-  onShowNotice,
   onAddNotice,
   recommandUserEl
 }) => (
   <Section flexDirection="row">
-    {loading && !loadingMorePosts && <Loader />}
+    {loading && loadingMorePosts && <Loader />}
     <PostWrap>
-      <Subject>최근 업로드</Subject>
+      <Subject>신규 포스트</Subject>
       {posts.length > 0 ? (
         posts.map(post => <PostContainer key={post.id} {...post} />)
       ) : (
@@ -119,7 +82,7 @@ const FeedPresenter: FC<Props> = ({
       <aside>
         <StickyWrap>
           <div>
-            <Subject activeBorder>
+            <Subject activeBorder={true}>
               <span>공지사항</span>
               <div>
                 {isMaster && (
@@ -130,18 +93,7 @@ const FeedPresenter: FC<Props> = ({
               </div>
             </Subject>
             {notices.length > 0 ? (
-              <CarouselContainer>
-                {notices.map(({ id, title, description, updatedAt }) => (
-                  <Carousel.Item key={id}>
-                    <NoticeWrapper
-                      onClick={() => onShowNotice(title, description, id)}
-                    >
-                      <div>{title}</div>
-                      <Timestamp text={updatedAt} />
-                    </NoticeWrapper>
-                  </Carousel.Item>
-                ))}
-              </CarouselContainer>
+              <NoticeList notices={notices} />
             ) : (
               <NoData>
                 <h1>공지사항이 없습니다.</h1>
@@ -151,7 +103,7 @@ const FeedPresenter: FC<Props> = ({
         </StickyWrap>
       </aside>
     </UserWrap>
-    {isShowNoticeModal && <SetNoticeModal {...notice} isMaster={isMaster} />}
+    {isShowNoticeModal && <SetNoticeModal />}
     {isShowAddPostModal && <SetPostModal />}
     {isShowLoginModal && <AuthModal />}
   </Section>

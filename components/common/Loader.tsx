@@ -18,7 +18,7 @@ const Loader: FC = () => (
   <Container>
     <Spinner
       type="ThreeDots"
-      color="#358597"
+      color="#4142DD"
       height={80}
       width={80}
       visible={true}

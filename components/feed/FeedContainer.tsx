@@ -1,17 +1,9 @@
-import React, { useState, useCallback, useEffect, useRef, FC } from "react";
+import React, { useCallback, useEffect, useRef, FC } from "react";
 import { useQuery, NetworkStatus } from "@apollo/client";
 import FeedPresenter from "./FeedPresenter";
 import { postsQuery } from "../../graphql/post/query";
 import { noticesQuery } from "../../graphql/notice/query";
-import { useVssState, useVssDispatch, SET_NOTICE_MODAL } from "../../context";
-
-export type NoticeProps = {
-  action: string;
-  actionText: string;
-  title: string;
-  description: string;
-  noticeId: string;
-};
+import { useVssState, useVssDispatch, SHOW_NOTICE_MODAL } from "../../context";
 
 const FeedContainer: FC = () => {
   const {
@@ -21,14 +13,8 @@ const FeedContainer: FC = () => {
     isShowLoginModal
   } = useVssState();
   const dispatch = useVssDispatch();
+
   const recommandUserEl = useRef(null);
-  const [notice, setNotice] = useState<NoticeProps>({
-    action: "wait",
-    actionText: "비활성화",
-    title: "",
-    description: "",
-    noticeId: ""
-  });
 
   const { data: posts, loading, fetchMore, networkStatus } = useQuery(
     postsQuery,
@@ -52,7 +38,7 @@ const FeedContainer: FC = () => {
   const handleScrollFetchMore = () => {
     if (loading) return;
     const { scrollHeight, clientHeight, scrollTop } = document.documentElement;
-    if (posts && posts.getPosts) {
+    if (posts.getPosts) {
       if (scrollTop + clientHeight === scrollHeight) {
         if (posts.getPosts.length % 10 === 0) {
           fetchMore({
@@ -66,47 +52,15 @@ const FeedContainer: FC = () => {
   };
 
   const handleAddNotice = useCallback(() => {
-    setNotice({
+    dispatch({
+      type: SHOW_NOTICE_MODAL,
       action: "add",
       actionText: "등록",
       title: "",
       description: "",
       noticeId: ""
     });
-    dispatch({
-      type: SET_NOTICE_MODAL,
-      payload: true
-    });
   }, []);
-
-  const handleShowNotice = useCallback(
-    (title, description, noticeId) => {
-      setNotice({
-        action: isMaster ? "modifiable" : "readonly",
-        actionText: "",
-        title,
-        description,
-        noticeId
-      });
-      dispatch({
-        type: SET_NOTICE_MODAL,
-        payload: true
-      });
-    },
-    [isMaster]
-  );
-
-  useEffect(() => {
-    if (!isShowNoticeModal) {
-      setNotice({
-        action: "wait",
-        actionText: "비활성화",
-        title: "",
-        description: "",
-        noticeId: ""
-      });
-    }
-  }, [isShowNoticeModal]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
@@ -120,11 +74,9 @@ const FeedContainer: FC = () => {
       posts={posts.getPosts}
       notices={notices.getNotices}
       isMaster={isMaster}
-      notice={notice}
       isShowNoticeModal={isShowNoticeModal}
       isShowAddPostModal={isShowAddPostModal}
       isShowLoginModal={isShowLoginModal}
-      onShowNotice={handleShowNotice}
       onAddNotice={handleAddNotice}
       recommandUserEl={recommandUserEl}
     />

@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import SignIn from "../auth/SignInContainer";
 import SignUp from "../auth/SignUpContainer";
 import { StateChanger } from "../common/Form";
-import { useVssDispatch, SET_LOGIN_MODAL } from "../../context";
+import { useVssDispatch, HIDE_LOGIN_MODAL } from "../../context";
 
 const Link = styled.span`
   color: ${props => props.theme.blueColor};
@@ -17,8 +17,7 @@ const Auth: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch({
-      type: SET_LOGIN_MODAL,
-      payload: false
+      type: HIDE_LOGIN_MODAL
     });
   }, []);
 

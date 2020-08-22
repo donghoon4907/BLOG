@@ -2,7 +2,6 @@ import Router from "next/router";
 import React, { useState, useCallback, FC, useEffect } from "react";
 import styled from "styled-components";
 import Input from "./Input";
-import Avatar from "./Avatar";
 import { Label } from "./Form";
 import SearchResult from "./SearchResult";
 import { useDebounce } from "../../hooks";
@@ -95,7 +94,7 @@ const Header: FC = () => {
   const handleSearchSubmit = useCallback(
     e => {
       e.preventDefault();
-      Router.push(`/search/${search}`);
+      Router.push(`/search/${search}/createdAt_DESC`);
     },
     [search]
   );

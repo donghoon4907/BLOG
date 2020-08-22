@@ -15,17 +15,15 @@ const Container = styled.button`
   border: 1px solid ${props => props.theme.blueColor};
 
   &:hover {
-    background: white;
-    color: black;
-    border: 1px solid black;
+    opacity: 0.8;
   }
 `;
 
-type Props = {
+interface Props {
   text: string;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
-};
+}
 
 const Button: FC<Props> = ({ text, className, onClick }) => (
   <Container className={className} onClick={onClick}>

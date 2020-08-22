@@ -12,10 +12,10 @@ const Container = styled.a`
   }
 `;
 
-type Props = {
+interface Props {
   href: string;
   children: any;
-};
+}
 
 const StyledLink: FC<Props> = ({ href, children }) => (
   <div>

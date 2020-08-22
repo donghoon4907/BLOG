@@ -4,9 +4,9 @@ import { OverlayTrigger, Popover, Dropdown } from "react-bootstrap";
 import moment from "moment";
 import Avatar from "../common/Avatar";
 import Video from "../common/Video";
-import Link from "../common/Link";
 import Timestamp from "../common/Timestamp";
 import { HeartFull, HeartEmpty, Room, Download, More } from "../icon";
+import HoverUser from "../user/HoverUser";
 
 const Container = styled.div`
   ${props => props.theme.whiteBox};
@@ -19,12 +19,12 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: ${props => props.theme.bgColor};
+  background: white;
 `;
 
 const User = styled.div`
   position: relative;
-  width: 200px;
+  width: 100px;
   display: flex;
   align-items: center;
 `;
@@ -122,6 +122,8 @@ type Props = {
   isLiked: boolean;
   likeCount: number;
   isMyPost: string | boolean;
+  isShowUser: boolean;
+  onClickAvatar: any;
   onLike: any;
   onUpdate: any;
   onRoom: any;
@@ -138,6 +140,8 @@ const PostPresenter: FC<Props> = ({
   isLiked,
   likeCount,
   isMyPost,
+  isShowUser,
+  onClickAvatar,
   onLike,
   onUpdate,
   onRoom,
@@ -146,11 +150,9 @@ const PostPresenter: FC<Props> = ({
   <Container>
     <Header>
       <User>
-        <Link href={`/user/${user.id}`}>
-          <Avatar size="30" src={user.avatar.url} />
-        </Link>
-
+        <Avatar size="30" src={user.avatar.url} onClick={onClickAvatar} />
         <div style={{ textIndent: 10 }}>{user.nickname}</div>
+        {isShowUser && <HoverUser userId={user.id} />}
       </User>
       <div style={{ width: 100, textAlign: "right" }}>
         {isMyPost && (

@@ -21,10 +21,10 @@ const Contianer = styled.div`
   }
 `;
 
-type Props = {
+interface Props {
   title: string;
   updatedAt: string;
-};
+}
 
 const Notice: FC<Props> = ({ title, updatedAt }) => (
   <Contianer>

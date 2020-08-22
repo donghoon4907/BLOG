@@ -8,11 +8,11 @@ import {
 } from "react";
 import axios from "axios";
 
-export type UseInputProps = {
+export interface UseInputProps {
   value: string;
   onChange: (e: ChangeEvent<any>) => void;
   setValue: Dispatch<SetStateAction<string>>;
-};
+}
 
 export const useInput: (T: string) => UseInputProps = (
   defaultValue: string

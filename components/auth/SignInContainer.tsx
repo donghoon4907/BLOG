@@ -4,11 +4,12 @@ import { useInput } from "../../hooks";
 import { logInMutation } from "../../graphql/auth/mutation/login";
 import SignInPresenter from "./SignInPresenter";
 import { setAccessToken } from "../../lib/token";
-import { useVssDispatch, SET_LOGIN_MODAL } from "../../context";
+import { useVssDispatch, HIDE_LOGIN_MODAL, SET_ME } from "../../context";
 
 const SignInContainer: FC = () => {
   const dispatch = useVssDispatch();
   const [login, { loading }] = useMutation(logInMutation);
+
   const email = useInput("");
   const pwd = useInput("");
 
@@ -25,10 +26,18 @@ const SignInContainer: FC = () => {
           variables: { email: email.value, pwd: pwd.value }
         });
         if (logIn) {
-          setAccessToken(logIn);
+          const { token, id, nickname, email, avatar, isMaster } = logIn;
+          setAccessToken(token);
           dispatch({
-            type: SET_LOGIN_MODAL,
-            payload: false
+            type: SET_ME,
+            userId: id,
+            nickname,
+            email,
+            avatar,
+            isMaster
+          });
+          dispatch({
+            type: HIDE_LOGIN_MODAL
           });
         }
       } catch (error) {

@@ -1,4 +1,5 @@
-import React, { FC } from "react";
+import React from "react";
+import { NextPage } from "next";
 import styled from "styled-components";
 import Layout from "../components/common/Layout";
 import Button from "../components/common/Button";
@@ -45,7 +46,7 @@ const ButtonWrapper = styled.div`
   width: 100px;
 `;
 
-const ErrorPage: FC = () => {
+const ErrorPage: NextPage = () => {
   return (
     <Layout title="페이지를 찾을 수 없습니다">
       <Container>

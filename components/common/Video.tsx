@@ -23,9 +23,9 @@ const Wrapper = styled.video`
   }
 `;
 
-type Props = {
+interface Props {
   src: string;
-};
+}
 
 const Video: FC<Props> = ({ src }) => (
   <Container>

@@ -4,7 +4,7 @@ import { AddPost } from "../icon";
 import {
   useVssDispatch,
   SHOW_POST_MODAL,
-  SET_LOGIN_MODAL
+  SHOW_LOGIN_MODAL
 } from "../../context";
 import { getAccessToken } from "../../lib/token";
 
@@ -22,12 +22,15 @@ const AddPostButton: FC = () => {
     if (token) {
       dispatch({
         type: SHOW_POST_MODAL,
-        isShow: true
+        postId: "",
+        title: "",
+        description: "",
+        status: "PUBLIC",
+        url: ""
       });
     } else {
       dispatch({
-        type: SET_LOGIN_MODAL,
-        payload: true
+        type: SHOW_LOGIN_MODAL
       });
     }
   }, []);

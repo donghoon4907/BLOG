@@ -104,7 +104,7 @@ const SetPostContainer: FC = () => {
         data: { deletePost }
       } = await remove({
         variables: {
-          postId: activePost.id
+          postId: activePost.postId
         }
       });
       if (deletePost) {
@@ -145,7 +145,7 @@ const SetPostContainer: FC = () => {
               data: { updatePost }
             } = await update({
               variables: {
-                postId: activePost.id,
+                postId: activePost.postId,
                 title,
                 description,
                 status,
@@ -178,8 +178,7 @@ const SetPostContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch({
-      type: HIDE_POST_MODAL,
-      payload: false
+      type: HIDE_POST_MODAL
     });
   }, []);
 
@@ -193,7 +192,7 @@ const SetPostContainer: FC = () => {
     if (activePost.status) {
       setStatus(activePost.status);
     }
-    if (activePost.id) {
+    if (activePost.postId) {
       setProgress(100);
       setHeader("수정");
     }

@@ -2,9 +2,9 @@ import Head from "next/head";
 import React, { FC } from "react";
 import Header from "./Header";
 
-type Props = {
+interface Props {
   title?: string;
-};
+}
 
 const Layout: FC<Props> = ({ children, title = "VSS" }) => (
   <div>

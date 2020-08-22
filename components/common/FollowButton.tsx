@@ -6,10 +6,10 @@ import {
   unfollowMutation
 } from "../../graphql/user/mutation/follow";
 
-type Props = {
+interface Props {
   isFollowing: boolean;
   userId: string;
-};
+}
 
 const FollowButton: FC<Props> = ({ isFollowing, userId }) => {
   const [ctrlIsFolling, setCtrlIsFolling] = useState<boolean>(isFollowing);

@@ -1,8 +1,10 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { Accordion, Card, Table } from "react-bootstrap";
-import Section from "../common/Section";
 import PostContainer from "../post/PostContainer";
+import NoData from "../common/NoData";
+import Subject from "../common/Subject";
+import Loader from "../common/Loader";
 
 const Filter = styled.div`
   ${props => props.theme.whiteBox};
@@ -39,24 +41,25 @@ const StyledTd = styled.td<{ active?: boolean }>`
   font-weight: ${props => (props.active ? "bold" : 500)};
 `;
 
-const NoSearch = styled.div`
-  width: 100%;
-  text-align: center;
-`;
-
 type Props = {
+  loading: boolean;
+  loadingMorePosts: boolean;
   posts: any;
   orderBy: string;
   onSort: any;
 };
 
 const SearchPostPresenter: FC<Props> = ({
-  posts: { getPosts },
+  loading,
+  loadingMorePosts,
+  posts,
   orderBy,
   onSort
 }) => (
-  <Section>
-    {getPosts.length > 0 && (
+  <>
+    <Subject>포스트 검색결과</Subject>
+    {loading && loadingMorePosts && <Loader />}
+    {posts.length > 0 && (
       <Filter>
         <Accordion>
           <Card>
@@ -112,14 +115,12 @@ const SearchPostPresenter: FC<Props> = ({
         </Accordion>
       </Filter>
     )}
-    {getPosts.length > 0 ? (
-      getPosts.map(post => <PostContainer key={post.id} {...post} />)
+    {posts.length > 0 ? (
+      posts.map(post => <PostContainer key={post.id} {...post} />)
     ) : (
-      <NoSearch>
-        <h1>검색 결과가 없습니다.</h1>
-      </NoSearch>
+      <NoData>검색 결과가 없습니다.</NoData>
     )}
-  </Section>
+  </>
 );
 
 export default SearchPostPresenter;

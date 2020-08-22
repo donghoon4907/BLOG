@@ -9,9 +9,9 @@ const Container = styled.time`
   font-size: 12px;
 `;
 
-type Props = {
+interface Props {
   text: string;
-};
+}
 const Timestamp: FC<Props> = ({ text }) => (
   <Container>{moment(text).format("YYYY-MM-DD HH:mm:ss")}</Container>
 );

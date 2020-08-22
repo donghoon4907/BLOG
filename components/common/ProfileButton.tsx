@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from "react";
 import styled from "styled-components";
 import { Profile } from "../icon";
-import { useVssDispatch, SET_LOGIN_MODAL, SET_ME } from "../../context";
+import { useVssDispatch, SHOW_LOGIN_MODAL, SET_ME } from "../../context";
 import { getAccessToken, removeAccessToken } from "../../lib/token";
 
 const Container = styled.div`
@@ -21,17 +21,16 @@ const ProfileButton: FC = () => {
         removeAccessToken();
         dispatch({
           type: SET_ME,
-          id: "",
-          nickname: "",
-          email: "",
+          userId: null,
+          nickname: null,
+          email: null,
           avatar: null,
           isMaster: false
         });
       }
     } else {
       dispatch({
-        type: SET_LOGIN_MODAL,
-        payload: true
+        type: SHOW_LOGIN_MODAL
       });
     }
   }, []);

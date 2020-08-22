@@ -1,5 +1,4 @@
-import React, { useState, useCallback, FC } from "react";
-import Router from "next/router";
+import React, { useState, useCallback, useEffect, FC } from "react";
 import { useMutation } from "@apollo/client";
 import PostPresenter from "./PostPresenter";
 import { removePostMutation } from "../../graphql/post/mutation/remove";
@@ -8,7 +7,7 @@ import {
   useVssState,
   useVssDispatch,
   SHOW_POST_MODAL,
-  SET_LOGIN_MODAL
+  SHOW_LOGIN_MODAL
 } from "../../context";
 import { getAccessToken } from "../../lib/token";
 
@@ -33,10 +32,10 @@ const PostContainer: FC<PostProps> = ({
   user,
   video,
   status,
-  likes,
-  room
+  likes
+  // room
 }) => {
-  const { id: userId } = useVssState();
+  const { userId } = useVssState();
   const dispatch = useVssDispatch();
 
   const isMyPost = userId || userId === user.id;
@@ -44,9 +43,14 @@ const PostContainer: FC<PostProps> = ({
     likes.some((v: any) => v.user.id === userId)
   );
   const [ctrlLikeCount, setCtrlLikeCount] = useState<number>(likes.length);
+  const [isShowUser, setIsShowUser] = useState<boolean>(false);
 
   const [like, { loading: likeLoading }] = useMutation(likeMutation);
   const [remove, { loading: removeLoading }] = useMutation(removePostMutation);
+
+  const handleClickAvatar = useCallback(() => {
+    setIsShowUser(!isShowUser);
+  }, [isShowUser]);
 
   // 포스트 채팅방 접근 이벤트
   const handleRoom = useCallback(() => {
@@ -55,8 +59,7 @@ const PostContainer: FC<PostProps> = ({
       //Router.push(`/room/${room.id}`);
     } else {
       dispatch({
-        type: SET_LOGIN_MODAL,
-        payload: true
+        type: SHOW_LOGIN_MODAL
       });
     }
   }, []);
@@ -65,8 +68,7 @@ const PostContainer: FC<PostProps> = ({
   const handleUpdate = useCallback(() => {
     dispatch({
       type: SHOW_POST_MODAL,
-      isShow: true,
-      id,
+      postId: id,
       title,
       description,
       status,
@@ -78,9 +80,6 @@ const PostContainer: FC<PostProps> = ({
   const handleLike = useCallback(async () => {
     const token = getAccessToken();
     if (token) {
-      if (likeLoading) {
-        return alert("요청중입니다. 잠시만 기다려주세요.");
-      }
       setCtrlIsLiked(!ctrlIsLiked);
       setCtrlLikeCount(ctrlIsLiked ? ctrlLikeCount - 1 : ctrlLikeCount + 1);
 
@@ -94,8 +93,7 @@ const PostContainer: FC<PostProps> = ({
       }
     } else {
       dispatch({
-        type: SET_LOGIN_MODAL,
-        payload: true
+        type: SHOW_LOGIN_MODAL
       });
     }
   }, [ctrlIsLiked, ctrlLikeCount, likeLoading]);
@@ -127,6 +125,10 @@ const PostContainer: FC<PostProps> = ({
     }
   }, [removeLoading]);
 
+  useEffect(() => {
+    setCtrlIsLiked(likes.some((v: any) => v.user.id === userId));
+  }, [userId]);
+
   return (
     <PostPresenter
       title={title}
@@ -138,6 +140,8 @@ const PostContainer: FC<PostProps> = ({
       isLiked={ctrlIsLiked}
       likeCount={ctrlLikeCount}
       isMyPost={isMyPost}
+      isShowUser={isShowUser}
+      onClickAvatar={handleClickAvatar}
       onLike={handleLike}
       onUpdate={handleUpdate}
       onRoom={handleRoom}

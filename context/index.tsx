@@ -1,26 +1,27 @@
 import React, { useReducer, useContext, createContext, Dispatch } from "react";
+import { Avatar } from "../interfaces";
 
-type Avatar = {
-  url: string;
-};
-
-type ActivePost = {
-  id: string;
+export type ActivePost = {
+  postId: string;
   title: string;
   description: string;
   status: string;
   url: string;
 };
 
-type ActiveRoom = {
-  id: string;
+export type ActiveNotice = {
+  noticeId: string;
+  action: string;
+  actionText: string;
+  title: string;
+  description: string;
 };
 
 // type for state
 type State = {
-  id: string;
-  nickname: string;
-  email: string;
+  userId: string | null;
+  nickname: string | null;
+  email: string | null;
   avatar: Avatar | null;
   isMaster: boolean;
   isShowNoticeModal: boolean;
@@ -28,43 +29,51 @@ type State = {
   isShowSearchBar: boolean;
   isShowLoginModal: boolean;
   activePost: ActivePost;
-  activeRoom: ActiveRoom[];
+  activeNotice: ActiveNotice;
 };
 
 export const SET_ME = "SET_ME";
-export const SET_NOTICE_MODAL = "SET_NOTICE_MODAL";
+export const SHOW_NOTICE_MODAL = "SHOW_NOTICE_MODAL";
+export const HIDE_NOTICE_MODAL = "HIDE_NOTICE_MODAL";
 export const SHOW_POST_MODAL = "SHOW_POST_MODAL";
 export const HIDE_POST_MODAL = "HIDE_POST_MODAL";
-export const SET_LOGIN_MODAL = "SET_LOGIN_MODAL";
-export const ADD_ROOM = "ADD_ROOM";
-export const REMOVE_ROOM = "REMOVE_ROOM";
-export const SET_SEARCH_BAR = "SET_SEARCH_BAR";
+export const SHOW_LOGIN_MODAL = "SHOW_LOGIN_MODAL";
+export const HIDE_LOGIN_MODAL = "HIDE_LOGIN_MODAL";
+export const SHOW_SEARCH_BAR = "SHOW_SEARCH_BAR";
+export const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR";
 
 // type for action
 type Action =
   | {
       type: "SET_ME";
-      id: string;
-      nickname: string;
-      email: string;
+      userId: string | null;
+      nickname: string | null;
+      email: string | null;
       avatar: Avatar | null;
       isMaster: boolean;
     }
-  | { type: "SET_NOTICE_MODAL"; payload: boolean }
+  | {
+      type: "SHOW_NOTICE_MODAL";
+      noticeId: string;
+      action: string;
+      actionText: string;
+      title: string;
+      description: string;
+    }
+  | { type: "HIDE_NOTICE_MODAL" }
   | {
       type: "SHOW_POST_MODAL";
-      isShow: boolean;
-      id?: string;
-      title?: string;
-      description?: string;
-      status?: string;
-      url?: string;
+      postId: string;
+      title: string;
+      description: string | null;
+      status: string;
+      url: string;
     }
-  | { type: "HIDE_POST_MODAL"; payload: boolean }
-  | { type: "ADD_ROOM"; payload: string }
-  | { type: "REMOVE_ROOM"; payload: string }
-  | { type: "SET_SEARCH_BAR"; payload: boolean }
-  | { type: "SET_LOGIN_MODAL"; payload: boolean };
+  | { type: "HIDE_POST_MODAL" }
+  | { type: "SHOW_SEARCH_BAR" }
+  | { type: "HIDE_SEARCH_BAR" }
+  | { type: "SHOW_LOGIN_MODAL" }
+  | { type: "HIDE_LOGIN_MODAL" };
 
 // type for dispatch
 type VssDispatch = Dispatch<Action>;
@@ -79,60 +88,80 @@ function reducer(state: any, action: any) {
     case "SET_ME":
       return {
         ...state,
-        id: action.id,
+        userId: action.userId,
         nickname: action.nickname,
         email: action.email,
         avatar: action.avatar,
         isMaster: action.isMaster
       };
-    case "SET_NOTICE_MODAL":
+    case "SHOW_NOTICE_MODAL":
       return {
         ...state,
-        isShowNoticeModal: action.payload
+        isShowNoticeModal: true,
+        activeNotice: {
+          noticeId: action.noticeId,
+          action: action.action,
+          actionText: action.actionText,
+          title: action.title,
+          description: action.description
+        }
+      };
+    case "HIDE_NOTICE_MODAL":
+      return {
+        ...state,
+        isShowNoticeModal: false,
+        activeNotice: {
+          noticeId: "",
+          action: "wait",
+          actionText: "비활성화",
+          title: "",
+          description: ""
+        }
       };
     case "SHOW_POST_MODAL":
       return {
         ...state,
-        isShowAddPostModal: action.isShow,
+        isShowAddPostModal: true,
         activePost: {
-          id: action.id ? action.id : "",
-          title: action.title ? action.title : "",
-          description: action.description ? action.description : "",
-          status: action.status ? action.status : "",
-          url: action.url ? action.url : ""
+          postId: action.postId,
+          title: action.title,
+          description: action.description,
+          status: action.status,
+          url: action.url
         }
       };
+
     case "HIDE_POST_MODAL":
       return {
         ...state,
-        isShowAddPostModal: action.payload,
+        isShowAddPostModal: false,
         activePost: {
-          id: "",
+          postId: "",
           title: "",
           description: "",
           status: "",
           url: ""
         }
       };
-    case "ADD_ROOM":
+    case "SHOW_SEARCH_BAR":
       return {
         ...state,
-        activeRoom: state.activeRoom.concat([action.payload] as any)
+        isShowSearchBar: true
       };
-    case "REMOVE_ROOM":
+    case "HIDE_SEARCH_BAR":
       return {
         ...state,
-        activeRoom: state.activeRoom.filter(v => v.id !== action.payload)
+        isShowSearchBar: false
       };
-    case "SET_SEARCH_BAR":
+    case "SHOW_LOGIN_MODAL":
       return {
         ...state,
-        isShowSearchBar: action.payload
+        isShowLoginModal: true
       };
-    case "SET_LOGIN_MODAL":
+    case "HIDE_LOGIN_MODAL":
       return {
         ...state,
-        isShowLoginModal: action.payload
+        isShowLoginModal: false
       };
     default:
       return { ...state };
@@ -140,9 +169,9 @@ function reducer(state: any, action: any) {
 }
 
 const initialState: State = {
-  id: "",
-  nickname: "",
-  email: "",
+  userId: null,
+  nickname: null,
+  email: null,
   avatar: null,
   isMaster: false,
   isShowNoticeModal: false,
@@ -150,13 +179,19 @@ const initialState: State = {
   isShowSearchBar: false,
   isShowLoginModal: false,
   activePost: {
-    id: "",
+    postId: "",
     title: "",
     description: "",
     status: "",
     url: ""
   },
-  activeRoom: []
+  activeNotice: {
+    noticeId: "",
+    action: "wait",
+    actionText: "비활성화",
+    title: "",
+    description: ""
+  }
 };
 
 export function VssProvider({ children }) {
@@ -171,7 +206,6 @@ export function VssProvider({ children }) {
   );
 }
 
-// for hooks
 export function useVssState() {
   const state = useContext(VssContext);
   if (!state) throw new Error("not found provider");

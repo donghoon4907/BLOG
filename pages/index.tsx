@@ -1,5 +1,5 @@
-import React, { FC, useEffect } from "react";
-import { GetStaticProps } from "next";
+import React from "react";
+import { GetStaticProps, NextPage } from "next";
 import { useQuery } from "@apollo/client";
 import Layout from "../components/common/Layout";
 import Feed from "../components/feed/FeedContainer";
@@ -8,23 +8,22 @@ import { feedQuery } from "../graphql/page/query/feed";
 import { meQuery } from "../graphql/auth/query/me";
 import { useVssDispatch, SET_ME } from "../context";
 
-const Index: FC = () => {
+const Index: NextPage = () => {
   const dispatch = useVssDispatch();
-  const { data } = useQuery(meQuery);
-
-  useEffect(() => {
-    if (data && data.getMyProfile) {
-      const { id, nickname, email, avatar, isMaster } = data.getMyProfile;
+  useQuery(meQuery, {
+    ssr: false,
+    onCompleted: ({ getMyProfile }) => {
+      const { id, nickname, email, avatar, isMaster } = getMyProfile;
       dispatch({
         type: SET_ME,
-        id,
+        userId: id,
         nickname,
         email,
         avatar,
         isMaster
       });
     }
-  }, [data && data.getMyProfile]);
+  });
 
   return (
     <Layout>

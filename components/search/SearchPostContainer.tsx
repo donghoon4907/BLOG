@@ -1,53 +1,34 @@
-import Router from "next/router";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect, FC } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, NetworkStatus } from "@apollo/client";
 import SearchPostPresenter from "./SearchPostPresenter";
 import { postsQuery } from "../../graphql/post/query";
-import Loader from "../common/Loader";
 
 const SearchPostContainer: FC = () => {
-  const keyword = (Router.query.keyword || "") as string;
-  const orderBy = (Router.query.orderBy || "createdAt_DESC") as string;
+  const router = useRouter();
 
-  const { data: posts, loading: loadPostLoading, fetchMore } = useQuery(
-    postsQuery,
-    {
-      variables: {
-        searchKeyword: decodeURIComponent(keyword),
-        orderBy,
-        first: 10
-      },
-      notifyOnNetworkStatusChange: true
-    }
-  );
+  const { keyword, orderBy } = router.query as any;
 
-  const handleSort = useCallback(nextOrderBy => {
-    Router.push(`/search?keyword=${keyword}&orderBy=${nextOrderBy}`);
-  }, []);
+  const { data, loading, fetchMore, networkStatus } = useQuery(postsQuery, {
+    variables: {
+      searchKeyword: decodeURIComponent(keyword),
+      orderBy,
+      first: 10
+    },
+    notifyOnNetworkStatusChange: true
+  });
+
+  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore;
 
   const handleScrollFetchMore = () => {
-    if (loadPostLoading) return;
+    if (loading) return;
     const { scrollHeight, clientHeight, scrollTop } = document.documentElement;
-    if (posts && posts.getPosts) {
+    if (data.getPosts) {
       if (scrollTop + clientHeight === scrollHeight) {
-        if (posts.getPosts.length % 10 === 0) {
+        if (data.getPosts.length % 10 === 0) {
           fetchMore({
             variables: {
-              skip: posts.getPosts.length
-            },
-            updateQuery: (
-              prev,
-              { fetchMoreResult }: { fetchMoreResult?: any }
-            ) => {
-              if (!fetchMoreResult) return prev;
-
-              if (fetchMoreResult.getPosts.length === 0) {
-                window.removeEventListener("scroll", handleScrollFetchMore);
-              }
-
-              return Object.assign({}, prev, {
-                getPosts: [...prev.getPosts, ...fetchMoreResult.getPosts]
-              });
+              skip: data.getPosts.length
             }
           });
         }
@@ -55,17 +36,23 @@ const SearchPostContainer: FC = () => {
     }
   };
 
+  const handleSort = useCallback(nextOrderBy => {
+    router.push(`/search?keyword=${keyword}&orderBy=${nextOrderBy}`);
+  }, []);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [posts && posts.getPosts, loadPostLoading]);
-
-  if (loadPostLoading && !posts) {
-    return <Loader />;
-  }
+  }, [data.getPosts, loading]);
 
   return (
-    <SearchPostPresenter posts={posts} orderBy={orderBy} onSort={handleSort} />
+    <SearchPostPresenter
+      loading={loading}
+      loadingMorePosts={loadingMorePosts}
+      posts={data.getPosts}
+      orderBy={orderBy}
+      onSort={handleSort}
+    />
   );
 };
 

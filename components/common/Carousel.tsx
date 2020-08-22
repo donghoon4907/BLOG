@@ -38,9 +38,9 @@ export const CarouselItem = styled.div`
   }
 `;
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 const CarouselContainer: FC<Props> = ({ children }) => (
   <Container

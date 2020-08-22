@@ -44,11 +44,11 @@ const Item = styled.li`
   }
 `;
 
-type Props = {
+interface Props {
   searchKeyword: string;
   setSearch: Dispatch<SetStateAction<string>>;
   setSearchKeyword: Dispatch<SetStateAction<string>>;
-};
+}
 
 const SearchResult: FC<Props> = ({
   searchKeyword,

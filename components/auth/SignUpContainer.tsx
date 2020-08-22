@@ -11,9 +11,9 @@ import { useInput, useLazyAxios } from "../../hooks";
 import SignUpPresenter from "./SignUpPresenter";
 import { signUpMutation } from "../../graphql/user/mutation/signup";
 
-type Props = {
+interface Props {
   setAction: any;
-};
+}
 
 const SignUpContainer: FC<Props> = ({ setAction }) => {
   const { loading, call } = useLazyAxios();

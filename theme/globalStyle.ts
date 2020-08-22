@@ -8,11 +8,15 @@ export default createGlobalStyle`
     box-sizing: border-box;
   }
 
+  body {
+    background: rgba(0,0,0,0.03);
+  }
+
   svg {
     cursor: pointer;
 
     &:hover {
-      fill: #3897f0;
+      fill: #4142DD;
     }
   }
 

@@ -5,38 +5,23 @@ import { updateNoticeMutation } from "../../graphql/notice/mutation/update";
 import { removeNoticeMutation } from "../../graphql/notice/mutation/remove";
 import SetNoticePresenter from "./SetNoticePresenter";
 import { useInput, useLazyAxios } from "../../hooks";
-import { useVssDispatch, SET_NOTICE_MODAL } from "../../context";
+import { useVssState, useVssDispatch, HIDE_NOTICE_MODAL } from "../../context";
 
-type Props = {
-  title: string;
-  description: string;
-  action: string;
-  actionText: string;
-  noticeId: string;
-  isMaster: boolean;
-};
-
-const SetNoticeContainer: FC<Props> = ({
-  title,
-  description,
-  action,
-  actionText,
-  noticeId,
-  isMaster
-}) => {
+const SetNoticeContainer: FC = () => {
   const dispatch = useVssDispatch();
+  const { activeNotice, isMaster } = useVssState();
   const { loading, call } = useLazyAxios();
-  const modalTitle = useInput(title);
-  const modalDescription = useInput(description);
+  const modalTitle = useInput(activeNotice.title);
+  const modalDescription = useInput(activeNotice.description);
   const [mdDescription, setMdDescription] = useState<string>("");
   const [preview, setPreview] = useState<string>("");
   const [modalAction, setModalAction] = useState<any>({
-    code: action,
-    modalTitle: actionText
+    code: activeNotice.action,
+    modalTitle: activeNotice.actionText
   }); // readonly, modifiable, modify, add
 
   const [set, { loading: setNoticeLoading }] = useMutation(
-    noticeId ? updateNoticeMutation : addNoticeMutation
+    activeNotice.noticeId ? updateNoticeMutation : addNoticeMutation
   );
 
   const [remove, { loading: removeNoticeLoading }] = useMutation(
@@ -85,8 +70,7 @@ const SetNoticeContainer: FC<Props> = ({
 
   const handleClose = useCallback(() => {
     dispatch({
-      type: SET_NOTICE_MODAL,
-      payload: false
+      type: HIDE_NOTICE_MODAL
     });
   }, []);
 
@@ -109,7 +93,7 @@ const SetNoticeContainer: FC<Props> = ({
         data: { deleteNotice }
       } = await remove({
         variables: {
-          noticeId
+          noticeId: activeNotice.noticeId
         }
       });
       if (deleteNotice) {
@@ -140,7 +124,7 @@ const SetNoticeContainer: FC<Props> = ({
             variables: {
               title: modalTitle.value,
               description: modalDescription.value,
-              noticeId
+              noticeId: activeNotice.noticeId
             }
           });
           if (updateNotice) {
@@ -165,16 +149,16 @@ const SetNoticeContainer: FC<Props> = ({
   );
 
   useEffect(() => {
-    async function loadDescription(value) {
+    async function loadDescription(value: string) {
       const md = await convertTextIntoMd(value);
       if (md) {
         setMdDescription(md);
       }
     }
-    if (description) {
-      loadDescription(description);
+    if (activeNotice.description) {
+      loadDescription(activeNotice.description);
     }
-  }, []);
+  }, [activeNotice.description]);
 
   return (
     <SetNoticePresenter

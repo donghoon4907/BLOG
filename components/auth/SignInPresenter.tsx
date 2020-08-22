@@ -5,12 +5,12 @@ import Button from "../common/Button";
 import Loader from "../common/Loader";
 import { UseInputProps } from "../../hooks";
 
-type Props = {
+interface Props {
   loading: boolean;
   email: UseInputProps;
   pwd: UseInputProps;
   onSubmit: any;
-};
+}
 
 const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => {
   return (

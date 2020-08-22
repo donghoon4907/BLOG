@@ -23,7 +23,7 @@ const UploadWrapper = styled.div`
   }
 `;
 
-type Props = {
+interface Props {
   loading: boolean;
   signUpLoading: boolean;
   nickname: UseInputProps;
@@ -37,7 +37,7 @@ type Props = {
   onChangeConfirmPwd: any;
   onClickUpload: any;
   onSubmit: any;
-};
+}
 
 const SignUpPresenter: FC<Props> = ({
   loading,

@@ -19,10 +19,10 @@ const Container = styled.section<{ flexDirection: string }>`
   }
 `;
 
-type Props = {
+interface Props {
   children: ReactNode | JSX.Element;
   flexDirection?: string;
-};
+}
 
 const Section: FC<Props> = ({ children, flexDirection = "column" }) => (
   <Container flexDirection={flexDirection}>{children}</Container>
