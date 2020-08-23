@@ -116,6 +116,7 @@ const PostContainer: FC<PostProps> = ({
 
         if (deletePost) {
           alert("포스트가 삭제되었습니다.");
+          location.reload();
         }
       } catch (error) {
         const { message } = JSON.parse(error.message);

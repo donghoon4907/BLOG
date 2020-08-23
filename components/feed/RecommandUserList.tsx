@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
 import { recommandUsersQuery } from "../../graphql/user/query";
@@ -21,4 +21,4 @@ const RecommandUserList: FC = () => {
   );
 };
 
-export default memo(RecommandUserList);
+export default RecommandUserList;

@@ -112,9 +112,7 @@ const SetPostContainer: FC = () => {
       });
       if (deletePost) {
         alert("포스트가 삭제되었습니다.");
-        dispatch({
-          type: HIDE_POST_MODAL
-        });
+        location.reload();
       }
     }
   }, [activePost, removePostLoading]);
@@ -143,9 +141,7 @@ const SetPostContainer: FC = () => {
             });
             if (addPost) {
               alert("포스트가 등록되었습니다.");
-              dispatch({
-                type: HIDE_POST_MODAL
-              });
+              location.reload();
             }
           } else if (header === "수정") {
             const {
@@ -161,9 +157,7 @@ const SetPostContainer: FC = () => {
             });
             if (updatePost) {
               alert("포스트가 수정되었습니다.");
-              dispatch({
-                type: HIDE_POST_MODAL
-              });
+              location.reload();
             }
           } else {
             throw new Error("check current header");

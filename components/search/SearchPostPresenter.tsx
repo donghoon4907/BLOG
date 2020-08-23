@@ -8,15 +8,17 @@ type Props = {
   loading: boolean;
   loadingMorePosts: boolean;
   posts: any;
+  keyword: string;
 };
 
 const SearchPostPresenter: FC<Props> = ({
   loading,
   loadingMorePosts,
-  posts
+  posts,
+  keyword
 }) => (
   <>
-    <Subject>포스트 검색결과</Subject>
+    <Subject>"{keyword}" 검색결과</Subject>
     {loading && loadingMorePosts && <Loader />}
     {posts.length > 0 ? (
       posts.map(post => <PostContainer key={post.id} {...post} />)

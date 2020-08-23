@@ -239,9 +239,6 @@ const userQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "getStaticProps", function() { return /* binding */ getStaticProps; });
-
 // EXTERNAL MODULE: external "react"
 var external_react_ = __webpack_require__("cDcd");
 var external_react_default = /*#__PURE__*/__webpack_require__.n(external_react_);
@@ -370,7 +367,7 @@ const NoticeList = () => {
   })))));
 };
 
-/* harmony default export */ var feed_NoticeList = (Object(external_react_["memo"])(NoticeList));
+/* harmony default export */ var feed_NoticeList = (NoticeList);
 // EXTERNAL MODULE: ./graphql/post/query/index.ts
 var query = __webpack_require__("GEYq");
 
@@ -435,7 +432,7 @@ const PostList = () => {
   }, post))));
 };
 
-/* harmony default export */ var feed_PostList = (Object(external_react_["memo"])(PostList));
+/* harmony default export */ var feed_PostList = (PostList);
 // EXTERNAL MODULE: ./graphql/user/query/index.ts
 var user_query = __webpack_require__("2207");
 
@@ -529,7 +526,7 @@ const RecommandUserList = () => {
   }, user))));
 };
 
-/* harmony default export */ var feed_RecommandUserList = (Object(external_react_["memo"])(RecommandUserList));
+/* harmony default export */ var feed_RecommandUserList = (RecommandUserList);
 // CONCATENATED MODULE: ./components/feed/FeedPresenter.tsx
 var FeedPresenter_jsx = external_react_default.a.createElement;
 
@@ -700,7 +697,7 @@ const Index = () => {
   return pages_jsx(Layout["a" /* default */], null, pages_jsx(feed_FeedContainer, null));
 };
 
-const getStaticProps = async () => {
+Index.getInitialProps = async () => {
   const apolloClient = Object(apollo["a" /* initializeApollo */])();
   await apolloClient.query({
     query: feedQuery,
@@ -709,12 +706,25 @@ const getStaticProps = async () => {
     }
   });
   return {
-    props: {
-      initialApolloState: apolloClient.cache.extract()
-    },
-    revalidate: 1
+    initialApolloState: apolloClient.cache.extract()
   };
-};
+}; // export const getStaticProps: GetStaticProps = async () => {
+//   const apolloClient = initializeApollo();
+//   await apolloClient.query({
+//     query: feedQuery,
+//     variables: {
+//       first: 10
+//     }
+//   });
+//   return {
+//     props: {
+//       initialApolloState: apolloClient.cache.extract()
+//     },
+//     revalidate: 1
+//   };
+// };
+
+
 /* harmony default export */ var pages = __webpack_exports__["default"] = (Index);
 
 /***/ }),
@@ -1325,9 +1335,7 @@ const SetNoticeContainer = () => {
 
       if (deleteNotice) {
         alert("공지사항이 삭제되었습니다.");
-        dispatch({
-          type: context["b" /* HIDE_NOTICE_MODAL */]
-        });
+        location.reload();
       }
     }
   }, [removeNoticeLoading]);
@@ -1357,14 +1365,10 @@ const SetNoticeContainer = () => {
 
         if (updateNotice) {
           alert("공지사항이 수정되었습니다.");
-          dispatch({
-            type: context["b" /* HIDE_NOTICE_MODAL */]
-          });
+          location.reload();
         } else if (addNotice) {
           alert("공지사항이 등록되었습니다.");
-          dispatch({
-            type: context["b" /* HIDE_NOTICE_MODAL */]
-          });
+          location.reload();
         }
       } catch (error) {
         const {
@@ -1664,9 +1668,7 @@ const SetPostContainer = () => {
 
       if (deletePost) {
         alert("포스트가 삭제되었습니다.");
-        dispatch({
-          type: context["c" /* HIDE_POST_MODAL */]
-        });
+        location.reload();
       }
     }
   }, [activePost, removePostLoading]);
@@ -1697,9 +1699,7 @@ const SetPostContainer = () => {
 
           if (addPost) {
             alert("포스트가 등록되었습니다.");
-            dispatch({
-              type: context["c" /* HIDE_POST_MODAL */]
-            });
+            location.reload();
           }
         } else if (header === "수정") {
           const {
@@ -1718,9 +1718,7 @@ const SetPostContainer = () => {
 
           if (updatePost) {
             alert("포스트가 수정되었습니다.");
-            dispatch({
-              type: context["c" /* HIDE_POST_MODAL */]
-            });
+            location.reload();
           }
         } else {
           throw new Error("check current header");
@@ -2805,6 +2803,9 @@ const FollowButton = ({
       });
     }
   }, [ctrlIsFolling, followLoading, unfollowLoading]);
+  Object(external_react_["useEffect"])(() => {
+    setCtrlIsFolling(isFollowing);
+  }, [isFollowing]);
   return __jsx(Button["a" /* default */], {
     text: ctrlIsFolling ? "언팔로우" : "팔로우",
     onClick: handleFollow
@@ -3140,6 +3141,7 @@ const PostContainer = ({
 
         if (deletePost) {
           alert("포스트가 삭제되었습니다.");
+          location.reload();
         }
       } catch (error) {
         const {

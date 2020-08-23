@@ -1,4 +1,4 @@
-import React, { useCallback, FC, memo } from "react";
+import React, { useCallback, FC } from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
 import { Carousel } from "react-bootstrap";
@@ -57,4 +57,4 @@ const NoticeList: FC = () => {
   );
 };
 
-export default memo(NoticeList);
+export default NoticeList;

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, FC, Fragment } from "react";
+import React, { useEffect, FC } from "react";
 import { useQuery, NetworkStatus } from "@apollo/client";
 import SearchPostPresenter from "./SearchPostPresenter";
 import { postsQuery } from "../../graphql/post/query";
@@ -7,11 +7,16 @@ import { postsQuery } from "../../graphql/post/query";
 const SearchPostContainer: FC = () => {
   const router = useRouter();
 
-  const { keyword } = router.query as any;
+  let keyword, orderBy;
+  if (router.query.keyword) {
+    keyword = router.query.keyword[0] || "";
+    orderBy = router.query.keyword[1] || "";
+  }
 
   const { data, loading, fetchMore, networkStatus } = useQuery(postsQuery, {
     variables: {
       searchKeyword: decodeURIComponent(keyword),
+      orderBy,
       first: 10
     },
     notifyOnNetworkStatusChange: true
@@ -27,7 +32,9 @@ const SearchPostContainer: FC = () => {
         if (data.getPosts.length % 10 === 0) {
           fetchMore({
             variables: {
-              skip: data.getPosts.length
+              skip: data.getPosts.length,
+              searchKeyword: decodeURIComponent(keyword),
+              orderBy
             }
           });
         }
@@ -38,17 +45,14 @@ const SearchPostContainer: FC = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [data && data.getPosts, loading]);
-
-  if (!data && loading) {
-    return <Fragment />;
-  }
+  }, [data.getPosts, loading, keyword, orderBy]);
 
   return (
     <SearchPostPresenter
       loading={loading}
       loadingMorePosts={loadingMorePosts}
       posts={data.getPosts}
+      keyword={keyword}
     />
   );
 };

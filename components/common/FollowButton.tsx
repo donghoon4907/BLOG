@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import Button from "./Button";
 import {
@@ -52,6 +52,10 @@ const FollowButton: FC<Props> = ({ isFollowing, userId }) => {
       });
     }
   }, [ctrlIsFolling, followLoading, unfollowLoading]);
+
+  useEffect(() => {
+    setCtrlIsFolling(isFollowing);
+  }, [isFollowing]);
 
   return (
     <Button

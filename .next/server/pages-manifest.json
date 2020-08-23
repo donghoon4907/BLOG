@@ -4,5 +4,6 @@
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
   "/search": "pages/search.html",
+  "/search/[...keyword]": "pages/search/[...keyword].js",
   "/_error": "pages/_error.js"
 }
