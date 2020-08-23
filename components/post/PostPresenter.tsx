@@ -5,7 +5,7 @@ import moment from "moment";
 import Avatar from "../common/Avatar";
 import Video from "../common/Video";
 import Timestamp from "../common/Timestamp";
-import { HeartFull, HeartEmpty, Room, Download, More } from "../icon";
+import { HeartFull, HeartEmpty, Download, More } from "../icon";
 import HoverUser from "../user/HoverUser";
 
 const Container = styled.div`
@@ -126,7 +126,7 @@ type Props = {
   onClickAvatar: any;
   onLike: any;
   onUpdate: any;
-  onRoom: any;
+  onRoom?: any;
   onDelete: any;
 };
 
@@ -144,7 +144,7 @@ const PostPresenter: FC<Props> = ({
   onClickAvatar,
   onLike,
   onUpdate,
-  onRoom,
+  // onRoom,
   onDelete
 }) => (
   <Container>
@@ -194,9 +194,9 @@ const PostPresenter: FC<Props> = ({
           <Icon>{likeCount.toLocaleString()}</Icon>
           {status === "PUBLIC" && (
             <Fragment>
-              <Icon>
+              {/* <Icon>
                 <Room onClick={onRoom} />
-              </Icon>
+              </Icon> */}
 
               <OverlayTrigger
                 trigger="click"

@@ -34,5 +34,23 @@ export const feedQuery = gql`
       createdAt
       updatedAt
     }
+    getRecommandUsers {
+      id
+      nickname
+      email
+      avatar {
+        url
+      }
+      isMaster
+      followedBy {
+        id
+      }
+      following {
+        id
+      }
+      posts {
+        id
+      }
+    }
   }
 `;

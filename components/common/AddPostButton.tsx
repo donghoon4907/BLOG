@@ -36,7 +36,7 @@ const AddPostButton: FC = () => {
   }, []);
 
   return (
-    <Container onClick={handleClick}>
+    <Container onClick={handleClick} title="포스트 등록">
       <AddPost style={{ width: 40, height: 40 }} />
     </Container>
   );

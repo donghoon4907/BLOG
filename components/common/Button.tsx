@@ -23,10 +23,11 @@ interface Props {
   text: string;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
+  type?: "button" | "submit" | "reset" | undefined;
 }
 
-const Button: FC<Props> = ({ text, className, onClick }) => (
-  <Container className={className} onClick={onClick}>
+const Button: FC<Props> = ({ text, className, onClick, type = "button" }) => (
+  <Container className={className} onClick={onClick} type={type}>
     {text}
   </Container>
 );

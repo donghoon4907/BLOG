@@ -16,7 +16,7 @@ export default createGlobalStyle`
     cursor: pointer;
 
     &:hover {
-      fill: #4142DD;
+      opacity: 0.7;
     }
   }
 

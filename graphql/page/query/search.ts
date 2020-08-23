@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const searchQuery = gql`
-  query feed($skip: Int, $first: Int, $keyword: String!, $orderBy: String) {
+  query feed($skip: Int, $first: Int, $keyword: String, $orderBy: String) {
     getPosts(
       skip: $skip
       first: $first

@@ -44,18 +44,6 @@ export const HeartFull: FC<Props> = ({ style }) => (
   </svg>
 );
 
-export const Filter: FC<Props> = ({ style }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    style={style}
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <path d="M1 0h22l-9 15.094v8.906l-4-3v-5.906z" />
-  </svg>
-);
-
 export const Comment: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -232,5 +220,21 @@ export const MinimizeSearch: FC<Props> = ({ style }) => (
     viewBox="0 0 24 24"
   >
     <path d="M13 10h-8v-2h8v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z" />
+  </svg>
+);
+
+export const Filter: FC<Props> = ({ style }) => (
+  <svg
+    viewBox="0 0 24 24"
+    preserveAspectRatio="xMidYMid meet"
+    focusable="false"
+    width={size}
+    height={size}
+    style={style}
+  >
+    <g>
+      <path d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path>
+    </g>
   </svg>
 );

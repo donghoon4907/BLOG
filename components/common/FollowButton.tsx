@@ -5,6 +5,8 @@ import {
   followMutation,
   unfollowMutation
 } from "../../graphql/user/mutation/follow";
+import { getAccessToken } from "../../lib/token";
+import { useVssDispatch, SHOW_LOGIN_MODAL } from "../../context";
 
 interface Props {
   isFollowing: boolean;
@@ -12,6 +14,7 @@ interface Props {
 }
 
 const FollowButton: FC<Props> = ({ isFollowing, userId }) => {
+  const dispatch = useVssDispatch();
   const [ctrlIsFolling, setCtrlIsFolling] = useState<boolean>(isFollowing);
 
   const [follow, { loading: followLoading }] = useMutation(followMutation);
@@ -20,26 +23,33 @@ const FollowButton: FC<Props> = ({ isFollowing, userId }) => {
   );
 
   const handleFollow = useCallback(async () => {
-    if (ctrlIsFolling) {
-      if (unfollowLoading) return;
+    const token = getAccessToken();
+    if (token) {
+      if (ctrlIsFolling) {
+        if (unfollowLoading) return;
 
-      const { data } = await unfollow({
-        variables: { userId }
-      });
-      if (data.unfollow) {
-        setCtrlIsFolling(false);
-        alert("언팔로우 되었습니다.");
+        const { data } = await unfollow({
+          variables: { userId }
+        });
+        if (data.unfollow) {
+          setCtrlIsFolling(false);
+          alert("언팔로우 되었습니다.");
+        }
+      } else {
+        if (followLoading) return;
+
+        const { data } = await follow({
+          variables: { userId }
+        });
+        if (data.follow) {
+          setCtrlIsFolling(true);
+          alert("팔로우 되었습니다.");
+        }
       }
     } else {
-      if (followLoading) return;
-
-      const { data } = await follow({
-        variables: { userId }
+      dispatch({
+        type: SHOW_LOGIN_MODAL
       });
-      if (data.follow) {
-        setCtrlIsFolling(true);
-        alert("팔로우 되었습니다.");
-      }
     }
   }, [ctrlIsFolling, followLoading, unfollowLoading]);
 

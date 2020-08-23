@@ -10,7 +10,6 @@ export const usersQuery = gql`
     ) {
       id
       nickname
-      email
       avatar {
         url
       }
@@ -33,7 +32,6 @@ export const recommandUsersQuery = gql`
     getRecommandUsers {
       id
       nickname
-      email
       avatar {
         url
       }

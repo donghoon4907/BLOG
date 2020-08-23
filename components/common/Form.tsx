@@ -30,12 +30,12 @@ export const Label = styled.label<{ val?: string }>`
   font-size: 10px;
   opacity: ${props => (props.val ? 0.5 : 0)};
   animation: opacity 2s slidein;
+  z-index: 100;
 `;
 
 export const StateChanger = styled.div`
   text-align: center;
   padding: 20px 0px;
-  background: rgba(0, 0, 0, 0.03);
 `;
 
 export const TextArea = styled.textarea`

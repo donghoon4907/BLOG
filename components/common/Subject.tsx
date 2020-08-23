@@ -5,7 +5,7 @@ const Container = styled.div<{ activeBorder?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: ${props => props.activeBorder && "2px solid black"};
+  border-bottom: ${props => props.activeBorder && `1px solid gray`};
   padding: 8px 5px;
   font-size: 20px;
   margin-bottom: 10px;

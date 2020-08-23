@@ -2,6 +2,7 @@ import React, { FC, memo } from "react";
 import styled from "styled-components";
 import SearchUserItem from "../user/SearchUserItem";
 import Subject from "../common/Subject";
+import NoData from "../common/NoData";
 
 const Container = styled.div`
   width: 100%;
@@ -19,20 +20,19 @@ const Container = styled.div`
 
 type Props = {
   users: any;
-  recommandUsers: any;
   keyword: string;
 };
 
-const SearchUserPresenter: FC<Props> = ({ users, recommandUsers, keyword }) => (
+const SearchUserPresenter: FC<Props> = ({ users, keyword }) => (
   <>
     <Subject>"{keyword}"에 대한 검색결과</Subject>
     {users.length === 0 && <Subject>추천 사용자</Subject>}
     <Container>
-      {users.length > 0
-        ? users.map(user => <SearchUserItem key={user.id} {...user} />)
-        : recommandUsers.map(user => (
-            <SearchUserItem key={user.id} {...user} />
-          ))}
+      {users.length > 0 ? (
+        users.map(user => <SearchUserItem key={user.id} {...user} />)
+      ) : (
+        <NoData>검색 결과가 없습니다.</NoData>
+      )}
     </Container>
   </>
 );

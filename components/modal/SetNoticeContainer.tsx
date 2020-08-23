@@ -98,7 +98,9 @@ const SetNoticeContainer: FC = () => {
       });
       if (deleteNotice) {
         alert("공지사항이 삭제되었습니다.");
-        window.location.reload();
+        dispatch({
+          type: HIDE_NOTICE_MODAL
+        });
       }
     }
   }, [removeNoticeLoading]);
@@ -129,10 +131,14 @@ const SetNoticeContainer: FC = () => {
           });
           if (updateNotice) {
             alert("공지사항이 수정되었습니다.");
-            window.location.reload();
+            dispatch({
+              type: HIDE_NOTICE_MODAL
+            });
           } else if (addNotice) {
             alert("공지사항이 등록되었습니다.");
-            window.location.reload();
+            dispatch({
+              type: HIDE_NOTICE_MODAL
+            });
           }
         } catch (error) {
           const { message } = JSON.parse(error.message);

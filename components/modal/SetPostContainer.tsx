@@ -61,11 +61,14 @@ const SetPostContainer: FC = () => {
   );
 
   const handleClickFile = useCallback(() => {
+    if (progress > 0 && progress < 100) {
+      return alert("업로드 진행 중입니다.");
+    }
     const node = fileEl.current;
     if (node) {
       node.click();
     }
-  }, []);
+  }, [progress]);
 
   const handleChangeFile = useCallback(async e => {
     if (!e.target.value) return; // cancel select file
@@ -109,7 +112,9 @@ const SetPostContainer: FC = () => {
       });
       if (deletePost) {
         alert("포스트가 삭제되었습니다.");
-        window.location.reload();
+        dispatch({
+          type: HIDE_POST_MODAL
+        });
       }
     }
   }, [activePost, removePostLoading]);
@@ -138,7 +143,9 @@ const SetPostContainer: FC = () => {
             });
             if (addPost) {
               alert("포스트가 등록되었습니다.");
-              location.reload();
+              dispatch({
+                type: HIDE_POST_MODAL
+              });
             }
           } else if (header === "수정") {
             const {
@@ -154,7 +161,9 @@ const SetPostContainer: FC = () => {
             });
             if (updatePost) {
               alert("포스트가 수정되었습니다.");
-              location.reload();
+              dispatch({
+                type: HIDE_POST_MODAL
+              });
             }
           } else {
             throw new Error("check current header");

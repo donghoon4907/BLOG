@@ -1,18 +1,13 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import PostContainer from "../post/PostContainer";
-import SetNoticeModal from "../modal/SetNoticeContainer";
-import SetPostModal from "../modal/SetPostContainer";
-import AuthModal from "../modal/Auth";
 import Section from "../common/Section";
 import { Add } from "../icon";
-import Loader from "../common/Loader";
-import { Notice } from "../../interfaces";
-import NoticeList from "./NoticeList";
 import Subject from "../common/Subject";
-import NoData from "../common/NoData";
+import NoticeList from "./NoticeList";
+import PostList from "./PostList";
+import RecommandUserList from "./RecommandUserList";
 
-const PostWrap = styled.div`
+const PostWrapper = styled.div`
   width: 600px;
 
   ${props => props.theme.media.tablet} {
@@ -20,7 +15,7 @@ const PostWrap = styled.div`
   }
 `;
 
-const UserWrap = styled.div`
+const UserWrapper = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -42,43 +37,22 @@ const StickyWrap = styled.div`
 `;
 
 type Props = {
-  loading: boolean;
-  loadingMorePosts: boolean;
-  posts: any;
-  notices: Notice[];
   isMaster: boolean;
-  isShowNoticeModal: boolean;
-  isShowAddPostModal: boolean;
-  isShowLoginModal: boolean;
   onAddNotice: any;
   recommandUserEl: any;
 };
 
 const FeedPresenter: FC<Props> = ({
-  loading,
-  loadingMorePosts,
-  posts,
-  notices,
   isMaster,
-  isShowNoticeModal,
-  isShowAddPostModal,
-  isShowLoginModal,
   onAddNotice,
   recommandUserEl
 }) => (
   <Section flexDirection="row">
-    {loading && loadingMorePosts && <Loader />}
-    <PostWrap>
-      <Subject>신규 포스트</Subject>
-      {posts.length > 0 ? (
-        posts.map(post => <PostContainer key={post.id} {...post} />)
-      ) : (
-        <NoData>
-          <h1>게시글이 없습니다.</h1>
-        </NoData>
-      )}
-    </PostWrap>
-    <UserWrap ref={recommandUserEl}>
+    <PostWrapper>
+      <Subject>최신 포스트</Subject>
+      <PostList />
+    </PostWrapper>
+    <UserWrapper ref={recommandUserEl}>
       <aside>
         <StickyWrap>
           <div>
@@ -92,20 +66,15 @@ const FeedPresenter: FC<Props> = ({
                 )}
               </div>
             </Subject>
-            {notices.length > 0 ? (
-              <NoticeList notices={notices} />
-            ) : (
-              <NoData>
-                <h1>공지사항이 없습니다.</h1>
-              </NoData>
-            )}
+            <NoticeList />
+          </div>
+          <div>
+            <Subject activeBorder={true}>추천인</Subject>
+            <RecommandUserList />
           </div>
         </StickyWrap>
       </aside>
-    </UserWrap>
-    {isShowNoticeModal && <SetNoticeModal />}
-    {isShowAddPostModal && <SetPostModal />}
-    {isShowLoginModal && <AuthModal />}
+    </UserWrapper>
   </Section>
 );
 

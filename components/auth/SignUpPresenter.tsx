@@ -124,7 +124,7 @@ const SignUpPresenter: FC<Props> = ({
             autoComplete="off"
           />
         </InputWrapper>
-        <Button text="회원가입" />
+        <Button text="회원가입" type="submit" />
       </form>
     </>
   );

@@ -1,9 +1,10 @@
 import React, { useCallback, FC, memo } from "react";
 import styled from "styled-components";
+import { useQuery } from "@apollo/client";
 import { Carousel } from "react-bootstrap";
+import { noticesQuery } from "../../graphql/notice/query";
 import CarouselContainer from "../common/Carousel";
 import Timestamp from "../common/Timestamp";
-import { Notice } from "../../interfaces";
 import { useVssState, useVssDispatch, SHOW_NOTICE_MODAL } from "../../context";
 
 const NoticeWrapper = styled.div`
@@ -18,13 +19,15 @@ const NoticeWrapper = styled.div`
   cursor: pointer;
 `;
 
-interface Props {
-  notices: Notice[];
-}
-
-const NoticeList: FC<Props> = ({ notices }) => {
+const NoticeList: FC = () => {
   const dispatch = useVssDispatch();
   const { isMaster } = useVssState();
+
+  const { data } = useQuery(noticesQuery, {
+    variables: {
+      first: 10
+    }
+  });
 
   const handleClick = useCallback(
     (title, description, noticeId) => {
@@ -39,9 +42,10 @@ const NoticeList: FC<Props> = ({ notices }) => {
     },
     [isMaster]
   );
+
   return (
     <CarouselContainer>
-      {notices.map(({ id, title, description, updatedAt }) => (
+      {data.getNotices.map(({ id, title, description, updatedAt }) => (
         <Carousel.Item key={id}>
           <NoticeWrapper onClick={() => handleClick(title, description, id)}>
             <div>{title}</div>

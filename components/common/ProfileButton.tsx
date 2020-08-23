@@ -1,14 +1,7 @@
 import React, { FC, useCallback } from "react";
-import styled from "styled-components";
 import { Profile } from "../icon";
 import { useVssDispatch, SHOW_LOGIN_MODAL, SET_ME } from "../../context";
 import { getAccessToken, removeAccessToken } from "../../lib/token";
-
-const Container = styled.div`
-  ${props => props.theme.media.tablet} {
-    display: none;
-  }
-`;
 
 const ProfileButton: FC = () => {
   const dispatch = useVssDispatch();
@@ -36,9 +29,9 @@ const ProfileButton: FC = () => {
   }, []);
 
   return (
-    <Container onClick={handleClick}>
-      <Profile style={{ width: 24, height: 24 }} />
-    </Container>
+    <div onClick={handleClick}>
+      <Profile />
+    </div>
   );
 };
 
