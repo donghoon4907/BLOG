@@ -7,18 +7,19 @@ import { postsQuery } from "../../graphql/post/query";
 const SearchPostContainer: FC = () => {
   const router = useRouter();
 
-  let keyword, orderBy;
-  if (router.query.keyword) {
-    keyword = router.query.keyword[0] || "";
-    orderBy = router.query.keyword[1] || "";
+  const variables = {
+    first: 10
+  };
+
+  if (router.query.keyword && router.query.keyword.length > 0) {
+    (router.query.keyword as any).forEach(v => {
+      const splitQuery = v.split("=");
+      variables[splitQuery[0]] = splitQuery[1];
+    });
   }
 
   const { data, loading, fetchMore, networkStatus } = useQuery(postsQuery, {
-    variables: {
-      searchKeyword: decodeURIComponent(keyword),
-      orderBy,
-      first: 10
-    },
+    variables,
     notifyOnNetworkStatusChange: true
   });
 
@@ -32,9 +33,8 @@ const SearchPostContainer: FC = () => {
         if (data.getPosts.length % 10 === 0) {
           fetchMore({
             variables: {
-              skip: data.getPosts.length,
-              searchKeyword: decodeURIComponent(keyword),
-              orderBy
+              ...variables,
+              skip: data.getPosts.length
             }
           });
         }
@@ -45,14 +45,14 @@ const SearchPostContainer: FC = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [data.getPosts, loading, keyword, orderBy]);
+  }, [data.getPosts, loading]);
 
   return (
     <SearchPostPresenter
       loading={loading}
       loadingMorePosts={loadingMorePosts}
       posts={data.getPosts}
-      keyword={keyword}
+      keyword={variables["searchKeyword"] || ""}
     />
   );
 };

@@ -2124,9 +2124,16 @@ const SearchBar = () => {
   const router = Object(next_router__WEBPACK_IMPORTED_MODULE_0__["useRouter"])();
   let keyword, orderBy;
 
-  if (router.query.keyword) {
-    keyword = router.query.keyword[0] || "";
-    orderBy = router.query.keyword[1] || "";
+  if (router.query.keyword && router.query.keyword.length > 0) {
+    router.query.keyword.forEach(v => {
+      const splitQuery = v.split("=");
+
+      if (splitQuery[0] === "searchKeyword") {
+        keyword = splitQuery[1];
+      } else if (splitQuery[0] === "sort") {
+        orderBy = splitQuery[1];
+      }
+    });
   }
 
   const {
@@ -2136,7 +2143,7 @@ const SearchBar = () => {
   const {
     0: sort,
     1: setSort
-  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(orderBy);
+  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(orderBy || "");
   const {
     0: filters,
     1: setFilters
@@ -2144,7 +2151,7 @@ const SearchBar = () => {
   const {
     0: search,
     1: setSearch
-  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(keyword); // const [searchKeyword, setSearchKeyword] = useDebounce("", 500);
+  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(keyword || ""); // const [searchKeyword, setSearchKeyword] = useDebounce("", 500);
 
   const handleClickFilter = Object(react__WEBPACK_IMPORTED_MODULE_1__["useCallback"])(() => {
     setActiveFilter(!activeFilter);
@@ -2175,7 +2182,20 @@ const SearchBar = () => {
     }
 
     setActiveFilter(false);
-    router.push(`/search/${search}/${sort}`);
+    let url = "/search";
+
+    if (search) {
+      url += `/searchKeyword=${search}`;
+    }
+
+    if (sort) {
+      url += `/orderBy=${sort}`;
+    }
+
+    filters.forEach(v => {
+      url += `/filter=${v}`;
+    });
+    router.push(url);
   }, [search, sort, filters]);
   return __jsx(SearchForm, {
     onSubmit: handleSearchSubmit
@@ -4805,6 +4825,13 @@ const SearchPostPresenter = ({
 // CONCATENATED MODULE: ./components/search/SearchPostContainer.tsx
 var SearchPostContainer_jsx = external_react_default.a.createElement;
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 
 
 
@@ -4812,11 +4839,15 @@ var SearchPostContainer_jsx = external_react_default.a.createElement;
 
 const SearchPostContainer = () => {
   const router = Object(router_["useRouter"])();
-  let keyword, orderBy;
+  const variables = {
+    first: 10
+  };
 
-  if (router.query.keyword) {
-    keyword = router.query.keyword[0] || "";
-    orderBy = router.query.keyword[1] || "";
+  if (router.query.keyword && router.query.keyword.length > 0) {
+    router.query.keyword.forEach(v => {
+      const splitQuery = v.split("=");
+      variables[splitQuery[0]] = splitQuery[1];
+    });
   }
 
   const {
@@ -4825,11 +4856,7 @@ const SearchPostContainer = () => {
     fetchMore,
     networkStatus
   } = Object(client_["useQuery"])(post_query["a" /* postsQuery */], {
-    variables: {
-      searchKeyword: decodeURIComponent(keyword),
-      orderBy,
-      first: 10
-    },
+    variables,
     notifyOnNetworkStatusChange: true
   });
   const loadingMorePosts = networkStatus === client_["NetworkStatus"].fetchMore;
@@ -4846,11 +4873,9 @@ const SearchPostContainer = () => {
       if (scrollTop + clientHeight === scrollHeight) {
         if (data.getPosts.length % 10 === 0) {
           fetchMore({
-            variables: {
-              skip: data.getPosts.length,
-              searchKeyword: decodeURIComponent(keyword),
-              orderBy
-            }
+            variables: _objectSpread(_objectSpread({}, variables), {}, {
+              skip: data.getPosts.length
+            })
           });
         }
       }
@@ -4860,12 +4885,12 @@ const SearchPostContainer = () => {
   Object(external_react_["useEffect"])(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [data.getPosts, loading, keyword, orderBy]);
+  }, [data.getPosts, loading]);
   return SearchPostContainer_jsx(search_SearchPostPresenter, {
     loading: loading,
     loadingMorePosts: loadingMorePosts,
     posts: data.getPosts,
-    keyword: keyword
+    keyword: variables["searchKeyword"] || ""
   });
 };
 
@@ -4890,51 +4915,44 @@ const FilterWrapper = external_styled_components_default.a.span.withConfig({
   displayName: "SearchTag__FilterWrapper",
   componentId: "n6c13p-1"
 })(["", ";display:inline-block;padding:10px;& + &{margin-left:10px;}"], props => props.theme.whiteBox);
+const sortAndFilter = search_options.sort.concat(search_options.filter);
 
-const setTag = obj => Object.keys(obj).filter(v => obj[v] && v !== "keyword").reduce((acc, v) => {
-  if (v === "filter") {
-    const splitFilter = obj[v].split(",");
-    splitFilter.forEach(v2 => {
-      acc.push({
-        query: v,
-        value: v2,
-        text: search_options[v].filter(v3 => v3.value === v2)[0].text
-      });
-    });
-  } else {
-    acc.push({
-      query: v,
-      value: obj[v],
-      text: search_options[v].filter(v2 => v2.value === obj[v])[0].text
-    });
-  }
-
-  return acc;
-}, []);
+const setTag = keyword => keyword.map(v => {
+  const splitQuery = v.split("=");
+  return {
+    query: splitQuery[0],
+    value: splitQuery[1],
+    text: splitQuery[0] !== "searchKeyword" ? sortAndFilter.filter(v2 => v2.value === splitQuery[1])[0].text : ""
+  };
+});
 
 const SearchTag = () => {
   const router = Object(router_["useRouter"])();
   const {
     0: filters,
     1: setFilters
-  } = Object(external_react_["useState"])(setTag(router.query));
+  } = Object(external_react_["useState"])(router.query.keyword ? setTag(router.query.keyword) : []);
   const handleRemove = Object(external_react_["useCallback"])(text => {
     const nextFilters = filters.filter(v => v.text !== text);
-    const keyword = router.query.keyword;
-    let sort = "";
-    const findSort = nextFilters.filter(v => v.query === "sort");
+    setFilters(nextFilters);
+    const keyword = nextFilters.find(v => v.query === "searchKeyword");
+    const sort = nextFilters.find(v => v.query === "orderBy");
+    const filter = nextFilters.filter(v => v.query === "filter");
+    let url = `/search/searchKeyword=${keyword.value}`;
 
-    if (findSort.length > 0) {
-      sort = findSort[0].value;
+    if (sort) {
+      url += `/orderBy=${sort.value}`;
     }
 
-    const filter = nextFilters.filter(v => v.query !== "sort").map(v => v.value).join(",");
-    router.push(`/search?keyword=${keyword}&sort=${sort}&filter=${filter}`);
+    filter.forEach(v => {
+      url += `/filter=${v.value}`;
+    });
+    router.push(url);
   }, [filters, router.query]);
   Object(external_react_["useEffect"])(() => {
-    setFilters(setTag(router.query));
-  }, [router.query]);
-  return SearchTag_jsx(SearchTag_Container, null, filters.map(v => SearchTag_jsx(FilterWrapper, {
+    setFilters(router.query.keyword ? setTag(router.query.keyword) : []);
+  }, [router.query.keyword]);
+  return SearchTag_jsx(SearchTag_Container, null, filters.filter(v => v.text).map(v => SearchTag_jsx(FilterWrapper, {
     key: v.value
   }, v.text, SearchTag_jsx("span", {
     "aria-hidden": "true",
@@ -4992,21 +5010,21 @@ const Keyword = () => {
 Keyword.getInitialProps = async ({
   query
 }) => {
-  let searchKeyword, orderBy;
+  const variables = {
+    first: 10
+  };
 
-  if (query.keyword) {
-    searchKeyword = query.keyword[0] || "";
-    orderBy = query.keyword[1] || "";
+  if (query.keyword && query.keyword.length > 0) {
+    query.keyword.forEach(v => {
+      const splitQuery = v.split("=");
+      variables[splitQuery[0]] = splitQuery[1];
+    });
   }
 
   const apolloClient = Object(apollo["a" /* initializeApollo */])();
   await apolloClient.query({
     query: post_query["a" /* postsQuery */],
-    variables: {
-      first: 10,
-      searchKeyword,
-      orderBy
-    }
+    variables
   });
   return {
     initialApolloState: apolloClient.cache.extract()

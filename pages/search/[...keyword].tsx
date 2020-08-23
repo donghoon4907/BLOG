@@ -38,20 +38,21 @@ const Keyword: NextPage = () => {
 };
 
 Keyword.getInitialProps = async ({ query }) => {
-  let searchKeyword, orderBy;
-  if (query.keyword) {
-    searchKeyword = query.keyword[0] || "";
-    orderBy = query.keyword[1] || "";
+  const variables = {
+    first: 10
+  };
+
+  if (query.keyword && query.keyword.length > 0) {
+    (query.keyword as any).forEach(v => {
+      const splitQuery = v.split("=");
+      variables[splitQuery[0]] = splitQuery[1];
+    });
   }
 
   const apolloClient = initializeApollo();
   await apolloClient.query({
     query: postsQuery,
-    variables: {
-      first: 10,
-      searchKeyword,
-      orderBy
-    }
+    variables
   });
 
   return {

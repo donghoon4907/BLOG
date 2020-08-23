@@ -81,14 +81,22 @@ const FilterSelector = styled.div`
 const SearchBar = () => {
   const router = useRouter();
   let keyword, orderBy;
-  if (router.query.keyword) {
-    keyword = router.query.keyword[0] || "";
-    orderBy = router.query.keyword[1] || "";
+
+  if (router.query.keyword && router.query.keyword.length > 0) {
+    (router.query.keyword as any).forEach(v => {
+      const splitQuery = v.split("=");
+      if (splitQuery[0] === "searchKeyword") {
+        keyword = splitQuery[1];
+      } else if (splitQuery[0] === "sort") {
+        orderBy = splitQuery[1];
+      }
+    });
   }
+
   const [activeFilter, setActiveFilter] = useState<boolean>(false);
-  const [sort, setSort] = useState<string>(orderBy);
+  const [sort, setSort] = useState<string>(orderBy || "");
   const [filters, setFilters] = useState<string[]>([]);
-  const [search, setSearch] = useState<string>(keyword);
+  const [search, setSearch] = useState<string>(keyword || "");
   // const [searchKeyword, setSearchKeyword] = useDebounce("", 500);
 
   const handleClickFilter = useCallback(() => {
@@ -120,7 +128,18 @@ const SearchBar = () => {
         return alert("검색어를 입력하세요");
       }
       setActiveFilter(false);
-      router.push(`/search/${search}/${sort}`);
+
+      let url = "/search";
+      if (search) {
+        url += `/searchKeyword=${search}`;
+      }
+      if (sort) {
+        url += `/orderBy=${sort}`;
+      }
+      filters.forEach(v => {
+        url += `/filter=${v}`;
+      });
+      router.push(url);
     },
     [search, sort, filters]
   );
