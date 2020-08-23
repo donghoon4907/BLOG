@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const followMutation = gql`\n  mutation follow($userId: String!) {\n    follow(userId: $userId)\n  }\n`;\nexport const unfollowMutation = gql`\n  mutation unfollow($userId: String!) {\n    unfollow(userId: $userId)\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}
