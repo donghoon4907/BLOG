@@ -7,7 +7,7 @@ const FeedContainer: FC = () => {
   const { isMaster } = useVssState();
   const dispatch = useVssDispatch();
 
-  const recommandUserEl = useRef(null);
+  const $recommandUser = useRef(null);
 
   const handleAddNotice = useCallback(() => {
     dispatch({
@@ -24,7 +24,7 @@ const FeedContainer: FC = () => {
     <FeedPresenter
       isMaster={isMaster}
       onAddNotice={handleAddNotice}
-      recommandUserEl={recommandUserEl}
+      $recommandUser={$recommandUser}
     />
   );
 };

@@ -17,8 +17,8 @@ interface Props {
 
 const SignUpContainer: FC<Props> = ({ setAction }) => {
   const { loading, call } = useLazyAxios();
-  const fileEl = useRef<HTMLInputElement>(null);
-  const confirmPwdEl = useRef<HTMLInputElement>(null);
+  const $file = useRef<HTMLInputElement>(null);
+  const $confirmPwd = useRef<HTMLInputElement>(null);
 
   const nickname = useInput("");
   const email = useInput("");
@@ -32,7 +32,7 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
   const handleChangeConfirmPwd = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-      const node = confirmPwdEl.current;
+      const node = $confirmPwd.current;
       setConfirmPwd(value);
 
       if (pwd.value !== value) {
@@ -85,7 +85,7 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
   );
 
   const handleClickUpload = useCallback(() => {
-    const node = fileEl.current;
+    const node = $file.current;
     if (node) {
       node.click();
     }
@@ -134,8 +134,8 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
       pwd={pwd}
       confirmPwd={confirmPwd}
       preview={preview}
-      fileEl={fileEl}
-      confirmPwdEl={confirmPwdEl}
+      $file={$file}
+      $confirmPwd={$confirmPwd}
       onChangePreview={handleChangePreview}
       onChangeConfirmPwd={handleChangeConfirmPwd}
       onClickUpload={handleClickUpload}

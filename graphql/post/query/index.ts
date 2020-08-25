@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-
+/**
+ * * 포스트 검색
+ */
 export const postsQuery = gql`
   query getPosts(
     $skip: Int

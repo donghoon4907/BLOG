@@ -1,4 +1,4 @@
-import React, { useEffect, FC } from "react";
+import React, { useEffect, FC, memo } from "react";
 import { useQuery, NetworkStatus } from "@apollo/client";
 import { postsQuery } from "../../graphql/post/query";
 import PostContainer from "../post/PostContainer";
@@ -38,11 +38,11 @@ const PostList: FC = () => {
   return (
     <>
       {loading && loadingMorePosts && <Loader />}
-      {data.getPosts.map(post => (
+      {data.getPosts.map((post) => (
         <PostContainer key={post.id} {...post} />
       ))}
     </>
   );
 };
 
-export default PostList;
+export default memo(PostList);

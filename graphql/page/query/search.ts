@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-
+/**
+ * * Search Page에서 호출 쿼리 목록
+ */
 export const searchQuery = gql`
   query feed($skip: Int, $first: Int, $keyword: String, $orderBy: String) {
     getPosts(

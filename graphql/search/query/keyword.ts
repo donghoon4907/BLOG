@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-
+/**
+ * * 연관 검색어 검색
+ */
 export const keywordQuery = gql`
   query getSearchKeyword(
     $skip: Int

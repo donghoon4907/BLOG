@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-
+/**
+ * * 포스트 수정
+ */
 export const updatePostMutation = gql`
   mutation updatePost(
     $postId: String!

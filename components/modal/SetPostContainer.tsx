@@ -21,7 +21,7 @@ const SetPostContainer: FC = () => {
 
   const [header, setHeader] = useState("영상 업로드");
 
-  const fileEl = useRef<HTMLInputElement>(null);
+  const $file = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -64,13 +64,13 @@ const SetPostContainer: FC = () => {
     if (progress > 0 && progress < 100) {
       return alert("업로드 진행 중입니다.");
     }
-    const node = fileEl.current;
+    const node = $file.current;
     if (node) {
       node.click();
     }
   }, [progress]);
 
-  const handleChangeFile = useCallback(async e => {
+  const handleChangeFile = useCallback(async (e) => {
     if (!e.target.value) return; // cancel select file
 
     const { files } = e.target;
@@ -215,7 +215,7 @@ const SetPostContainer: FC = () => {
       status={status}
       progress={progress}
       file={file}
-      fileEl={fileEl}
+      $file={$file}
       onClickFile={handleClickFile}
       onChangeFile={handleChangeFile}
       onChangeTitle={handleChangeTitle}

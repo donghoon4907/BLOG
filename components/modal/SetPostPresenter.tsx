@@ -7,8 +7,8 @@ import Loader from "../common/Loader";
 import { Upload } from "../icon";
 
 const UploadWrapper = styled.div`
-  ${props => props.theme.whiteBox};
-  background: ${props => props.theme.bgColor};
+  ${(props) => props.theme.whiteBox};
+  background: ${(props) => props.theme.bgColor};
   width: 100%;
   height: 300px;
   cursor: pointer;
@@ -42,7 +42,7 @@ type Props = {
   status: string;
   progress: number;
   file: string;
-  fileEl: any;
+  $file: any;
   onClickFile: any;
   onChangeFile: any;
   onChangeTitle: any;
@@ -63,7 +63,7 @@ const SetNoticePresenter: FC<Props> = ({
   status,
   progress,
   file,
-  fileEl,
+  $file,
   onClickFile,
   onChangeFile,
   onChangeTitle,
@@ -109,7 +109,7 @@ const SetNoticePresenter: FC<Props> = ({
               <input
                 type="file"
                 onChange={onChangeFile}
-                ref={fileEl}
+                ref={$file}
                 hidden
                 accept="video/*"
               />

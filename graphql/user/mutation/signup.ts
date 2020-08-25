@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-
+/**
+ * * 회원가입
+ */
 export const signUpMutation = gql`
   mutation addUser(
     $email: String!

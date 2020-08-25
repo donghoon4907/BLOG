@@ -8,7 +8,7 @@ import { Thumbnail } from "../icon";
 import { UseInputProps } from "../../hooks";
 
 const UploadWrapper = styled.div`
-  ${props => props.theme.whiteBox}
+  ${(props) => props.theme.whiteBox}
   width: 100%;
   height: 150px;
   display: flex;
@@ -31,8 +31,8 @@ interface Props {
   pwd: UseInputProps;
   confirmPwd: string;
   preview: string;
-  fileEl: any;
-  confirmPwdEl: any;
+  $file: any;
+  $confirmPwd: any;
   onChangePreview: any;
   onChangeConfirmPwd: any;
   onClickUpload: any;
@@ -47,8 +47,8 @@ const SignUpPresenter: FC<Props> = ({
   pwd,
   confirmPwd,
   preview,
-  fileEl,
-  confirmPwdEl,
+  $file,
+  $confirmPwd,
   onChangePreview,
   onChangeConfirmPwd,
   onClickUpload,
@@ -68,7 +68,7 @@ const SignUpPresenter: FC<Props> = ({
           <input
             type="file"
             onChange={onChangePreview}
-            ref={fileEl}
+            ref={$file}
             hidden
             accept="image/jpg, image/jpeg, image/png"
           />
@@ -109,7 +109,7 @@ const SignUpPresenter: FC<Props> = ({
             required
             value={confirmPwd}
             onChange={onChangeConfirmPwd}
-            ref={confirmPwdEl}
+            ref={$confirmPwd}
           />
         </InputWrapper>
         <InputWrapper>

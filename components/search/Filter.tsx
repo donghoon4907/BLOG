@@ -1,9 +1,14 @@
+/**
+ *
+ * deprecate
+ */
+
 import React from "react";
 import styled from "styled-components";
 import { Accordion, Card, Table } from "react-bootstrap";
 
 const Container = styled.div`
-  ${props => props.theme.whiteBox};
+  ${(props) => props.theme.whiteBox};
   width: 100%;
   height: auto;
   margin-bottom: 30px;
@@ -19,12 +24,12 @@ const Container = styled.div`
   & .card-header {
     border: none;
     cursor: pointer;
-    background: ${props => props.theme.bgColor};
+    background: ${(props) => props.theme.bgColor};
   }
 
   & .table thead th {
     border: none;
-    border-bottom: ${props => props.theme.boxBorder};
+    border-bottom: ${(props) => props.theme.boxBorder};
   }
 
   & td {
@@ -34,7 +39,7 @@ const Container = styled.div`
 
 const StyledTd = styled.td<{ active?: boolean }>`
   cursor: pointer;
-  font-weight: ${props => (props.active ? "bold" : 500)};
+  font-weight: ${(props) => (props.active ? "bold" : 500)};
 `;
 
 const Filter = () => {

@@ -1,19 +1,20 @@
-import React from "react";
-import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { NextPage, GetServerSideProps } from "next";
 import { useQuery } from "@apollo/client";
 import { initializeApollo } from "../../lib/apollo";
-import { meQuery } from "../../graphql/auth/query/me";
+import { meQuery, MeData, Me } from "../../graphql/auth/query/me";
 import { postsQuery } from "../../graphql/post/query";
-import { useVssDispatch, SET_ME } from "../../context";
+import { useVssDispatch, SET_ME, SEARCH_POST } from "../../context";
 import Layout from "../../components/common/Layout";
 import Section from "../../components/common/Section";
 import SearchPost from "../../components/search/SearchPostContainer";
-import SearchBar from "../../components/search/SearchBar";
-import SearchTag from "../../components/search/SearchTag";
 
 const Keyword: NextPage = () => {
+  const router = useRouter();
   const dispatch = useVssDispatch();
-  useQuery(meQuery, {
+  useQuery<MeData, Me>(meQuery, {
+    ssr: false,
     onCompleted: ({ getMyProfile }) => {
       const { id, nickname, email, avatar, isMaster } = getMyProfile;
       dispatch({
@@ -26,37 +27,37 @@ const Keyword: NextPage = () => {
       });
     }
   });
+  useEffect(() => {
+    dispatch({
+      type: SEARCH_POST,
+      searchKeyword: router.query.searchKeyword as string
+    });
+  }, []);
   return (
-    <Layout title="검색">
+    <Layout title="검색결과">
       <Section>
-        <SearchBar />
-        <SearchTag />
         <SearchPost />
       </Section>
     </Layout>
   );
 };
 
-Keyword.getInitialProps = async ({ query }) => {
-  const variables = {
-    first: 10
-  };
-
-  if (query.keyword && query.keyword.length > 0) {
-    (query.keyword as any).forEach(v => {
-      const splitQuery = v.split("=");
-      variables[splitQuery[0]] = splitQuery[1];
-    });
-  }
-
+export const getServerSideProps: GetServerSideProps = async ({
+  query: { searchKeyword }
+}) => {
   const apolloClient = initializeApollo();
   await apolloClient.query({
     query: postsQuery,
-    variables
+    variables: {
+      first: 10,
+      searchKeyword
+    }
   });
 
   return {
-    initialApolloState: apolloClient.cache.extract()
+    props: {
+      initialApolloState: apolloClient.cache.extract()
+    }
   };
 };
 

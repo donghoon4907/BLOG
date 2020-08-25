@@ -10,7 +10,7 @@ import RecommandUserList from "./RecommandUserList";
 const PostWrapper = styled.div`
   width: 600px;
 
-  ${props => props.theme.media.tablet} {
+  ${(props) => props.theme.media.tablet} {
     width: 100%;
   }
 `;
@@ -26,7 +26,7 @@ const UserWrapper = styled.div`
     flex: 1;
   }
 
-  ${props => props.theme.media.tablet} {
+  ${(props) => props.theme.media.tablet} {
     display: none;
   }
 `;
@@ -39,20 +39,20 @@ const StickyWrap = styled.div`
 type Props = {
   isMaster: boolean;
   onAddNotice: any;
-  recommandUserEl: any;
+  $recommandUser: any;
 };
 
 const FeedPresenter: FC<Props> = ({
   isMaster,
   onAddNotice,
-  recommandUserEl
+  $recommandUser
 }) => (
   <Section flexDirection="row">
     <PostWrapper>
       <Subject>최신 포스트</Subject>
       <PostList />
     </PostWrapper>
-    <UserWrapper ref={recommandUserEl}>
+    <UserWrapper ref={$recommandUser}>
       <aside>
         <StickyWrap>
           <div>

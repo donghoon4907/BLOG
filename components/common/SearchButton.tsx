@@ -1,13 +1,27 @@
-import React, { FC } from "react";
-import Link from "next/link";
+import React, { FC, useCallback } from "react";
+import {
+  useVssDispatch,
+  useVssState,
+  SHOW_SEARCH_BAR,
+  HIDE_SEARCH_BAR
+} from "../../context";
 import { Search } from "../icon";
 
-const SearchButton: FC = () => (
-  <Link href="/search">
-    <a>
+const SearchButton: FC = () => {
+  const dispatch = useVssDispatch();
+  const { isShowSearchBar } = useVssState();
+
+  const handleClick = useCallback(() => {
+    dispatch({
+      type: isShowSearchBar ? HIDE_SEARCH_BAR : SHOW_SEARCH_BAR
+    });
+  }, [isShowSearchBar]);
+
+  return (
+    <div onClick={handleClick}>
       <Search />
-    </a>
-  </Link>
-);
+    </div>
+  );
+};
 
 export default SearchButton;

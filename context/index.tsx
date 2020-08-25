@@ -17,6 +17,17 @@ export type ActiveNotice = {
   description: string;
 };
 
+export enum PostOrderByInput {
+  createdAt_DESC = "createdAt_DESC",
+  createdAt_ASC = "createdAt_ASC"
+}
+
+export type SearchPostOption = {
+  orderBy: PostOrderByInput | null;
+  searchKeyword: string;
+  filter: string[];
+};
+
 // type for state
 type State = {
   userId: string | null;
@@ -27,9 +38,11 @@ type State = {
   isShowNoticeModal: boolean;
   isShowAddPostModal: boolean;
   isShowSearchBar: boolean;
+  isShowFilterBar: boolean;
   isShowLoginModal: boolean;
   activePost: ActivePost;
   activeNotice: ActiveNotice;
+  searchPostOption: SearchPostOption;
 };
 
 export const SET_ME = "SET_ME";
@@ -41,6 +54,9 @@ export const SHOW_LOGIN_MODAL = "SHOW_LOGIN_MODAL";
 export const HIDE_LOGIN_MODAL = "HIDE_LOGIN_MODAL";
 export const SHOW_SEARCH_BAR = "SHOW_SEARCH_BAR";
 export const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR";
+export const SHOW_FILTER_BAR = "SHOW_FILTER_BAR";
+export const HIDE_FILTER_BAR = "HIDE_FILTER_BAR";
+export const SEARCH_POST = "SEARCH_POST";
 
 // type for action
 type Action =
@@ -72,8 +88,16 @@ type Action =
   | { type: "HIDE_POST_MODAL" }
   | { type: "SHOW_SEARCH_BAR" }
   | { type: "HIDE_SEARCH_BAR" }
+  | { type: "SHOW_FILTER_BAR" }
+  | { type: "HIDE_FILTER_BAR" }
   | { type: "SHOW_LOGIN_MODAL" }
-  | { type: "HIDE_LOGIN_MODAL" };
+  | { type: "HIDE_LOGIN_MODAL" }
+  | {
+      type: "SEARCH_POST";
+      orderBy?: string | null;
+      searchKeyword?: string;
+      filter?: string[];
+    };
 
 // type for dispatch
 type VssDispatch = Dispatch<Action>;
@@ -153,6 +177,16 @@ function reducer(state: any, action: any) {
         ...state,
         isShowSearchBar: false
       };
+    case "SHOW_FILTER_BAR":
+      return {
+        ...state,
+        isShowFilterBar: true
+      };
+    case "HIDE_FILTER_BAR":
+      return {
+        ...state,
+        isShowFilterBar: false
+      };
     case "SHOW_LOGIN_MODAL":
       return {
         ...state,
@@ -162,6 +196,21 @@ function reducer(state: any, action: any) {
       return {
         ...state,
         isShowLoginModal: false
+      };
+    case "SEARCH_POST":
+      return {
+        ...state,
+        searchPostOption: {
+          orderBy: action.hasOwnProperty("orderBy")
+            ? action.orderBy
+            : state.searchPostOption.orderBy,
+          searchKeyword: action.hasOwnProperty("searchKeyword")
+            ? action.searchKeyword
+            : state.searchPostOption.searchKeyword,
+          filter: action.hasOwnProperty("filter")
+            ? action.filter
+            : state.searchPostOption.filter
+        }
       };
     default:
       return { ...state };
@@ -177,6 +226,7 @@ const initialState: State = {
   isShowNoticeModal: false,
   isShowAddPostModal: false,
   isShowSearchBar: false,
+  isShowFilterBar: false,
   isShowLoginModal: false,
   activePost: {
     postId: "",
@@ -191,6 +241,11 @@ const initialState: State = {
     actionText: "비활성화",
     title: "",
     description: ""
+  },
+  searchPostOption: {
+    orderBy: null,
+    searchKeyword: "",
+    filter: []
   }
 };
 

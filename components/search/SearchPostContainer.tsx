@@ -1,25 +1,26 @@
-import { useRouter } from "next/router";
-import React, { useEffect, FC } from "react";
+import React, { useEffect, useCallback, FC } from "react";
 import { useQuery, NetworkStatus } from "@apollo/client";
+import {
+  useVssState,
+  useVssDispatch,
+  SHOW_FILTER_BAR,
+  HIDE_FILTER_BAR
+} from "../../context";
 import SearchPostPresenter from "./SearchPostPresenter";
 import { postsQuery } from "../../graphql/post/query";
 
 const SearchPostContainer: FC = () => {
-  const router = useRouter();
+  const {
+    searchPostOption: { searchKeyword, orderBy },
+    isShowFilterBar
+  } = useVssState();
 
-  const variables = {
-    first: 10
-  };
-
-  if (router.query.keyword && router.query.keyword.length > 0) {
-    (router.query.keyword as any).forEach(v => {
-      const splitQuery = v.split("=");
-      variables[splitQuery[0]] = splitQuery[1];
-    });
-  }
-
+  const dispatch = useVssDispatch();
   const { data, loading, fetchMore, networkStatus } = useQuery(postsQuery, {
-    variables,
+    variables: {
+      first: 10,
+      searchKeyword
+    },
     notifyOnNetworkStatusChange: true
   });
 
@@ -33,14 +34,21 @@ const SearchPostContainer: FC = () => {
         if (data.getPosts.length % 10 === 0) {
           fetchMore({
             variables: {
-              ...variables,
-              skip: data.getPosts.length
+              skip: data.getPosts.length,
+              searchKeyword,
+              orderBy
             }
           });
         }
       }
     }
   };
+
+  const handleClickFilter = useCallback(() => {
+    dispatch({
+      type: isShowFilterBar ? HIDE_FILTER_BAR : SHOW_FILTER_BAR
+    });
+  }, [isShowFilterBar]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
@@ -52,7 +60,9 @@ const SearchPostContainer: FC = () => {
       loading={loading}
       loadingMorePosts={loadingMorePosts}
       posts={data.getPosts}
-      keyword={variables["searchKeyword"] || ""}
+      keyword={searchKeyword}
+      isShowFilterBar={isShowFilterBar}
+      onClickFilter={handleClickFilter}
     />
   );
 };
