@@ -41,7 +41,7 @@ interface Props {
 
 const RecommandUserItem: FC<Props> = ({ id, avatar, nickname, followedBy }) => {
   const { userId } = useVssState();
-  const isFollowing = followedBy.some(v => v.id === userId);
+  const isFollowing = followedBy.some((v) => v.id === userId);
 
   const [isShowUser, setIsShowUser] = useState<boolean>(false);
 
@@ -58,12 +58,12 @@ const RecommandUserItem: FC<Props> = ({ id, avatar, nickname, followedBy }) => {
       <NicknameWrapper>{nickname}</NicknameWrapper>
 
       <FollowWrapper>
-        {id !== userId && (
+        {userId && id !== userId && (
           <FollowButton isFollowing={isFollowing} userId={id} />
         )}
       </FollowWrapper>
 
-      {isShowUser && <HoverUser userId={id} />}
+      {isShowUser && <HoverUser userId={id} top={60} />}
     </Container>
   );
 };

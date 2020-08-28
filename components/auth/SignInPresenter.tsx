@@ -38,6 +38,7 @@ const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => {
             type="password"
             placeholder="암호"
             name="password"
+            autoComplete="off"
             required
             {...pwd}
           />
