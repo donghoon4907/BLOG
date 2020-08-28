@@ -5,14 +5,12 @@ import Layout from "../components/common/Layout";
 import Feed from "../components/feed/FeedContainer";
 import { initializeApollo } from "../lib/apollo";
 import { feedQuery } from "../graphql/page/query/feed";
-import { meQuery, Me, MeData } from "../graphql/auth/query/me";
+import { meQuery } from "../graphql/auth/query/me";
 import { useVssDispatch, SET_ME } from "../context";
-
-
 
 const Index: NextPage = () => {
   const dispatch = useVssDispatch();
-  useQuery<MeData, Me>(meQuery, {
+  useQuery(meQuery, {
     ssr: false,
     onCompleted: ({ getMyProfile }) => {
       const { id, nickname, email, avatar, isMaster } = getMyProfile;

@@ -9,7 +9,7 @@ import { Filter } from "../icon";
 
 interface Props {
   loading: boolean;
-  loadingMorePosts: boolean;
+  // loadingMorePosts: boolean;
   posts: any;
   keyword: string;
   isShowFilterBar: boolean;
@@ -18,7 +18,7 @@ interface Props {
 
 const SearchPostPresenter: FC<Props> = ({
   loading,
-  loadingMorePosts,
+  // loadingMorePosts,
   posts,
   keyword,
   isShowFilterBar,
@@ -33,7 +33,7 @@ const SearchPostPresenter: FC<Props> = ({
     </Subject>
     {isShowFilterBar && <SearchFilter />}
     <SearchTag />
-    {loading && loadingMorePosts && <Loader />}
+    {loading && <Loader />}
     {posts.length > 0 ? (
       posts.map((post) => <PostContainer key={post.id} {...post} />)
     ) : (

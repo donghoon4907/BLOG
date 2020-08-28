@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback, FC } from "react";
-import { useQuery, NetworkStatus } from "@apollo/client";
+import React, { useState, useEffect, useCallback, FC } from "react";
+import { useApolloClient } from "@apollo/client";
 import {
   useVssState,
   useVssDispatch,
@@ -16,29 +16,43 @@ const SearchPostContainer: FC = () => {
   } = useVssState();
 
   const dispatch = useVssDispatch();
-  const { data, loading, fetchMore, networkStatus } = useQuery(postsQuery, {
-    variables: {
-      first: 10,
-      searchKeyword
-    },
-    notifyOnNetworkStatusChange: true
-  });
+  const client = useApolloClient();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadPost, setLoadPost] = useState<any>([]);
 
-  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore;
+  const searchPost = useCallback(
+    async (isReset) => {
+      if (loading) return;
+      setLoading(true);
+      const { data } = await client.query({
+        query: postsQuery,
+        variables: {
+          searchKeyword,
+          orderBy,
+          first: 10,
+          skip: isReset ? 0 : loadPost.length
+        },
+        fetchPolicy: "network-only"
+      });
+      if (data) {
+        if (isReset) {
+          setLoadPost(data.getPosts);
+        } else {
+          setLoadPost(loadPost.concat(data.getPosts));
+        }
+      }
+      setLoading(false);
+    },
+    [loading, loadPost, searchKeyword, orderBy]
+  );
 
   const handleScrollFetchMore = () => {
     if (loading) return;
     const { scrollHeight, clientHeight, scrollTop } = document.documentElement;
-    if (data.getPosts) {
+    if (loadPost.length > 0) {
       if (scrollTop + clientHeight === scrollHeight) {
-        if (data.getPosts.length % 10 === 0) {
-          fetchMore({
-            variables: {
-              skip: data.getPosts.length,
-              searchKeyword,
-              orderBy
-            }
-          });
+        if (loadPost.length % 10 === 0) {
+          searchPost(false);
         }
       }
     }
@@ -53,13 +67,18 @@ const SearchPostContainer: FC = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [data.getPosts, loading]);
+  }, [loadPost, loading]);
+
+  useEffect(() => {
+    if (searchKeyword) {
+      searchPost(true);
+    }
+  }, [searchKeyword, orderBy]);
 
   return (
     <SearchPostPresenter
       loading={loading}
-      loadingMorePosts={loadingMorePosts}
-      posts={data.getPosts}
+      posts={loadPost}
       keyword={searchKeyword}
       isShowFilterBar={isShowFilterBar}
       onClickFilter={handleClickFilter}

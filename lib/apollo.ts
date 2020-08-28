@@ -10,7 +10,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition, concatPagination } from "@apollo/client/utilities";
+import { getMainDefinition } from "@apollo/client/utilities";
 import fetch from "isomorphic-unfetch";
 import isBrowser from "./isBrowser";
 import { getAccessToken } from "./token";
@@ -77,15 +77,7 @@ function createApolloClient() {
       authLink,
       isBrowser ? httpLink : splitLink
     ]),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            getPosts: concatPagination()
-          }
-        }
-      }
-    })
+    cache: new InMemoryCache()
   });
 }
 

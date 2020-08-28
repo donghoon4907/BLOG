@@ -28,13 +28,6 @@ const SearchTag: FC = () => {
     searchPostOption: { orderBy, filter = [] }
   } = useVssState();
 
-  const handleRemoveSort = useCallback(() => {
-    dispatch({
-      type: SEARCH_POST,
-      orderBy: null
-    });
-  }, []);
-
   const handleRemoveFilter = useCallback(
     (v) => {
       dispatch({
@@ -50,18 +43,12 @@ const SearchTag: FC = () => {
       {orderBy && (
         <FilterWrapper key={orderBy}>
           {(sortAndFilter.find((v) => v.value === orderBy) as any).text}
-          <span
-            aria-hidden="true"
-            style={{ marginLeft: 10, cursor: "pointer" }}
-            onClick={handleRemoveSort}
-          >
-            ×
-          </span>
         </FilterWrapper>
       )}
       {filter.map((v) => (
         <FilterWrapper key={v}>
           {(sortAndFilter.find((v2) => v2.value === v) as any).text}
+
           <span
             aria-hidden="true"
             style={{ marginLeft: 10, cursor: "pointer" }}

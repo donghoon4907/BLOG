@@ -1,7 +1,12 @@
 import React, { FC, useState, useCallback, ChangeEvent } from "react";
 import styled from "styled-components";
 import Button from "../common/Button";
-import { useVssDispatch, SEARCH_POST, HIDE_FILTER_BAR } from "../../context";
+import {
+  useVssDispatch,
+  useVssState,
+  SEARCH_POST,
+  HIDE_FILTER_BAR
+} from "../../context";
 import searchOptions from "./search_options.json";
 
 const FilterWrapper = styled.div`
@@ -43,11 +48,14 @@ const FilterSelector = styled.div`
 
 const SearchFilter: FC = () => {
   const dispatch = useVssDispatch();
-  const [orderBy, setOrderBy] = useState<string>("");
+  const {
+    searchPostOption: { orderBy }
+  } = useVssState();
+  const [sort, setSort] = useState<string>(orderBy);
   const [filter, setFilter] = useState<string[]>([]);
 
   const handleChangeSort = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setOrderBy(e.target.value);
+    setSort(e.target.value);
   }, []);
 
   const handleChangeFilter = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -62,13 +70,13 @@ const SearchFilter: FC = () => {
   const handleSubmit = useCallback(() => {
     dispatch({
       type: SEARCH_POST,
-      orderBy,
+      orderBy: sort,
       filter
     });
     dispatch({
       type: HIDE_FILTER_BAR
     });
-  }, [orderBy, filter]);
+  }, [sort, filter]);
   return (
     <FilterWrapper>
       <FilterColumn>
@@ -81,6 +89,7 @@ const SearchFilter: FC = () => {
                 name="radio"
                 id={v.id}
                 value={v.value}
+                checked={sort === v.value}
                 onChange={handleChangeSort}
               />
               <label htmlFor={v.id}>{v.text}</label>
@@ -99,6 +108,7 @@ const SearchFilter: FC = () => {
                 id={v.id}
                 value={v.value}
                 onChange={handleChangeFilter}
+                disabled
               />
               <label htmlFor={v.id}>{v.text}</label>
             </span>

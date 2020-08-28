@@ -44,7 +44,7 @@ export const SearchInput = styled(Input)`
 const HeaderSearchBar = () => {
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const $search = useRef(null);
+  const $search = useRef<HTMLInputElement>(null);
 
   const handleChangeSearchKeyword = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

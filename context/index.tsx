@@ -17,13 +17,8 @@ export type ActiveNotice = {
   description: string;
 };
 
-export enum PostOrderByInput {
-  createdAt_DESC = "createdAt_DESC",
-  createdAt_ASC = "createdAt_ASC"
-}
-
 export type SearchPostOption = {
-  orderBy: PostOrderByInput | null;
+  orderBy: string;
   searchKeyword: string;
   filter: string[];
 };
@@ -94,7 +89,7 @@ type Action =
   | { type: "HIDE_LOGIN_MODAL" }
   | {
       type: "SEARCH_POST";
-      orderBy?: string | null;
+      orderBy?: string;
       searchKeyword?: string;
       filter?: string[];
     };
@@ -243,7 +238,7 @@ const initialState: State = {
     description: ""
   },
   searchPostOption: {
-    orderBy: null,
+    orderBy: "createdAt_DESC",
     searchKeyword: "",
     filter: []
   }

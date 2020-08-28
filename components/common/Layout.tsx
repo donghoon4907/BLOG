@@ -27,6 +27,7 @@ const Layout: FC<Props> = ({ children, title = "VSS" }) => {
         <meta name="description" content="Video sharing system" />
         <meta name="google" content="notranslate" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         <title>{title}</title>
       </Head>
       <>{title !== "페이지를 찾을 수 없습니다" && <Header />}</>
