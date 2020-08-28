@@ -6,28 +6,28 @@ import { useVssState } from "../../context";
 import FollowButton from "../common/FollowButton";
 import { Thumbnail, Column } from "./common";
 
-const Container = styled.div`
-  ${props => props.theme.whiteBox};
+const Container = styled.div<{ top: number }>`
+  ${(props) => props.theme.whiteBox};
   position: absolute;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  top: 35px;
+  top: ${(props) => props.top}px;
   left: 0;
   width: 240px;
   height: 220px;
   z-index: 100;
 `;
 
-const Loading = styled.div`
-  ${props => props.theme.whiteBox};
+const Loading = styled.div<{ top: number }>`
+  ${(props) => props.theme.whiteBox};
   position: absolute;
   overflow: hidden;
   display: flex;
   justfiy-content: flex-start;
   align-items: center;
   text-indent: 10px;
-  top: 35px;
+  top: ${(props) => props.top}px;
   left: 0;
   width: 240px;
   height: 50px;
@@ -36,9 +36,10 @@ const Loading = styled.div`
 
 interface Props {
   userId: string;
+  top: number;
 }
 
-const HoverUser: FC<Props> = ({ userId }) => {
+const HoverUser: FC<Props> = ({ userId, top }) => {
   const { userId: myUserId } = useVssState();
   const { data, loading } = useQuery(userQuery, {
     variables: {
@@ -48,12 +49,12 @@ const HoverUser: FC<Props> = ({ userId }) => {
   });
 
   if (loading) {
-    return <Loading>로딩 중입니다...</Loading>;
+    return <Loading top={top}>로딩 중입니다...</Loading>;
   }
   const { nickname, avatar, followedBy, following, posts } = data.getUser;
   const isFollowing = followedBy.some((v: any) => v.id === myUserId);
   return (
-    <Container>
+    <Container top={top}>
       <Thumbnail src={avatar.url} />
       <Column>
         <div>{nickname}</div>

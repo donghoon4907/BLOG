@@ -7,7 +7,7 @@ import { UseInputProps } from "../../hooks";
 import Loader from "../common/Loader";
 
 const ReadOnlyDescription = styled.div`
-  ${props => props.theme.whiteBox};
+  ${(props) => props.theme.whiteBox};
   position: absolute;
   top: 0;
   left: 0;
@@ -30,7 +30,6 @@ const PreviewWrap = styled(ReadOnlyDescription)`
 `;
 
 type Props = {
-  loading: boolean;
   setNoticeLoading: boolean;
   removeNoticeLoading: boolean;
   action: any;
@@ -48,7 +47,6 @@ type Props = {
 };
 
 const SetNoticePresenter: FC<Props> = ({
-  loading,
   setNoticeLoading,
   removeNoticeLoading,
   action,
@@ -65,7 +63,7 @@ const SetNoticePresenter: FC<Props> = ({
   onSubmit
 }) => (
   <Fragment>
-    {(loading || setNoticeLoading || removeNoticeLoading) && <Loader />}
+    {(setNoticeLoading || removeNoticeLoading) && <Loader />}
     <Modal onHide={onClose} show animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>

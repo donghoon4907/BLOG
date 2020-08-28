@@ -94,6 +94,7 @@ const SignUpPresenter: FC<Props> = ({
             type="password"
             placeholder="암호"
             name="password"
+            autoComplete="off"
             required
             {...pwd}
           />
@@ -106,6 +107,7 @@ const SignUpPresenter: FC<Props> = ({
             type="password"
             placeholder="암호 확인"
             name="conform_password"
+            autoComplete="off"
             required
             value={confirmPwd}
             onChange={onChangeConfirmPwd}

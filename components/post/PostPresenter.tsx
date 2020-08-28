@@ -9,7 +9,7 @@ import { HeartFull, HeartEmpty, Download, More } from "../icon";
 import HoverUser from "../user/HoverUser";
 
 const Container = styled.div`
-  ${props => props.theme.whiteBox};
+  ${(props) => props.theme.whiteBox};
   width: 100%;
   margin-bottom: 30px;
 `;
@@ -24,15 +24,24 @@ const Header = styled.div`
 
 const User = styled.div`
   position: relative;
-  width: 100px;
+  width: 120px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+`;
+
+const Nick = styled.div`
+  width: 100px;
+  text-indent: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Body = styled.div`
   padding: 15px;
-  border-top: ${props => props.theme.boxBorder};
-  border-bottom: ${props => props.theme.boxBorder};
+  border-top: ${(props) => props.theme.boxBorder};
+  border-bottom: ${(props) => props.theme.boxBorder};
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -63,7 +72,7 @@ const IconWrapper = styled.div`
 
 const Icon = styled.span<{ disabledMobile?: boolean }>`
   margin-right: 10px;
-  ${props => props.disabledMobile && props.theme.isMobile && "display: none"}
+  ${(props) => props.disabledMobile && props.theme.isMobile && "display: none"}
 `;
 
 const DownloadItem = styled.div`
@@ -76,10 +85,10 @@ const DownloadLink = styled.a`
   width: 100%;
   height: 100%;
   border: 0;
-  border-radius: ${props => props.theme.borderRadius};
+  border-radius: ${(props) => props.theme.borderRadius};
   color: white;
   font-weight: 600;
-  background: ${props => props.theme.blueColor};
+  background: ${(props) => props.theme.blueColor};
   text-align: center;
   padding: 7px 0;
   font-size: 14px;
@@ -151,8 +160,8 @@ const PostPresenter: FC<Props> = ({
     <Header>
       <User>
         <Avatar size="30" src={user.avatar.url} onClick={onClickAvatar} />
-        <div style={{ textIndent: 10 }}>{user.nickname}</div>
-        {isShowUser && <HoverUser userId={user.id} />}
+        <Nick>{user.nickname}</Nick>
+        {isShowUser && <HoverUser userId={user.id} top={30} />}
       </User>
       <div style={{ width: 100, textAlign: "right" }}>
         {isMyPost && (
