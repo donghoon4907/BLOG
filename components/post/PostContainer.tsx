@@ -38,7 +38,7 @@ const PostContainer: FC<PostProps> = ({
   const { userId } = useVssState();
   const dispatch = useVssDispatch();
 
-  const isMyPost = userId || userId === user.id;
+  const isMyPost = (userId && userId === user.id) || false;
   const [ctrlIsLiked, setCtrlIsLiked] = useState<boolean>(
     likes.some((v: any) => v.user.id === userId)
   );
