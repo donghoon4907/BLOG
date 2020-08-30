@@ -56,7 +56,6 @@ const PostContainer: FC<PostProps> = ({
   const handleRoom = useCallback(() => {
     const token = getAccessToken();
     if (token) {
-      //Router.push(`/room/${room.id}`);
     } else {
       dispatch({
         type: SHOW_LOGIN_MODAL
