@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const likeMutation = gql`\n  mutation likePost($postId: String!) {\n    likePost(postId: $postId)\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

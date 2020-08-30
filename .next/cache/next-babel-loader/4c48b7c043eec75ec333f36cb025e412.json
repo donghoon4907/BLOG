@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { gql } from \"@apollo/client\";\nexport const signUpMutation = gql`\n  mutation addUser(\n    $email: String!\n    $pwd: String!\n    $nickname: String!\n    $file: String!\n  ) {\n    addUser(email: $email, pwd: $pwd, nickname: $nickname, file: $file)\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}
