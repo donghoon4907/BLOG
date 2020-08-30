@@ -24,9 +24,18 @@ const Header = styled.div`
 
 const User = styled.div`
   position: relative;
-  width: 100px;
+  width: 120px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+`;
+
+const Nick = styled.div`
+  width: 100px;
+  text-indent: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Body = styled.div`
@@ -151,8 +160,8 @@ const PostPresenter: FC<Props> = ({
     <Header>
       <User>
         <Avatar size="30" src={user.avatar.url} onClick={onClickAvatar} />
-        <div style={{ textIndent: 10 }}>{user.nickname}</div>
-        {isShowUser && <HoverUser userId={user.id} />}
+        <Nick>{user.nickname}</Nick>
+        {isShowUser && <HoverUser userId={user.id} top={30} />}
       </User>
       <div style={{ width: 100, textAlign: "right" }}>
         {isMyPost && (

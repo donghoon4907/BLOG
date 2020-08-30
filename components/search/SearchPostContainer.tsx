@@ -1,58 +1,87 @@
-import { useRouter } from "next/router";
-import React, { useEffect, FC } from "react";
-import { useQuery, NetworkStatus } from "@apollo/client";
+import React, { useState, useEffect, useCallback, FC } from "react";
+import { useApolloClient } from "@apollo/client";
+import {
+  useVssState,
+  useVssDispatch,
+  SHOW_FILTER_BAR,
+  HIDE_FILTER_BAR
+} from "../../context";
 import SearchPostPresenter from "./SearchPostPresenter";
 import { postsQuery } from "../../graphql/post/query";
 
 const SearchPostContainer: FC = () => {
-  const router = useRouter();
+  const {
+    searchPostOption: { searchKeyword, orderBy },
+    isShowFilterBar
+  } = useVssState();
 
-  const variables = {
-    first: 10
-  };
+  const dispatch = useVssDispatch();
+  const client = useApolloClient();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadPost, setLoadPost] = useState<any>([]);
 
-  if (router.query.keyword && router.query.keyword.length > 0) {
-    (router.query.keyword as any).forEach(v => {
-      const splitQuery = v.split("=");
-      variables[splitQuery[0]] = splitQuery[1];
-    });
-  }
-
-  const { data, loading, fetchMore, networkStatus } = useQuery(postsQuery, {
-    variables,
-    notifyOnNetworkStatusChange: true
-  });
-
-  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore;
+  const searchPost = useCallback(
+    async isReset => {
+      if (loading) return;
+      setLoading(true);
+      const { data } = await client.query({
+        query: postsQuery,
+        variables: {
+          searchKeyword,
+          orderBy,
+          first: 10,
+          skip: isReset ? 0 : loadPost.length
+        },
+        fetchPolicy: "network-only"
+      });
+      if (data) {
+        if (isReset) {
+          setLoadPost(data.getPosts);
+        } else {
+          setLoadPost(loadPost.concat(data.getPosts));
+        }
+      }
+      setLoading(false);
+    },
+    [loading, loadPost, searchKeyword, orderBy]
+  );
 
   const handleScrollFetchMore = () => {
     if (loading) return;
     const { scrollHeight, clientHeight, scrollTop } = document.documentElement;
-    if (data.getPosts) {
+    if (loadPost.length > 0) {
       if (scrollTop + clientHeight === scrollHeight) {
-        if (data.getPosts.length % 10 === 0) {
-          fetchMore({
-            variables: {
-              ...variables,
-              skip: data.getPosts.length
-            }
-          });
+        if (loadPost.length % 10 === 0) {
+          searchPost(false);
         }
       }
     }
   };
 
+  const handleClickFilter = useCallback(() => {
+    dispatch({
+      type: isShowFilterBar ? HIDE_FILTER_BAR : SHOW_FILTER_BAR
+    });
+  }, [isShowFilterBar]);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
-  }, [data.getPosts, loading]);
+  }, [loadPost, loading]);
+
+  useEffect(() => {
+    if (searchKeyword) {
+      searchPost(true);
+    }
+  }, [searchKeyword, orderBy]);
 
   return (
     <SearchPostPresenter
       loading={loading}
-      loadingMorePosts={loadingMorePosts}
-      posts={data.getPosts}
-      keyword={variables["searchKeyword"] || ""}
+      posts={loadPost}
+      keyword={searchKeyword}
+      isShowFilterBar={isShowFilterBar}
+      onClickFilter={handleClickFilter}
     />
   );
 };

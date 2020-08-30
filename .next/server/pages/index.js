@@ -160,6 +160,10 @@ module.exports = require("isomorphic-unfetch");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("z+8S");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_apollo_client__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * * 사용자 검색
+ */
+
 const usersQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
   query users($skip: Int, $first: Int, $keyword: String, $orderBy: String) {
     getUsers(
@@ -239,6 +243,9 @@ const userQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "getStaticProps", function() { return /* binding */ getStaticProps; });
+
 // EXTERNAL MODULE: external "react"
 var external_react_ = __webpack_require__("cDcd");
 var external_react_default = /*#__PURE__*/__webpack_require__.n(external_react_);
@@ -246,7 +253,7 @@ var external_react_default = /*#__PURE__*/__webpack_require__.n(external_react_)
 // EXTERNAL MODULE: external "@apollo/client"
 var client_ = __webpack_require__("z+8S");
 
-// EXTERNAL MODULE: ./components/common/Layout.tsx + 22 modules
+// EXTERNAL MODULE: ./components/common/Layout.tsx + 23 modules
 var Layout = __webpack_require__("4siG");
 
 // EXTERNAL MODULE: external "styled-components"
@@ -332,10 +339,10 @@ const NoticeWrapper = external_styled_components_default.a.div.withConfig({
 })(["height:50px;display:flex;flex-direction:column;justify-content:center;margin-right:15%;margin-left:15%;padding:5px;text-align:center;cursor:pointer;"]);
 
 const NoticeList = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const {
     isMaster
-  } = Object(context["j" /* useVssState */])();
+  } = Object(context["o" /* useVssState */])();
   const {
     data
   } = Object(client_["useQuery"])(noticesQuery, {
@@ -345,7 +352,7 @@ const NoticeList = () => {
   });
   const handleClick = Object(external_react_["useCallback"])((title, description, noticeId) => {
     dispatch({
-      type: context["f" /* SHOW_NOTICE_MODAL */],
+      type: context["j" /* SHOW_NOTICE_MODAL */],
       action: isMaster ? "modifiable" : "readonly",
       actionText: "",
       title,
@@ -392,15 +399,13 @@ const PostList = () => {
   const {
     data,
     loading,
-    fetchMore,
-    networkStatus
+    fetchMore
   } = Object(client_["useQuery"])(query["a" /* postsQuery */], {
     variables: {
       first: 10
     },
     notifyOnNetworkStatusChange: true
   });
-  const loadingMorePosts = networkStatus === client_["NetworkStatus"].fetchMore;
 
   const handleScrollFetchMore = () => {
     if (loading) return;
@@ -410,14 +415,33 @@ const PostList = () => {
       scrollTop
     } = document.documentElement;
 
-    if (data.getPosts) {
-      if (scrollTop + clientHeight === scrollHeight) {
-        if (data.getPosts.length % 10 === 0) {
-          fetchMore({
-            variables: {
-              skip: data.getPosts.length
-            }
-          });
+    if (data) {
+      if (data.getPosts) {
+        if (scrollTop + clientHeight === scrollHeight) {
+          if (data.getPosts.length % 10 === 0) {
+            fetchMore({
+              variables: {
+                skip: data.getPosts.length
+              },
+              updateQuery: (prev, next) => {
+                const {
+                  fetchMoreResult
+                } = next;
+
+                if (fetchMoreResult) {
+                  if (fetchMoreResult.getPosts.length === 0) {
+                    window.removeEventListener("scroll", handleScrollFetchMore);
+                  }
+
+                  return Object.assign({}, prev, {
+                    getPosts: [...prev.getPosts, ...fetchMoreResult.getPosts]
+                  });
+                } else {
+                  return prev;
+                }
+              }
+            });
+          }
         }
       }
     }
@@ -427,12 +451,12 @@ const PostList = () => {
     window.addEventListener("scroll", handleScrollFetchMore);
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
   }, [data.getPosts, loading]);
-  return PostList_jsx(external_react_default.a.Fragment, null, loading && loadingMorePosts && PostList_jsx(Loader["a" /* default */], null), data.getPosts.map(post => PostList_jsx(PostContainer["a" /* default */], _extends({
+  return PostList_jsx(external_react_default.a.Fragment, null, loading && PostList_jsx(Loader["a" /* default */], null), data.getPosts.map(post => PostList_jsx(PostContainer["a" /* default */], _extends({
     key: post.id
   }, post))));
 };
 
-/* harmony default export */ var feed_PostList = (PostList);
+/* harmony default export */ var feed_PostList = (Object(external_react_["memo"])(PostList));
 // EXTERNAL MODULE: ./graphql/user/query/index.ts
 var user_query = __webpack_require__("2207");
 
@@ -478,7 +502,7 @@ const RecommandUserItem = ({
 }) => {
   const {
     userId
-  } = Object(context["j" /* useVssState */])();
+  } = Object(context["o" /* useVssState */])();
   const isFollowing = followedBy.some(v => v.id === userId);
   const {
     0: isShowUser,
@@ -493,11 +517,12 @@ const RecommandUserItem = ({
     size: "45",
     src: avatar.url,
     onClick: handleClickAvatar
-  })), RecommandUserItem_jsx(NicknameWrapper, null, nickname), RecommandUserItem_jsx(FollowWrapper, null, id !== userId && RecommandUserItem_jsx(FollowButton["a" /* default */], {
+  })), RecommandUserItem_jsx(NicknameWrapper, null, nickname), RecommandUserItem_jsx(FollowWrapper, null, userId && id !== userId && RecommandUserItem_jsx(FollowButton["a" /* default */], {
     isFollowing: isFollowing,
     userId: id
   })), isShowUser && RecommandUserItem_jsx(HoverUser["a" /* default */], {
-    userId: id
+    userId: id,
+    top: 60
   }));
 };
 
@@ -553,11 +578,11 @@ const StickyWrap = external_styled_components_default.a.div.withConfig({
 const FeedPresenter = ({
   isMaster,
   onAddNotice,
-  recommandUserEl
+  $recommandUser
 }) => FeedPresenter_jsx(Section["a" /* default */], {
   flexDirection: "row"
 }, FeedPresenter_jsx(PostWrapper, null, FeedPresenter_jsx(Subject["a" /* default */], null, "\uCD5C\uC2E0 \uD3EC\uC2A4\uD2B8"), FeedPresenter_jsx(feed_PostList, null)), FeedPresenter_jsx(UserWrapper, {
-  ref: recommandUserEl
+  ref: $recommandUser
 }, FeedPresenter_jsx("aside", null, FeedPresenter_jsx(StickyWrap, null, FeedPresenter_jsx("div", null, FeedPresenter_jsx(Subject["a" /* default */], {
   activeBorder: true
 }, FeedPresenter_jsx("span", null, "\uACF5\uC9C0\uC0AC\uD56D"), FeedPresenter_jsx("div", null, isMaster && FeedPresenter_jsx("div", {
@@ -576,12 +601,12 @@ var FeedContainer_jsx = external_react_default.a.createElement;
 const FeedContainer = () => {
   const {
     isMaster
-  } = Object(context["j" /* useVssState */])();
-  const dispatch = Object(context["i" /* useVssDispatch */])();
-  const recommandUserEl = Object(external_react_["useRef"])(null);
+  } = Object(context["o" /* useVssState */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
+  const $recommandUser = Object(external_react_["useRef"])(null);
   const handleAddNotice = Object(external_react_["useCallback"])(() => {
     dispatch({
-      type: context["f" /* SHOW_NOTICE_MODAL */],
+      type: context["j" /* SHOW_NOTICE_MODAL */],
       action: "add",
       actionText: "등록",
       title: "",
@@ -592,7 +617,7 @@ const FeedContainer = () => {
   return FeedContainer_jsx(feed_FeedPresenter, {
     isMaster: isMaster,
     onAddNotice: handleAddNotice,
-    recommandUserEl: recommandUserEl
+    $recommandUser: $recommandUser
   });
 };
 
@@ -601,6 +626,10 @@ const FeedContainer = () => {
 var apollo = __webpack_require__("ZRao");
 
 // CONCATENATED MODULE: ./graphql/page/query/feed.ts
+
+/**
+ * * Index Page에서 호출 쿼리 목록
+ */
 
 const feedQuery = client_["gql"]`
   query feed($skip: Int, $first: Int) {
@@ -671,7 +700,7 @@ var pages_jsx = external_react_default.a.createElement;
 
 
 const Index = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   Object(client_["useQuery"])(me["a" /* meQuery */], {
     ssr: false,
     onCompleted: ({
@@ -685,7 +714,7 @@ const Index = () => {
         isMaster
       } = getMyProfile;
       dispatch({
-        type: context["d" /* SET_ME */],
+        type: context["g" /* SET_ME */],
         userId: id,
         nickname,
         email,
@@ -697,7 +726,7 @@ const Index = () => {
   return pages_jsx(Layout["a" /* default */], null, pages_jsx(feed_FeedContainer, null));
 };
 
-Index.getInitialProps = async () => {
+const getStaticProps = async () => {
   const apolloClient = Object(apollo["a" /* initializeApollo */])();
   await apolloClient.query({
     query: feedQuery,
@@ -706,25 +735,12 @@ Index.getInitialProps = async () => {
     }
   });
   return {
-    initialApolloState: apolloClient.cache.extract()
+    props: {
+      initialApolloState: apolloClient.cache.extract()
+    },
+    revalidate: 1
   };
-}; // export const getStaticProps: GetStaticProps = async () => {
-//   const apolloClient = initializeApollo();
-//   await apolloClient.query({
-//     query: feedQuery,
-//     variables: {
-//       first: 10
-//     }
-//   });
-//   return {
-//     props: {
-//       initialApolloState: apolloClient.cache.extract()
-//     },
-//     revalidate: 1
-//   };
-// };
-
-
+};
 /* harmony default export */ var pages = __webpack_exports__["default"] = (Index);
 
 /***/ }),
@@ -789,6 +805,13 @@ function assign(target, ...searchParamsList) {
   });
   return target;
 }
+
+/***/ }),
+
+/***/ "4Q3z":
+/***/ (function(module, exports) {
+
+module.exports = require("next/router");
 
 /***/ }),
 
@@ -866,6 +889,9 @@ var external_react_default = /*#__PURE__*/__webpack_require__.n(external_react_)
 var external_styled_components_ = __webpack_require__("Dtiu");
 var external_styled_components_default = /*#__PURE__*/__webpack_require__.n(external_styled_components_);
 
+// EXTERNAL MODULE: ./context/index.tsx
+var context = __webpack_require__("O0wy");
+
 // EXTERNAL MODULE: ./node_modules/next/link.js
 var next_link = __webpack_require__("YFqc");
 var link_default = /*#__PURE__*/__webpack_require__.n(next_link);
@@ -891,9 +917,6 @@ const StyledLink = ({
 // EXTERNAL MODULE: ./components/icon/index.tsx
 var icon = __webpack_require__("z75s");
 
-// EXTERNAL MODULE: ./context/index.tsx
-var context = __webpack_require__("O0wy");
-
 // EXTERNAL MODULE: ./lib/token.ts
 var lib_token = __webpack_require__("hLbD");
 
@@ -910,13 +933,13 @@ const AddPostButton_Container = external_styled_components_default.a.div.withCon
 })(["", "{display:none;}"], props => props.theme.media.tablet);
 
 const AddPostButton = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const handleClick = Object(external_react_["useCallback"])(() => {
     const token = Object(lib_token["a" /* getAccessToken */])();
 
     if (token) {
       dispatch({
-        type: context["g" /* SHOW_POST_MODAL */],
+        type: context["k" /* SHOW_POST_MODAL */],
         postId: "",
         title: "",
         description: "",
@@ -925,7 +948,7 @@ const AddPostButton = () => {
       });
     } else {
       dispatch({
-        type: context["e" /* SHOW_LOGIN_MODAL */]
+        type: context["i" /* SHOW_LOGIN_MODAL */]
       });
     }
   }, []);
@@ -949,7 +972,7 @@ var ProfileButton_jsx = external_react_default.a.createElement;
 
 
 const ProfileButton = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const handleClick = Object(external_react_["useCallback"])(() => {
     const token = Object(lib_token["a" /* getAccessToken */])();
 
@@ -959,7 +982,7 @@ const ProfileButton = () => {
       if (tf) {
         Object(lib_token["b" /* removeAccessToken */])();
         dispatch({
-          type: context["d" /* SET_ME */],
+          type: context["g" /* SET_ME */],
           userId: null,
           nickname: null,
           email: null,
@@ -969,7 +992,7 @@ const ProfileButton = () => {
       }
     } else {
       dispatch({
-        type: context["e" /* SHOW_LOGIN_MODAL */]
+        type: context["i" /* SHOW_LOGIN_MODAL */]
       });
     }
   }, []);
@@ -985,13 +1008,97 @@ var SearchButton_jsx = external_react_default.a.createElement;
 
 
 
-const SearchButton = () => SearchButton_jsx(link_default.a, {
-  href: "/search"
-}, SearchButton_jsx("a", null, SearchButton_jsx(icon["j" /* Search */], null)));
+const SearchButton = () => {
+  const dispatch = Object(context["n" /* useVssDispatch */])();
+  const {
+    isShowSearchBar
+  } = Object(context["o" /* useVssState */])();
+  const handleClick = Object(external_react_["useCallback"])(() => {
+    dispatch({
+      type: isShowSearchBar ? context["e" /* HIDE_SEARCH_BAR */] : context["l" /* SHOW_SEARCH_BAR */]
+    });
+  }, [isShowSearchBar]);
+  return SearchButton_jsx("div", {
+    onClick: handleClick
+  }, SearchButton_jsx(icon["j" /* Search */], null));
+};
 
 /* harmony default export */ var common_SearchButton = (SearchButton);
+// EXTERNAL MODULE: external "next/router"
+var router_ = __webpack_require__("4Q3z");
+
+// EXTERNAL MODULE: ./components/common/Input.tsx
+var Input = __webpack_require__("4lbY");
+
+// EXTERNAL MODULE: ./components/common/Form.tsx
+var Form = __webpack_require__("ppIK");
+
+// CONCATENATED MODULE: ./components/common/HeaderSearchBar.tsx
+var HeaderSearchBar_jsx = external_react_default.a.createElement;
+
+
+
+
+
+const SearchForm = external_styled_components_default.a.form.withConfig({
+  displayName: "HeaderSearchBar__SearchForm",
+  componentId: "s0s9q4-0"
+})(["position:relative;margin:0 auto;width:500px;", "{width:calc(100% - 2rem);}"], props => props.theme.media.tablet);
+const Wrapper = external_styled_components_default.a.div.withConfig({
+  displayName: "HeaderSearchBar__Wrapper",
+  componentId: "s0s9q4-1"
+})(["position:relative;display:flex;justify-content:space-between;"]);
+const SearchInput = external_styled_components_default()(Input["a" /* default */]).withConfig({
+  displayName: "HeaderSearchBar__SearchInput",
+  componentId: "s0s9q4-2"
+})(["background:", ";padding:5px;font-size:14px;border-radius:3px;text-align:center;position:relative;&::placeholder{opacity:0.8;font-weight:200;}"], props => props.theme.bgColor);
+
+const HeaderSearchBar = () => {
+  const router = Object(router_["useRouter"])();
+  const {
+    0: searchKeyword,
+    1: setSearchKeyword
+  } = Object(external_react_["useState"])("");
+  const $search = Object(external_react_["useRef"])(null);
+  const handleChangeSearchKeyword = Object(external_react_["useCallback"])(e => {
+    setSearchKeyword(e.target.value);
+  }, []);
+  const handleSearchSubmit = Object(external_react_["useCallback"])(e => {
+    e.preventDefault();
+
+    if (!searchKeyword) {
+      return alert("검색어를 입력하세요");
+    }
+
+    router.push(`/search/${searchKeyword}`);
+  }, [searchKeyword]);
+  Object(external_react_["useEffect"])(() => {
+    const node = $search.current;
+
+    if (node) {
+      node.focus();
+    }
+  }, []);
+  return HeaderSearchBar_jsx(SearchForm, {
+    onSubmit: handleSearchSubmit
+  }, HeaderSearchBar_jsx(Form["b" /* Label */], {
+    htmlFor: "search",
+    val: searchKeyword
+  }, "\uAC80\uC0C9\uC5B4\uB97C \uC785\uB825\uD558\uC138\uC694."), HeaderSearchBar_jsx(Wrapper, null, HeaderSearchBar_jsx(SearchInput, {
+    placeholder: "\uAC80\uC0C9\uC5B4\uB97C \uC785\uB825\uD558\uC138\uC694.",
+    name: "search",
+    value: searchKeyword,
+    onChange: handleChangeSearchKeyword,
+    autoComplete: "off",
+    ref: $search
+  })));
+};
+
+/* harmony default export */ var common_HeaderSearchBar = (HeaderSearchBar);
 // CONCATENATED MODULE: ./components/common/Header.tsx
 var Header_jsx = external_react_default.a.createElement;
+
+
 
 
 
@@ -1002,10 +1109,10 @@ const Header_Container = external_styled_components_default.a.header.withConfig(
   displayName: "Header__Container",
   componentId: "sc-5hjg9x-0"
 })(["height:4rem;width:100%;background:white;position:fixed;border-bottom:", ";z-index:1;"], props => props.theme.boxBorder);
-const Wrapper = external_styled_components_default.a.div.withConfig({
+const Header_Wrapper = external_styled_components_default.a.div.withConfig({
   displayName: "Header__Wrapper",
   componentId: "sc-5hjg9x-1"
-})(["width:912px;height:100%;display:flex;justify-content:space-between;align-items:center;margin:0 auto;padding:0 10px;", "{width:768px;}", "{width:calc(100% - 2rem);}"], props => props.theme.media.desktop, props => props.theme.media.tablet);
+})(["width:912px;height:100%;display:flex;justify-content:space-between;align-items:center;margin:0 auto;padding:0 10px;position:relative;", "{width:768px;}", "{width:calc(100% - 2rem);}"], props => props.theme.media.desktop, props => props.theme.media.tablet);
 const Column = external_styled_components_default.a.div.withConfig({
   displayName: "Header__Column",
   componentId: "sc-5hjg9x-2"
@@ -1014,16 +1121,33 @@ const Logo = external_styled_components_default.a.span.withConfig({
   displayName: "Header__Logo",
   componentId: "sc-5hjg9x-3"
 })(["font-size:30px;font-weight:500;letter-spacing:5px;cursor:pointer;"]);
+const SearchWrapper = external_styled_components_default.a.div.withConfig({
+  displayName: "Header__SearchWrapper",
+  componentId: "sc-5hjg9x-4"
+})(["border:", ";background:white;position:absolute;top:4rem - 10px;left:0;width:100%;height:60px;padding:10px;"], props => props.theme.boxBorder);
 
-const Header = () => Header_jsx(Header_Container, null, Header_jsx(Wrapper, null, Header_jsx(Column, null, Header_jsx(Link, {
-  href: "/"
-}, Header_jsx(Logo, null, "VSS"))), Header_jsx(Column, null, Header_jsx(common_SearchButton, null), Header_jsx(common_AddPostButton, null), Header_jsx(common_ProfileButton, null))));
+const Header = () => {
+  const {
+    isShowSearchBar
+  } = Object(context["o" /* useVssState */])();
+  return Header_jsx(Header_Container, null, Header_jsx(Header_Wrapper, null, Header_jsx(Column, null, Header_jsx(Link, {
+    href: "/"
+  }, Header_jsx(Logo, null, "VSS"))), Header_jsx(Column, null, Header_jsx(common_SearchButton, null), Header_jsx(common_AddPostButton, null), Header_jsx(common_ProfileButton, null))), isShowSearchBar && Header_jsx(SearchWrapper, null, Header_jsx(common_HeaderSearchBar, null)));
+};
 
 /* harmony default export */ var common_Header = (Header);
 // EXTERNAL MODULE: external "@apollo/client"
 var client_ = __webpack_require__("z+8S");
 
+// EXTERNAL MODULE: external "marked"
+var external_marked_ = __webpack_require__("HWFp");
+var external_marked_default = /*#__PURE__*/__webpack_require__.n(external_marked_);
+
 // CONCATENATED MODULE: ./graphql/notice/mutation/add.ts
+
+/**
+ * * 공지사항 등록
+ */
 
 const addNoticeMutation = client_["gql"]`
   mutation addNotice($title: String!, $description: String!) {
@@ -1031,6 +1155,10 @@ const addNoticeMutation = client_["gql"]`
   }
 `;
 // CONCATENATED MODULE: ./graphql/notice/mutation/update.ts
+
+/**
+ * * 공지사항 수정
+ */
 
 const updateNoticeMutation = client_["gql"]`
   mutation updateNotice(
@@ -1043,6 +1171,10 @@ const updateNoticeMutation = client_["gql"]`
 `;
 // CONCATENATED MODULE: ./graphql/notice/mutation/remove.ts
 
+/**
+ * * 공지사항 삭제
+ */
+
 const removeNoticeMutation = client_["gql"]`
   mutation deleteNotice($noticeId: String!) {
     deleteNotice(noticeId: $noticeId)
@@ -1050,12 +1182,6 @@ const removeNoticeMutation = client_["gql"]`
 `;
 // EXTERNAL MODULE: external "react-bootstrap"
 var external_react_bootstrap_ = __webpack_require__("IZS3");
-
-// EXTERNAL MODULE: ./components/common/Input.tsx
-var Input = __webpack_require__("4lbY");
-
-// EXTERNAL MODULE: ./components/common/Form.tsx
-var Form = __webpack_require__("ppIK");
 
 // EXTERNAL MODULE: ./components/common/Loader.tsx
 var Loader = __webpack_require__("4e43");
@@ -1081,7 +1207,6 @@ const PreviewWrap = external_styled_components_default()(ReadOnlyDescription).wi
 })(["z-index:10;& > span{position:absolute;top:5px;right:5px;cursor:pointer;}"]);
 
 const SetNoticePresenter = ({
-  loading,
   setNoticeLoading,
   removeNoticeLoading,
   action,
@@ -1096,7 +1221,7 @@ const SetNoticePresenter = ({
   onClose,
   onDelete,
   onSubmit
-}) => SetNoticePresenter_jsx(external_react_["Fragment"], null, (loading || setNoticeLoading || removeNoticeLoading) && SetNoticePresenter_jsx(Loader["a" /* default */], null), SetNoticePresenter_jsx(external_react_bootstrap_["Modal"], {
+}) => SetNoticePresenter_jsx(external_react_["Fragment"], null, (setNoticeLoading || removeNoticeLoading) && SetNoticePresenter_jsx(Loader["a" /* default */], null), SetNoticePresenter_jsx(external_react_bootstrap_["Modal"], {
   onHide: onClose,
   show: true,
   animation: false
@@ -1225,16 +1350,13 @@ var SetNoticeContainer_jsx = external_react_default.a.createElement;
 
 
 
+
 const SetNoticeContainer = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const {
     activeNotice,
     isMaster
-  } = Object(context["j" /* useVssState */])();
-  const {
-    loading,
-    call
-  } = useLazyAxios();
+  } = Object(context["o" /* useVssState */])();
   const modalTitle = useInput(activeNotice.title);
   const modalDescription = useInput(activeNotice.description);
   const {
@@ -1259,54 +1381,19 @@ const SetNoticeContainer = () => {
   const [remove, {
     loading: removeNoticeLoading
   }] = Object(client_["useMutation"])(removeNoticeMutation);
-
-  const convertTextIntoMd = async text => {
-    const {
-      data,
-      error
-    } = await call({
-      method: "post",
-      url: "https://api.github.com/markdown",
-      data: {
-        text,
-        mode: "gfm",
-        context: "github/gollum"
-      }
-    });
-
-    if (data) {
-      const doc = new DOMParser().parseFromString(data, "text/html");
-      return doc.body.innerHTML;
-    } else if (error) {
-      return null;
-    } else {
-      throw new Error("please, check useLazyAxios");
-    }
-  };
-
   const handlePreView = Object(external_react_["useCallback"])(async () => {
-    if (loading) return;
-
     if (!modalDescription.value) {
       return alert("내용을 입력하세요.");
     }
 
-    try {
-      const md = await convertTextIntoMd(modalDescription.value);
-
-      if (md) {
-        setPreview(md);
-      }
-    } catch {
-      alert("미리보기 로드에 실패했습니다.");
-    }
+    setPreview(external_marked_default()(modalDescription.value));
   }, [modalDescription.value]);
   const handleRefreshPreview = Object(external_react_["useCallback"])(() => {
     setPreview("");
   }, []);
   const handleClose = Object(external_react_["useCallback"])(() => {
     dispatch({
-      type: context["b" /* HIDE_NOTICE_MODAL */]
+      type: context["c" /* HIDE_NOTICE_MODAL */]
     });
   }, []);
   const handleShowEdit = Object(external_react_["useCallback"])(() => {
@@ -1379,20 +1466,11 @@ const SetNoticeContainer = () => {
     }
   }, [modalAction.code, modalTitle.value, modalDescription.value, setNoticeLoading]);
   Object(external_react_["useEffect"])(() => {
-    async function loadDescription(value) {
-      const md = await convertTextIntoMd(value);
-
-      if (md) {
-        setMdDescription(md);
-      }
-    }
-
     if (activeNotice.description) {
-      loadDescription(activeNotice.description);
+      setMdDescription(external_marked_default()(activeNotice.description));
     }
   }, [activeNotice.description]);
   return SetNoticeContainer_jsx(modal_SetNoticePresenter, {
-    loading: loading,
     removeNoticeLoading: removeNoticeLoading,
     setNoticeLoading: setNoticeLoading,
     action: modalAction,
@@ -1413,6 +1491,10 @@ const SetNoticeContainer = () => {
 /* harmony default export */ var modal_SetNoticeContainer = (SetNoticeContainer);
 // CONCATENATED MODULE: ./graphql/post/mutation/add.ts
 
+/**
+ * * 포스트 추가
+ */
+
 const addPostMutation = client_["gql"]`
   mutation addPost(
     $title: String!
@@ -1429,6 +1511,10 @@ const addPostMutation = client_["gql"]`
   }
 `;
 // CONCATENATED MODULE: ./graphql/post/mutation/update.ts
+
+/**
+ * * 포스트 수정
+ */
 
 const updatePostMutation = client_["gql"]`
   mutation updatePost(
@@ -1476,7 +1562,7 @@ const SetPostPresenter_SetNoticePresenter = ({
   status,
   progress,
   file,
-  fileEl,
+  $file,
   onClickFile,
   onChangeFile,
   onChangeTitle,
@@ -1506,7 +1592,7 @@ const SetPostPresenter_SetNoticePresenter = ({
 }, "\uD30C\uC77C\uC120\uD0DD")))), SetPostPresenter_jsx("input", {
   type: "file",
   onChange: onChangeFile,
-  ref: fileEl,
+  ref: $file,
   hidden: true,
   accept: "video/*"
 })) : SetPostPresenter_jsx(external_react_default.a.Fragment, null, SetPostPresenter_jsx(Form["a" /* InputWrapper */], null, SetPostPresenter_jsx(Form["b" /* Label */], {
@@ -1567,13 +1653,13 @@ var SetPostContainer_jsx = external_react_default.a.createElement;
 const SetPostContainer = () => {
   const {
     activePost
-  } = Object(context["j" /* useVssState */])();
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  } = Object(context["o" /* useVssState */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const {
     0: header,
     1: setHeader
   } = Object(external_react_["useState"])("영상 업로드");
-  const fileEl = Object(external_react_["useRef"])(null);
+  const $file = Object(external_react_["useRef"])(null);
   const {
     0: title,
     1: setTitle
@@ -1617,7 +1703,7 @@ const SetPostContainer = () => {
       return alert("업로드 진행 중입니다.");
     }
 
-    const node = fileEl.current;
+    const node = $file.current;
 
     if (node) {
       node.click();
@@ -1733,7 +1819,7 @@ const SetPostContainer = () => {
   }, [title, description, status, file, addPostLoading, activePost, updatePostLoading]);
   const handleClose = Object(external_react_["useCallback"])(() => {
     dispatch({
-      type: context["c" /* HIDE_POST_MODAL */]
+      type: context["d" /* HIDE_POST_MODAL */]
     });
   }, []);
   Object(external_react_["useEffect"])(() => {
@@ -1768,7 +1854,7 @@ const SetPostContainer = () => {
     status: status,
     progress: progress,
     file: file,
-    fileEl: fileEl,
+    $file: $file,
     onClickFile: handleClickFile,
     onChangeFile: handleChangeFile,
     onChangeTitle: handleChangeTitle,
@@ -1782,6 +1868,10 @@ const SetPostContainer = () => {
 
 /* harmony default export */ var modal_SetPostContainer = (SetPostContainer);
 // CONCATENATED MODULE: ./graphql/auth/mutation/login.ts
+
+/**
+ * * 로그인
+ */
 
 const logInMutation = client_["gql"]`
   mutation logIn($email: String!, $pwd: String!) {
@@ -1835,6 +1925,7 @@ const SignInPresenter = ({
     type: "password",
     placeholder: "\uC554\uD638",
     name: "password",
+    autoComplete: "off",
     required: true
   }, pwd))), SignInPresenter_jsx(Button["a" /* default */], {
     text: "\uB85C\uADF8\uC778",
@@ -1854,7 +1945,7 @@ var SignInContainer_jsx = external_react_default.a.createElement;
 
 
 const SignInContainer = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const [login, {
     loading
   }] = Object(client_["useMutation"])(logInMutation);
@@ -1890,7 +1981,7 @@ const SignInContainer = () => {
         } = logIn;
         Object(lib_token["c" /* setAccessToken */])(token);
         dispatch({
-          type: context["d" /* SET_ME */],
+          type: context["g" /* SET_ME */],
           userId: id,
           nickname,
           email,
@@ -1898,7 +1989,7 @@ const SignInContainer = () => {
           isMaster
         });
         dispatch({
-          type: context["a" /* HIDE_LOGIN_MODAL */]
+          type: context["b" /* HIDE_LOGIN_MODAL */]
         });
       }
     } catch (error) {
@@ -1942,8 +2033,8 @@ const SignUpPresenter = ({
   pwd,
   confirmPwd,
   preview,
-  fileEl,
-  confirmPwdEl,
+  $file,
+  $confirmPwd,
   onChangePreview,
   onChangeConfirmPwd,
   onClickUpload,
@@ -1965,7 +2056,7 @@ const SignUpPresenter = ({
   }), SignUpPresenter_jsx("input", {
     type: "file",
     onChange: onChangePreview,
-    ref: fileEl,
+    ref: $file,
     hidden: true,
     accept: "image/jpg, image/jpeg, image/png"
   })), SignUpPresenter_jsx(Form["a" /* InputWrapper */], null, SignUpPresenter_jsx(Form["b" /* Label */], {
@@ -1984,6 +2075,7 @@ const SignUpPresenter = ({
     type: "password",
     placeholder: "\uC554\uD638",
     name: "password",
+    autoComplete: "off",
     required: true
   }, pwd))), SignUpPresenter_jsx(Form["a" /* InputWrapper */], null, SignUpPresenter_jsx(Form["b" /* Label */], {
     htmlFor: "conform_password",
@@ -1992,10 +2084,11 @@ const SignUpPresenter = ({
     type: "password",
     placeholder: "\uC554\uD638 \uD655\uC778",
     name: "conform_password",
+    autoComplete: "off",
     required: true,
     value: confirmPwd,
     onChange: onChangeConfirmPwd,
-    ref: confirmPwdEl
+    ref: $confirmPwd
   })), SignUpPresenter_jsx(Form["a" /* InputWrapper */], null, SignUpPresenter_jsx(Form["b" /* Label */], {
     htmlFor: "nickname",
     val: nickname.value
@@ -2013,6 +2106,10 @@ const SignUpPresenter = ({
 
 /* harmony default export */ var auth_SignUpPresenter = (SignUpPresenter);
 // CONCATENATED MODULE: ./graphql/user/mutation/signup.ts
+
+/**
+ * * 회원가입
+ */
 
 const signUpMutation = client_["gql"]`
   mutation addUser(
@@ -2039,8 +2136,8 @@ const SignUpContainer = ({
     loading,
     call
   } = useLazyAxios();
-  const fileEl = Object(external_react_["useRef"])(null);
-  const confirmPwdEl = Object(external_react_["useRef"])(null);
+  const $file = Object(external_react_["useRef"])(null);
+  const $confirmPwd = Object(external_react_["useRef"])(null);
   const nickname = useInput("");
   const email = useInput("");
   const pwd = useInput("");
@@ -2063,7 +2160,7 @@ const SignUpContainer = ({
     const {
       value
     } = e.target;
-    const node = confirmPwdEl.current;
+    const node = $confirmPwd.current;
     setConfirmPwd(value);
 
     if (pwd.value !== value) {
@@ -2116,7 +2213,7 @@ const SignUpContainer = ({
     }
   }, [loading]);
   const handleClickUpload = Object(external_react_["useCallback"])(() => {
-    const node = fileEl.current;
+    const node = $file.current;
 
     if (node) {
       node.click();
@@ -2166,8 +2263,8 @@ const SignUpContainer = ({
     pwd: pwd,
     confirmPwd: confirmPwd,
     preview: preview,
-    fileEl: fileEl,
-    confirmPwdEl: confirmPwdEl,
+    $file: $file,
+    $confirmPwd: $confirmPwd,
     onChangePreview: handleChangePreview,
     onChangeConfirmPwd: handleChangeConfirmPwd,
     onClickUpload: handleClickUpload,
@@ -2191,14 +2288,14 @@ const Auth_Link = external_styled_components_default.a.span.withConfig({
 })(["color:", ";cursor:pointer;"], props => props.theme.blueColor);
 
 const Auth = () => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const {
     0: action,
     1: setAction
   } = Object(external_react_["useState"])("login");
   const handleClose = Object(external_react_["useCallback"])(() => {
     dispatch({
-      type: context["a" /* HIDE_LOGIN_MODAL */]
+      type: context["b" /* HIDE_LOGIN_MODAL */]
     });
   }, []);
   return Auth_jsx(external_react_bootstrap_["Modal"], {
@@ -2235,7 +2332,7 @@ const Layout = ({
     isShowNoticeModal,
     isShowAddPostModal,
     isShowLoginModal
-  } = Object(context["j" /* useVssState */])();
+  } = Object(context["o" /* useVssState */])();
   return Layout_jsx("div", null, Layout_jsx(head_default.a, null, Layout_jsx("meta", {
     charSet: "UTF-8",
     name: "format-detection",
@@ -2252,6 +2349,10 @@ const Layout = ({
   }), Layout_jsx("meta", {
     httpEquiv: "X-UA-Compatible",
     content: "ie=edge"
+  }), Layout_jsx("link", {
+    rel: "icon",
+    type: "image/x-icon",
+    href: "/static/favicon.ico"
   }), Layout_jsx("title", null, title)), Layout_jsx(external_react_default.a.Fragment, null, title !== "페이지를 찾을 수 없습니다" && Layout_jsx(common_Header, null)), Layout_jsx(external_react_default.a.Fragment, null, children), Layout_jsx(external_react_default.a.Fragment, null, isShowNoticeModal && Layout_jsx(modal_SetNoticeContainer, null), isShowAddPostModal && Layout_jsx(modal_SetPostContainer, null), isShowLoginModal && Layout_jsx(modal_Auth, null)));
 };
 
@@ -2306,18 +2407,19 @@ var __jsx = external_react_default.a.createElement;
 const Container = external_styled_components_default.a.div.withConfig({
   displayName: "HoverUser__Container",
   componentId: "v2im11-0"
-})(["", ";position:absolute;display:flex;flex-direction:column;overflow:hidden;top:35px;left:0;width:240px;height:220px;z-index:100;"], props => props.theme.whiteBox);
+})(["", ";position:absolute;display:flex;flex-direction:column;overflow:hidden;top:", "px;left:0;width:240px;height:220px;z-index:100;"], props => props.theme.whiteBox, props => props.top);
 const Loading = external_styled_components_default.a.div.withConfig({
   displayName: "HoverUser__Loading",
   componentId: "v2im11-1"
-})(["", ";position:absolute;overflow:hidden;display:flex;justfiy-content:flex-start;align-items:center;text-indent:10px;top:35px;left:0;width:240px;height:50px;z-index:100;"], props => props.theme.whiteBox);
+})(["", ";position:absolute;overflow:hidden;display:flex;justfiy-content:flex-start;align-items:center;text-indent:10px;top:", "px;left:0;width:240px;height:50px;z-index:100;"], props => props.theme.whiteBox, props => props.top);
 
 const HoverUser = ({
-  userId
+  userId,
+  top
 }) => {
   const {
     userId: myUserId
-  } = Object(context["j" /* useVssState */])();
+  } = Object(context["o" /* useVssState */])();
   const {
     data,
     loading
@@ -2329,7 +2431,9 @@ const HoverUser = ({
   });
 
   if (loading) {
-    return __jsx(Loading, null, "\uB85C\uB529 \uC911\uC785\uB2C8\uB2E4...");
+    return __jsx(Loading, {
+      top: top
+    }, "\uB85C\uB529 \uC911\uC785\uB2C8\uB2E4...");
   }
 
   const {
@@ -2340,7 +2444,9 @@ const HoverUser = ({
     posts
   } = data.getUser;
   const isFollowing = followedBy.some(v => v.id === myUserId);
-  return __jsx(Container, null, __jsx(Thumbnail, {
+  return __jsx(Container, {
+    top: top
+  }, __jsx(Thumbnail, {
     src: avatar.url
   }), __jsx(Column, null, __jsx("div", null, nickname), __jsx("div", null, myUserId && userId !== myUserId && __jsx(FollowButton["a" /* default */], {
     userId: userId,
@@ -2558,6 +2664,10 @@ module.exports = _interopRequireWildcard;
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("z+8S");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_apollo_client__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * * 포스트 삭제
+ */
+
 const removePostMutation = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
   mutation deletePost($postId: String!) {
     deletePost(postId: $postId)
@@ -2631,6 +2741,10 @@ module.exports = require("@apollo/client/utilities");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("z+8S");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_apollo_client__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * * 포스트 검색
+ */
+
 const postsQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
   query getPosts(
     $skip: Int
@@ -2664,12 +2778,16 @@ const postsQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
         }
       }
       status
-      room {
-        id
-      }
     }
   }
 `;
+
+/***/ }),
+
+/***/ "HWFp":
+/***/ (function(module, exports) {
+
+module.exports = require("marked");
 
 /***/ }),
 
@@ -2694,7 +2812,7 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 const Container = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.div.withConfig({
   displayName: "Subject__Container",
   componentId: "sc-1sw9jmh-0"
-})(["display:flex;justify-content:space-between;align-items:center;border-bottom:", ";padding:8px 5px;font-size:20px;margin-bottom:10px;font-weight:500;& svg{width:20px;height:20px;}"], props => props.activeBorder && `1px solid gray`);
+})(["display:flex;justify-content:space-between;align-items:center;border-bottom:", ";padding:8px 5px;font-size:20px;margin-bottom:10px;font-weight:500;& svg{width:20px;height:20px;}"], props => props.activeBorder && `2px solid gray`);
 
 const Subject = ({
   children,
@@ -2724,11 +2842,19 @@ var Button = __webpack_require__("Okwz");
 
 // CONCATENATED MODULE: ./graphql/user/mutation/follow.ts
 
+/**
+ * * 팔로우
+ */
+
 const followMutation = client_["gql"]`
   mutation follow($userId: String!) {
     follow(userId: $userId)
   }
 `;
+/**
+ * * 언팔로우
+ */
+
 const unfollowMutation = client_["gql"]`
   mutation unfollow($userId: String!) {
     unfollow(userId: $userId)
@@ -2753,7 +2879,7 @@ const FollowButton = ({
   isFollowing,
   userId
 }) => {
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const {
     0: ctrlIsFolling,
     1: setCtrlIsFolling
@@ -2799,7 +2925,7 @@ const FollowButton = ({
       }
     } else {
       dispatch({
-        type: context["e" /* SHOW_LOGIN_MODAL */]
+        type: context["i" /* SHOW_LOGIN_MODAL */]
       });
     }
   }, [ctrlIsFolling, followLoading, unfollowLoading]);
@@ -2898,42 +3024,46 @@ const Header = external_styled_components_default.a.div.withConfig({
 const User = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__User",
   componentId: "sc-69jamc-2"
-})(["position:relative;width:100px;display:flex;align-items:center;"]);
+})(["position:relative;width:120px;display:flex;justify-content:space-between;align-items:center;"]);
+const Nick = external_styled_components_default.a.div.withConfig({
+  displayName: "PostPresenter__Nick",
+  componentId: "sc-69jamc-3"
+})(["width:100px;text-indent:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"]);
 const Body = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__Body",
-  componentId: "sc-69jamc-3"
+  componentId: "sc-69jamc-4"
 })(["padding:15px;border-top:", ";border-bottom:", ";display:flex;flex-direction:column;width:100%;"], props => props.theme.boxBorder, props => props.theme.boxBorder);
 const Title = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__Title",
-  componentId: "sc-69jamc-4"
+  componentId: "sc-69jamc-5"
 })(["font-weight:bold;font-size:20px;margin-bottom:10px;"]);
 const Description = external_styled_components_default()(Title).withConfig({
   displayName: "PostPresenter__Description",
-  componentId: "sc-69jamc-5"
+  componentId: "sc-69jamc-6"
 })(["top:30px;font-size:16px;font-weight:500;margin-bottom:0;"]);
 const Footer = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__Footer",
-  componentId: "sc-69jamc-6"
+  componentId: "sc-69jamc-7"
 })(["padding:15px;"]);
 const IconWrapper = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__IconWrapper",
-  componentId: "sc-69jamc-7"
+  componentId: "sc-69jamc-8"
 })(["display:flex;justify-content:space-between;align-items:center;"]);
 const Icon = external_styled_components_default.a.span.withConfig({
   displayName: "PostPresenter__Icon",
-  componentId: "sc-69jamc-8"
+  componentId: "sc-69jamc-9"
 })(["margin-right:10px;", ""], props => props.disabledMobile && props.theme.isMobile && "display: none");
 const DownloadItem = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__DownloadItem",
-  componentId: "sc-69jamc-9"
+  componentId: "sc-69jamc-10"
 })(["display:inline-block;width:100%;"]);
 const DownloadLink = external_styled_components_default.a.a.withConfig({
   displayName: "PostPresenter__DownloadLink",
-  componentId: "sc-69jamc-10"
+  componentId: "sc-69jamc-11"
 })(["display:block;width:100%;height:100%;border:0;border-radius:", ";color:white;font-weight:600;background:", ";text-align:center;padding:7px 0;font-size:14px;&:hover{color:white;text-decoration:none;}"], props => props.theme.borderRadius, props => props.theme.blueColor);
 const MoreWrapper = external_styled_components_default.a.div.withConfig({
   displayName: "PostPresenter__MoreWrapper",
-  componentId: "sc-69jamc-11"
+  componentId: "sc-69jamc-12"
 })(["position:relative;& #dropdown-custom-2{position:absolute;top:-20px;right:0;opacity:0;z-index:1;}& svg{width:20px;height:20px;fill:gray;cursor:pointer;position:absolute;top:-10px;right:0;}"]);
 
 const PostPresenter = ({
@@ -2956,12 +3086,9 @@ const PostPresenter = ({
   size: "30",
   src: user.avatar.url,
   onClick: onClickAvatar
-}), PostPresenter_jsx("div", {
-  style: {
-    textIndent: 10
-  }
-}, user.nickname), isShowUser && PostPresenter_jsx(HoverUser["a" /* default */], {
-  userId: user.id
+}), PostPresenter_jsx(Nick, null, user.nickname), isShowUser && PostPresenter_jsx(HoverUser["a" /* default */], {
+  userId: user.id,
+  top: 30
 })), PostPresenter_jsx("div", {
   style: {
     width: 100,
@@ -3013,6 +3140,10 @@ var mutation_remove = __webpack_require__("AStJ");
 
 // CONCATENATED MODULE: ./graphql/post/mutation/like.ts
 
+/**
+ * * 좋아요 / 좋아요 취소
+ */
+
 const likeMutation = client_["gql"]`
   mutation likePost($postId: String!) {
     likePost(postId: $postId)
@@ -3047,8 +3178,8 @@ const PostContainer = ({
 }) => {
   const {
     userId
-  } = Object(context["j" /* useVssState */])();
-  const dispatch = Object(context["i" /* useVssDispatch */])();
+  } = Object(context["o" /* useVssState */])();
+  const dispatch = Object(context["n" /* useVssDispatch */])();
   const isMyPost = userId || userId === user.id;
   const {
     0: ctrlIsLiked,
@@ -3078,14 +3209,14 @@ const PostContainer = ({
     if (token) {//Router.push(`/room/${room.id}`);
     } else {
       dispatch({
-        type: context["e" /* SHOW_LOGIN_MODAL */]
+        type: context["i" /* SHOW_LOGIN_MODAL */]
       });
     }
   }, []); // 포스트 수정 이벤트
 
   const handleUpdate = Object(external_react_["useCallback"])(() => {
     dispatch({
-      type: context["g" /* SHOW_POST_MODAL */],
+      type: context["k" /* SHOW_POST_MODAL */],
       postId: id,
       title,
       description,
@@ -3115,7 +3246,7 @@ const PostContainer = ({
       }
     } else {
       dispatch({
-        type: context["e" /* SHOW_LOGIN_MODAL */]
+        type: context["i" /* SHOW_LOGIN_MODAL */]
       });
     }
   }, [ctrlIsLiked, ctrlLikeCount, likeLoading]); // 삭제 이벤트
@@ -3185,6 +3316,10 @@ const PostContainer = ({
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("z+8S");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_apollo_client__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * * 사용자 정보 로드
+ */
+
 const meQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
   query me {
     getMyProfile {
@@ -3211,18 +3346,21 @@ const meQuery = _apollo_client__WEBPACK_IMPORTED_MODULE_0__["gql"]`
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return SET_ME; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return SHOW_NOTICE_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return HIDE_NOTICE_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return SHOW_POST_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HIDE_POST_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return SHOW_LOGIN_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HIDE_LOGIN_MODAL; });
-/* unused harmony export SHOW_SEARCH_BAR */
-/* unused harmony export HIDE_SEARCH_BAR */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return VssProvider; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return useVssState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return useVssDispatch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return SET_ME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return SHOW_NOTICE_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HIDE_NOTICE_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return SHOW_POST_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HIDE_POST_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return SHOW_LOGIN_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return HIDE_LOGIN_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return SHOW_SEARCH_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return HIDE_SEARCH_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return SHOW_FILTER_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HIDE_FILTER_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return SEARCH_POST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return VssProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return useVssState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return useVssDispatch; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("cDcd");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
@@ -3242,7 +3380,10 @@ const HIDE_POST_MODAL = "HIDE_POST_MODAL";
 const SHOW_LOGIN_MODAL = "SHOW_LOGIN_MODAL";
 const HIDE_LOGIN_MODAL = "HIDE_LOGIN_MODAL";
 const SHOW_SEARCH_BAR = "SHOW_SEARCH_BAR";
-const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR"; // type for action
+const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR";
+const SHOW_FILTER_BAR = "SHOW_FILTER_BAR";
+const HIDE_FILTER_BAR = "HIDE_FILTER_BAR";
+const SEARCH_POST = "SEARCH_POST"; // type for action
 
 // create context
 const VssContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])(null);
@@ -3317,6 +3458,16 @@ function reducer(state, action) {
         isShowSearchBar: false
       });
 
+    case "SHOW_FILTER_BAR":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isShowFilterBar: true
+      });
+
+    case "HIDE_FILTER_BAR":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isShowFilterBar: false
+      });
+
     case "SHOW_LOGIN_MODAL":
       return _objectSpread(_objectSpread({}, state), {}, {
         isShowLoginModal: true
@@ -3325,6 +3476,15 @@ function reducer(state, action) {
     case "HIDE_LOGIN_MODAL":
       return _objectSpread(_objectSpread({}, state), {}, {
         isShowLoginModal: false
+      });
+
+    case "SEARCH_POST":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        searchPostOption: {
+          orderBy: action.hasOwnProperty("orderBy") ? action.orderBy : state.searchPostOption.orderBy,
+          searchKeyword: action.hasOwnProperty("searchKeyword") ? action.searchKeyword : state.searchPostOption.searchKeyword,
+          filter: action.hasOwnProperty("filter") ? action.filter : state.searchPostOption.filter
+        }
       });
 
     default:
@@ -3341,6 +3501,7 @@ const initialState = {
   isShowNoticeModal: false,
   isShowAddPostModal: false,
   isShowSearchBar: false,
+  isShowFilterBar: false,
   isShowLoginModal: false,
   activePost: {
     postId: "",
@@ -3355,6 +3516,11 @@ const initialState = {
     actionText: "비활성화",
     title: "",
     description: ""
+  },
+  searchPostOption: {
+    orderBy: "createdAt_DESC",
+    searchKeyword: "",
+    filter: []
   }
 };
 function VssProvider({
@@ -3718,15 +3884,7 @@ function createApolloClient() {
     connectToDevTools: _isBrowser__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"],
     ssrMode: !_isBrowser__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"],
     link: _apollo_client__WEBPACK_IMPORTED_MODULE_1__["ApolloLink"].from([errorLink, authLink, _isBrowser__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"] ? httpLink : splitLink]),
-    cache: new _apollo_client__WEBPACK_IMPORTED_MODULE_1__["InMemoryCache"]({
-      typePolicies: {
-        Query: {
-          fields: {
-            getPosts: Object(_apollo_client_utilities__WEBPACK_IMPORTED_MODULE_5__["concatPagination"])()
-          }
-        }
-      }
-    })
+    cache: new _apollo_client__WEBPACK_IMPORTED_MODULE_1__["InMemoryCache"]()
   });
 }
 

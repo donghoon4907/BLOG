@@ -31,8 +31,8 @@ interface Props {
   pwd: UseInputProps;
   confirmPwd: string;
   preview: string;
-  fileEl: any;
-  confirmPwdEl: any;
+  $file: any;
+  $confirmPwd: any;
   onChangePreview: any;
   onChangeConfirmPwd: any;
   onClickUpload: any;
@@ -47,8 +47,8 @@ const SignUpPresenter: FC<Props> = ({
   pwd,
   confirmPwd,
   preview,
-  fileEl,
-  confirmPwdEl,
+  $file,
+  $confirmPwd,
   onChangePreview,
   onChangeConfirmPwd,
   onClickUpload,
@@ -68,7 +68,7 @@ const SignUpPresenter: FC<Props> = ({
           <input
             type="file"
             onChange={onChangePreview}
-            ref={fileEl}
+            ref={$file}
             hidden
             accept="image/jpg, image/jpeg, image/png"
           />
@@ -94,6 +94,7 @@ const SignUpPresenter: FC<Props> = ({
             type="password"
             placeholder="암호"
             name="password"
+            autoComplete="off"
             required
             {...pwd}
           />
@@ -106,10 +107,11 @@ const SignUpPresenter: FC<Props> = ({
             type="password"
             placeholder="암호 확인"
             name="conform_password"
+            autoComplete="off"
             required
             value={confirmPwd}
             onChange={onChangeConfirmPwd}
-            ref={confirmPwdEl}
+            ref={$confirmPwd}
           />
         </InputWrapper>
         <InputWrapper>

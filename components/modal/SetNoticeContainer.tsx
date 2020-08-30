@@ -1,16 +1,16 @@
 import React, { useCallback, useState, useEffect, FC, FormEvent } from "react";
 import { useMutation } from "@apollo/client";
+import marked from "marked";
 import { addNoticeMutation } from "../../graphql/notice/mutation/add";
 import { updateNoticeMutation } from "../../graphql/notice/mutation/update";
 import { removeNoticeMutation } from "../../graphql/notice/mutation/remove";
 import SetNoticePresenter from "./SetNoticePresenter";
-import { useInput, useLazyAxios } from "../../hooks";
+import { useInput } from "../../hooks";
 import { useVssState, useVssDispatch, HIDE_NOTICE_MODAL } from "../../context";
 
 const SetNoticeContainer: FC = () => {
   const dispatch = useVssDispatch();
   const { activeNotice, isMaster } = useVssState();
-  const { loading, call } = useLazyAxios();
   const modalTitle = useInput(activeNotice.title);
   const modalDescription = useInput(activeNotice.description);
   const [mdDescription, setMdDescription] = useState<string>("");
@@ -28,40 +28,11 @@ const SetNoticeContainer: FC = () => {
     removeNoticeMutation
   );
 
-  const convertTextIntoMd = async (text: string) => {
-    const { data, error } = await call({
-      method: "post",
-      url: process.env.MDAPI_PATH,
-      data: {
-        text,
-        mode: "gfm",
-        context: "github/gollum"
-      }
-    });
-    if (data) {
-      const doc = new DOMParser().parseFromString(data, "text/html");
-      return doc.body.innerHTML;
-    } else if (error) {
-      return null;
-    } else {
-      throw new Error("please, check useLazyAxios");
-    }
-  };
-
   const handlePreView = useCallback(async () => {
-    if (loading) return;
     if (!modalDescription.value) {
       return alert("내용을 입력하세요.");
     }
-    try {
-      const md = await convertTextIntoMd(modalDescription.value);
-
-      if (md) {
-        setPreview(md);
-      }
-    } catch {
-      alert("미리보기 로드에 실패했습니다.");
-    }
+    setPreview(marked(modalDescription.value));
   }, [modalDescription.value]);
 
   const handleRefreshPreview = useCallback(() => {
@@ -149,20 +120,13 @@ const SetNoticeContainer: FC = () => {
   );
 
   useEffect(() => {
-    async function loadDescription(value: string) {
-      const md = await convertTextIntoMd(value);
-      if (md) {
-        setMdDescription(md);
-      }
-    }
     if (activeNotice.description) {
-      loadDescription(activeNotice.description);
+      setMdDescription(marked(activeNotice.description));
     }
   }, [activeNotice.description]);
 
   return (
     <SetNoticePresenter
-      loading={loading}
       removeNoticeLoading={removeNoticeLoading}
       setNoticeLoading={setNoticeLoading}
       action={modalAction}

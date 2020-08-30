@@ -42,7 +42,7 @@ type Props = {
   status: string;
   progress: number;
   file: string;
-  fileEl: any;
+  $file: any;
   onClickFile: any;
   onChangeFile: any;
   onChangeTitle: any;
@@ -63,7 +63,7 @@ const SetNoticePresenter: FC<Props> = ({
   status,
   progress,
   file,
-  fileEl,
+  $file,
   onClickFile,
   onChangeFile,
   onChangeTitle,
@@ -109,7 +109,7 @@ const SetNoticePresenter: FC<Props> = ({
               <input
                 type="file"
                 onChange={onChangeFile}
-                ref={fileEl}
+                ref={$file}
                 hidden
                 accept="video/*"
               />

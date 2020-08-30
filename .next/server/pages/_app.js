@@ -147,18 +147,21 @@ module.exports = require("@apollo/client/utilities");
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return SET_ME; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return SHOW_NOTICE_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return HIDE_NOTICE_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return SHOW_POST_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HIDE_POST_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return SHOW_LOGIN_MODAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HIDE_LOGIN_MODAL; });
-/* unused harmony export SHOW_SEARCH_BAR */
-/* unused harmony export HIDE_SEARCH_BAR */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return VssProvider; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return useVssState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return useVssDispatch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return SET_ME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return SHOW_NOTICE_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HIDE_NOTICE_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return SHOW_POST_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HIDE_POST_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return SHOW_LOGIN_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return HIDE_LOGIN_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return SHOW_SEARCH_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return HIDE_SEARCH_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return SHOW_FILTER_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HIDE_FILTER_BAR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return SEARCH_POST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return VssProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return useVssState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return useVssDispatch; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("cDcd");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
@@ -178,7 +181,10 @@ const HIDE_POST_MODAL = "HIDE_POST_MODAL";
 const SHOW_LOGIN_MODAL = "SHOW_LOGIN_MODAL";
 const HIDE_LOGIN_MODAL = "HIDE_LOGIN_MODAL";
 const SHOW_SEARCH_BAR = "SHOW_SEARCH_BAR";
-const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR"; // type for action
+const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR";
+const SHOW_FILTER_BAR = "SHOW_FILTER_BAR";
+const HIDE_FILTER_BAR = "HIDE_FILTER_BAR";
+const SEARCH_POST = "SEARCH_POST"; // type for action
 
 // create context
 const VssContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])(null);
@@ -253,6 +259,16 @@ function reducer(state, action) {
         isShowSearchBar: false
       });
 
+    case "SHOW_FILTER_BAR":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isShowFilterBar: true
+      });
+
+    case "HIDE_FILTER_BAR":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isShowFilterBar: false
+      });
+
     case "SHOW_LOGIN_MODAL":
       return _objectSpread(_objectSpread({}, state), {}, {
         isShowLoginModal: true
@@ -261,6 +277,15 @@ function reducer(state, action) {
     case "HIDE_LOGIN_MODAL":
       return _objectSpread(_objectSpread({}, state), {}, {
         isShowLoginModal: false
+      });
+
+    case "SEARCH_POST":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        searchPostOption: {
+          orderBy: action.hasOwnProperty("orderBy") ? action.orderBy : state.searchPostOption.orderBy,
+          searchKeyword: action.hasOwnProperty("searchKeyword") ? action.searchKeyword : state.searchPostOption.searchKeyword,
+          filter: action.hasOwnProperty("filter") ? action.filter : state.searchPostOption.filter
+        }
       });
 
     default:
@@ -277,6 +302,7 @@ const initialState = {
   isShowNoticeModal: false,
   isShowAddPostModal: false,
   isShowSearchBar: false,
+  isShowFilterBar: false,
   isShowLoginModal: false,
   activePost: {
     postId: "",
@@ -291,6 +317,11 @@ const initialState = {
     actionText: "비활성화",
     title: "",
     description: ""
+  },
+  searchPostOption: {
+    orderBy: "createdAt_DESC",
+    searchKeyword: "",
+    filter: []
   }
 };
 function VssProvider({
@@ -423,15 +454,7 @@ function createApolloClient() {
     connectToDevTools: _isBrowser__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"],
     ssrMode: !_isBrowser__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"],
     link: _apollo_client__WEBPACK_IMPORTED_MODULE_1__["ApolloLink"].from([errorLink, authLink, _isBrowser__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"] ? httpLink : splitLink]),
-    cache: new _apollo_client__WEBPACK_IMPORTED_MODULE_1__["InMemoryCache"]({
-      typePolicies: {
-        Query: {
-          fields: {
-            getPosts: Object(_apollo_client_utilities__WEBPACK_IMPORTED_MODULE_5__["concatPagination"])()
-          }
-        }
-      }
-    })
+    cache: new _apollo_client__WEBPACK_IMPORTED_MODULE_1__["InMemoryCache"]()
   });
 }
 
@@ -600,7 +623,7 @@ function App({
     client: apolloClient
   }, __jsx(globalStyle, null), __jsx(external_styled_components_["ThemeProvider"], {
     theme: theme
-  }, __jsx(context["h" /* VssProvider */], null, __jsx(Component, pageProps))));
+  }, __jsx(context["m" /* VssProvider */], null, __jsx(Component, pageProps))));
 }
 
 /***/ }),

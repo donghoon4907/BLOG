@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
-
+/**
+ * * 사용자 검색
+ */
 export const usersQuery = gql`
   query users($skip: Int, $first: Int, $keyword: String, $orderBy: String) {
     getUsers(

@@ -1,5 +1,5 @@
 import React from "react";
-import { NextPage } from "next";
+import { NextPage, GetStaticProps } from "next";
 import { useQuery } from "@apollo/client";
 import Layout from "../components/common/Layout";
 import Feed from "../components/feed/FeedContainer";
@@ -32,7 +32,7 @@ const Index: NextPage = () => {
   );
 };
 
-Index.getInitialProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
   await apolloClient.query({
     query: feedQuery,
@@ -42,25 +42,11 @@ Index.getInitialProps = async () => {
   });
 
   return {
-    initialApolloState: apolloClient.cache.extract()
+    props: {
+      initialApolloState: apolloClient.cache.extract()
+    },
+    revalidate: 1
   };
 };
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const apolloClient = initializeApollo();
-//   await apolloClient.query({
-//     query: feedQuery,
-//     variables: {
-//       first: 10
-//     }
-//   });
-
-//   return {
-//     props: {
-//       initialApolloState: apolloClient.cache.extract()
-//     },
-//     revalidate: 1
-//   };
-// };
 
 export default Index;

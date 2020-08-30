@@ -1,6 +1,6 @@
-import { useRouter } from "next/router";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, FC } from "react";
 import styled from "styled-components";
+import { useVssState, useVssDispatch, SEARCH_POST } from "../../context";
 import searchOptions from "./search_options.json";
 
 const Container = styled.div`
@@ -22,65 +22,42 @@ const FilterWrapper = styled.span`
 
 const sortAndFilter = searchOptions.sort.concat(searchOptions.filter);
 
-const setTag = (keyword: any) =>
-  keyword.map(v => {
-    const splitQuery = v.split("=");
-    return {
-      query: splitQuery[0],
-      value: splitQuery[1],
-      text:
-        splitQuery[0] !== "searchKeyword"
-          ? sortAndFilter.filter(v2 => v2.value === splitQuery[1])[0].text
-          : ""
-    };
-  });
+const SearchTag: FC = () => {
+  const dispatch = useVssDispatch();
+  const {
+    searchPostOption: { orderBy, filter = [] }
+  } = useVssState();
 
-const SearchTag = () => {
-  const router = useRouter();
-  const [filters, setFilters] = useState<any>(
-    router.query.keyword ? setTag(router.query.keyword) : []
-  );
-
-  const handleRemove = useCallback(
-    text => {
-      const nextFilters = filters.filter(v => v.text !== text);
-      setFilters(nextFilters);
-      const keyword = nextFilters.find(v => v.query === "searchKeyword");
-      const sort = nextFilters.find(v => v.query === "orderBy");
-      const filter = nextFilters.filter(v => v.query === "filter");
-
-      let url = `/search/searchKeyword=${keyword.value}`;
-      if (sort) {
-        url += `/orderBy=${sort.value}`;
-      }
-      filter.forEach(v => {
-        url += `/filter=${v.value}`;
+  const handleRemoveFilter = useCallback(
+    v => {
+      dispatch({
+        type: SEARCH_POST,
+        filter: filter.filter(v2 => v2 !== v)
       });
-      router.push(url);
     },
-    [filters, router.query]
+    [filter]
   );
-
-  useEffect(() => {
-    setFilters(router.query.keyword ? setTag(router.query.keyword) : []);
-  }, [router.query.keyword]);
 
   return (
     <Container>
-      {filters
-        .filter(v => v.text)
-        .map(v => (
-          <FilterWrapper key={v.value}>
-            {v.text}
-            <span
-              aria-hidden="true"
-              style={{ marginLeft: 10, cursor: "pointer" }}
-              onClick={() => handleRemove(v.text)}
-            >
-              ×
-            </span>
-          </FilterWrapper>
-        ))}
+      {orderBy && (
+        <FilterWrapper key={orderBy}>
+          {(sortAndFilter.find(v => v.value === orderBy) as any).text}
+        </FilterWrapper>
+      )}
+      {filter.map(v => (
+        <FilterWrapper key={v}>
+          {(sortAndFilter.find(v2 => v2.value === v) as any).text}
+
+          <span
+            aria-hidden="true"
+            style={{ marginLeft: 10, cursor: "pointer" }}
+            onClick={() => handleRemoveFilter(v)}
+          >
+            ×
+          </span>
+        </FilterWrapper>
+      ))}
     </Container>
   );
 };
