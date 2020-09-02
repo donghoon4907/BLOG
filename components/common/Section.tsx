@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 
 const Container = styled.section<{ flexDirection: string }>`
@@ -20,10 +20,19 @@ const Container = styled.section<{ flexDirection: string }>`
 `;
 
 interface Props {
-  children: ReactNode | JSX.Element;
+  /**
+   * * Flex direction
+   */
   flexDirection?: string;
 }
 
+/**
+ * Common section component
+ *
+ * @Component
+ * @author frisk
+ * @param flexDirection Flex direction
+ */
 const Section: FC<Props> = ({ children, flexDirection = "column" }) => (
   <Container flexDirection={flexDirection}>{children}</Container>
 );

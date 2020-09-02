@@ -11,6 +11,13 @@ const Link = styled.span`
   cursor: pointer;
 `;
 
+/**
+ * Auth modal component
+ *
+ * @Component
+ * @Modal
+ * @author frisk
+ */
 const Auth: FC = () => {
   const dispatch = useVssDispatch();
   const [action, setAction] = useState<string>("login");

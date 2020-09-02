@@ -17,15 +17,42 @@ const Container = styled.input`
 `;
 
 interface Props extends HTMLAttributes<HTMLInputElement> {
+  /**
+   * * Placeholder
+   */
   placeholder?: string;
+  /**
+   * * Required
+   */
   required?: boolean;
+  /**
+   * * Input Value
+   */
   value: string;
+  /**
+   * * Handler for change value
+   */
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * * Input Type
+   */
   type?: string;
+  /**
+   * * Name
+   */
   name?: string;
+  /**
+   * * Autocomplete
+   */
   autoComplete?: string;
 }
 
+/**
+ * Common input component
+ *
+ * @Component
+ * @author frisk
+ */
 const Input = forwardRef<HTMLInputElement, Props>((props, ref) => (
   <Container ref={ref} {...props} />
 ));

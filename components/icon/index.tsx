@@ -1,12 +1,27 @@
 import React, { FC, MouseEvent } from "react";
 
+/**
+ * * Default svg size
+ */
 const size = 24;
 
 type Props = {
+  /**
+   * * Svg style
+   */
   style?: any;
+  /**
+   * * Handler for click
+   */
   onClick?: (event: MouseEvent<SVGSVGElement>) => void;
 };
 
+/**
+ * Thumbnail icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Thumbnail: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -19,6 +34,12 @@ export const Thumbnail: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Heart empty icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const HeartEmpty: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -31,6 +52,12 @@ export const HeartEmpty: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Heart full icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const HeartFull: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +71,12 @@ export const HeartFull: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Comment icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Comment: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -56,6 +89,12 @@ export const Comment: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * More icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const More: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -68,6 +107,12 @@ export const More: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Upload icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Upload: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +125,12 @@ export const Upload: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Download icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Download: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +143,13 @@ export const Download: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Accept icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ * @param props.onClick Handler for click
+ */
 export const Accept: FC<Props> = ({ style, onClick }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +163,12 @@ export const Accept: FC<Props> = ({ style, onClick }) => (
   </svg>
 );
 
+/**
+ * Permit icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Permit: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +181,12 @@ export const Permit: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Private icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Private: FC<Props> = ({ style }) => (
   <svg
     style={style}
@@ -129,6 +199,13 @@ export const Private: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Room icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ * @param props.onClick Handler for click
+ */
 export const Room: FC<Props> = ({ style, onClick }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -142,6 +219,12 @@ export const Room: FC<Props> = ({ style, onClick }) => (
   </svg>
 );
 
+/**
+ * Bell icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Bell: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -154,6 +237,12 @@ export const Bell: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Next icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Next: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -166,6 +255,12 @@ export const Next: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Add icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Add: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -178,6 +273,12 @@ export const Add: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * AddPost icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const AddPost: FC<Props> = ({ style }) => (
   <svg
     style={style}
@@ -193,12 +294,24 @@ export const AddPost: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Profile icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Profile: FC<Props> = ({ style }) => (
   <svg viewBox="0 0 15 18.9" width={size} height={size} style={style}>
     <path d="M7.5 8.8c2.6 0 4.7-2 4.7-4.4S10.1 0 7.5 0 2.8 2 2.8 4.4C2.9 6.8 5 8.8 7.5 8.8zm0 1.5c-4.2 0-7.5 3.2-7.5 7.4 0 .6.5 1.2 1.2 1.2h12.6c.7 0 1.2-.5 1.2-1.2 0-4.1-3.3-7.4-7.5-7.4z"></path>
   </svg>
 );
 
+/**
+ * Search icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Search: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -211,6 +324,12 @@ export const Search: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * MinimizeSearch icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const MinimizeSearch: FC<Props> = ({ style }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -223,6 +342,12 @@ export const MinimizeSearch: FC<Props> = ({ style }) => (
   </svg>
 );
 
+/**
+ * Filter icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
 export const Filter: FC<Props> = ({ style }) => (
   <svg
     viewBox="0 0 24 24"

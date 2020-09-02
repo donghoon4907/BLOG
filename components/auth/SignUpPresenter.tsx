@@ -24,21 +24,66 @@ const UploadWrapper = styled.div`
 `;
 
 interface Props {
+  /**
+   * * Loading during upload request
+   */
   loading: boolean;
+  /**
+   * * Loading during sign up request
+   */
   signUpLoading: boolean;
+  /**
+   * * Nickname with useInput
+   */
   nickname: UseInputProps;
+  /**
+   * * Email with useInput
+   */
   email: UseInputProps;
+  /**
+   * Password with useInput
+   */
   pwd: UseInputProps;
+  /**
+   * * Confirm password with useInput
+   */
   confirmPwd: string;
+  /**
+   * * Preview image
+   */
   preview: string;
+  /**
+   * * File Element
+   */
   $file: any;
+  /**
+   * * Confirm password Element
+   */
   $confirmPwd: any;
+  /**
+   * * Handler for change preview image
+   */
   onChangePreview: any;
+  /**
+   * * Handler for change confirm password
+   */
   onChangeConfirmPwd: any;
+  /**
+   * * Handler for click file element
+   */
   onClickUpload: any;
+  /**
+   * * Handler for submit
+   */
   onSubmit: any;
 }
 
+/**
+ * Component for sign up
+ *
+ * @Presenter
+ * @author frisk
+ */
 const SignUpPresenter: FC<Props> = ({
   loading,
   signUpLoading,

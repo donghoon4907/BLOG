@@ -9,10 +9,24 @@ import { getAccessToken } from "../../lib/token";
 import { useVssDispatch, SHOW_LOGIN_MODAL } from "../../context";
 
 interface Props {
+  /**
+   * * Whether the user is following
+   */
   isFollowing: boolean;
+  /**
+   * * User ID
+   */
   userId: string;
 }
 
+/**
+ * Common follow button component
+ *
+ * @Component
+ * @author frisk
+ * @param props.isFollowing Whether the user is following
+ * @param props.userId User ID
+ */
 const FollowButton: FC<Props> = ({ isFollowing, userId }) => {
   const dispatch = useVssDispatch();
   const [ctrlIsFolling, setCtrlIsFolling] = useState<boolean>(isFollowing);

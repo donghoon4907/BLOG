@@ -33,26 +33,86 @@ const GuideLine = styled.div`
 `;
 
 type Props = {
+  /**
+   * * Loading during add notice request
+   */
   addPostLoading: boolean;
+  /**
+   * * Loading during update notice request
+   */
   updatePostLoading: boolean;
+  /**
+   * * Loading during remove notice request
+   */
   removePostLoading: boolean;
+  /**
+   * * Modal header text
+   */
   header: string;
+  /**
+   * * Post title
+   */
   title: string;
+  /**
+   * * Post description
+   */
   description: string;
+  /**
+   * * Post status
+   */
   status: string;
+  /**
+   * * Post upload progress
+   */
   progress: number;
+  /**
+   * * Uploaded file url
+   */
   file: string;
+  /**
+   * * File Element
+   */
   $file: any;
+  /**
+   * * Handler for click file element
+   */
   onClickFile: any;
+  /**
+   * * Handler for change file element
+   */
   onChangeFile: any;
+  /**
+   * * Handler for change post title
+   */
   onChangeTitle: any;
+  /**
+   * * Handler for change post description
+   */
   onChangeDescription: any;
+  /**
+   * * Handler for change post status
+   */
   onChangeStatus: any;
+  /**
+   * * Handler for close set post modal
+   */
   onClose: any;
+  /**
+   * * Handler for remove post
+   */
   onDelete: any;
+  /**
+   * * Handler for submit
+   */
   onSubmit: any;
 };
 
+/**
+ * Component for set post
+ *
+ * @Presenter
+ * @author frisk
+ */
 const SetNoticePresenter: FC<Props> = ({
   addPostLoading,
   updatePostLoading,

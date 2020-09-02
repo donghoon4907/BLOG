@@ -14,6 +14,12 @@ const Container = styled.div`
   }
 `;
 
+/**
+ * AddPost icon component in header
+ *
+ * @Component
+ * @author frisk
+ */
 const AddPostButton: FC = () => {
   const dispatch = useVssDispatch();
 

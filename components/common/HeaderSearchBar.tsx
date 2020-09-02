@@ -16,7 +16,7 @@ export const SearchForm = styled.form`
   margin: 0 auto;
   width: 500px;
 
-  ${(props) => props.theme.media.tablet} {
+  ${props => props.theme.media.tablet} {
     width: calc(100% - 2rem);
   }
 `;
@@ -28,7 +28,7 @@ export const Wrapper = styled.div`
 `;
 
 export const SearchInput = styled(Input)`
-  background: ${(props) => props.theme.bgColor};
+  background: ${props => props.theme.bgColor};
   padding: 5px;
   font-size: 14px;
   border-radius: 3px;
@@ -41,6 +41,12 @@ export const SearchInput = styled(Input)`
   }
 `;
 
+/**
+ * Search bar component in header
+ *
+ * @Component
+ * @author frisk
+ */
 const HeaderSearchBar = () => {
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState<string>("");

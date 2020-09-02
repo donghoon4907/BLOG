@@ -6,6 +6,12 @@ import SignInPresenter from "./SignInPresenter";
 import { setAccessToken } from "../../lib/token";
 import { useVssDispatch, HIDE_LOGIN_MODAL, SET_ME } from "../../context";
 
+/**
+ * Component for sign in
+ *
+ * @Container
+ * @author frisk
+ */
 const SignInContainer: FC = () => {
   const dispatch = useVssDispatch();
   const [login, { loading }] = useMutation(logInMutation);

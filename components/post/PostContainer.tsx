@@ -12,18 +12,54 @@ import {
 import { getAccessToken } from "../../lib/token";
 
 export type PostProps = {
+  /**
+   * * Post ID
+   */
   id: string;
+  /**
+   * * Post title
+   */
   title: string;
+  /**
+   * * Post description
+   */
   description: string;
+  /**
+   * * Post video obj
+   */
   video: any;
+  /**
+   * * Post user obj
+   */
   user: any;
+  /**
+   * * Post likes
+   */
   likes: any;
+  /**
+   * * Post createdAt
+   */
   createdAt: string;
+  /**
+   * * Post updatedAt
+   */
   updatedAt: string;
+  /**
+   * * Post status
+   */
   status: string;
+  /**
+   * * Post room obj
+   */
   room: any;
 };
 
+/**
+ * Component for render post
+ *
+ * @Container
+ * @author frisk
+ */
 const PostContainer: FC<PostProps> = ({
   id,
   title,

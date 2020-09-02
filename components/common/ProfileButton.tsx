@@ -3,6 +3,12 @@ import { Profile } from "../icon";
 import { useVssDispatch, SHOW_LOGIN_MODAL, SET_ME } from "../../context";
 import { getAccessToken, removeAccessToken } from "../../lib/token";
 
+/**
+ * Profile icon component in header
+ *
+ * @Component
+ * @author frisk
+ */
 const ProfileButton: FC = () => {
   const dispatch = useVssDispatch();
 

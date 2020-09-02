@@ -63,6 +63,12 @@ const SearchWrapper = styled.div`
   padding: 10px;
 `;
 
+/**
+ * Header component
+ *
+ * @Component
+ * @author frisk
+ */
 const Header: FC = () => {
   const { isShowSearchBar } = useVssState();
   return (

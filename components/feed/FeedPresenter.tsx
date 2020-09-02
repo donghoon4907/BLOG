@@ -37,22 +37,29 @@ const StickyWrap = styled.div`
 `;
 
 type Props = {
+  /**
+   * * Whether user is master
+   */
   isMaster: boolean;
+  /**
+   * * Handler for show add notice modal
+   */
   onAddNotice: any;
-  $recommandUser: any;
 };
 
-const FeedPresenter: FC<Props> = ({
-  isMaster,
-  onAddNotice,
-  $recommandUser
-}) => (
+/**
+ * Component for feed
+ *
+ * @Presenter
+ * @author frisk
+ */
+const FeedPresenter: FC<Props> = ({ isMaster, onAddNotice }) => (
   <Section flexDirection="row">
     <PostWrapper>
       <Subject>최신 포스트</Subject>
       <PostList />
     </PostWrapper>
-    <UserWrapper ref={$recommandUser}>
+    <UserWrapper>
       <aside>
         <StickyWrap>
           <div>

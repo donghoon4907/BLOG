@@ -10,8 +10,19 @@ const Container = styled.time`
 `;
 
 interface Props {
+  /**
+   * * Date
+   */
   text: string;
 }
+
+/**
+ * Common Timestamp component
+ *
+ * @Component
+ * @author frisk
+ * @param text Date
+ */
 const Timestamp: FC<Props> = ({ text }) => (
   <Container>{moment(text).format("YYYY-MM-DD HH:mm:ss")}</Container>
 );

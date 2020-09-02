@@ -18,9 +18,19 @@ const Container = styled.div<{ activeBorder?: boolean }>`
 `;
 
 interface Props {
+  /**
+   * * Whether to draw a border
+   */
   activeBorder?: boolean;
 }
 
+/**
+ * Common subject component
+ *
+ * @Component
+ * @author frisk
+ * @param activeBorder Whether to draw a border
+ */
 const Subject: FC<Props> = ({ children, activeBorder }) => (
   <Container activeBorder={activeBorder}>{children}</Container>
 );

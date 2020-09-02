@@ -4,6 +4,12 @@ import { postsQuery } from "../../graphql/post/query";
 import PostContainer from "../post/PostContainer";
 import Loader from "../common/Loader";
 
+/**
+ * Post list component for feed
+ *
+ * @Component
+ * @author frisk
+ */
 const PostList: FC = () => {
   const { data, loading, fetchMore } = useQuery(postsQuery, {
     variables: {

@@ -14,6 +14,12 @@ export const Container = styled.div`
   z-index: 10000;
 `;
 
+/**
+ * Common loader component
+ *
+ * @Component
+ * @author frisk
+ */
 const Loader: FC = () => (
   <Container>
     <Spinner

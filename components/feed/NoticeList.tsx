@@ -19,6 +19,12 @@ const NoticeWrapper = styled.div`
   cursor: pointer;
 `;
 
+/**
+ * Notice list component for feed
+ *
+ * @Component
+ * @author frisk
+ */
 const NoticeList: FC = () => {
   const dispatch = useVssDispatch();
   const { isMaster } = useVssState();

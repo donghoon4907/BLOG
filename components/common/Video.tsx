@@ -24,9 +24,19 @@ const Wrapper = styled.video`
 `;
 
 interface Props {
+  /**
+   * * Video source
+   */
   src: string;
 }
 
+/**
+ * Common Video component
+ *
+ * @Component
+ * @author frisk
+ * @param src Video source
+ */
 const Video: FC<Props> = ({ src }) => (
   <Container>
     <Wrapper controls preload="metadata">

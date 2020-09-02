@@ -12,9 +12,18 @@ import SignUpPresenter from "./SignUpPresenter";
 import { signUpMutation } from "../../graphql/user/mutation/signup";
 
 interface Props {
+  /**
+   * * Function to change mode to sign in and sign up
+   */
   setAction: any;
 }
 
+/**
+ * Component for sign up
+ *
+ * @Container
+ * @author frisk
+ */
 const SignUpContainer: FC<Props> = ({ setAction }) => {
   const { loading, call } = useLazyAxios();
   const $file = useRef<HTMLInputElement>(null);

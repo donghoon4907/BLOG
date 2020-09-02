@@ -7,6 +7,12 @@ import {
 } from "../../context";
 import { Search } from "../icon";
 
+/**
+ * Search icon component in header
+ *
+ * @Component
+ * @author frisk
+ */
 const SearchButton: FC = () => {
   const dispatch = useVssDispatch();
   const { isShowSearchBar } = useVssState();

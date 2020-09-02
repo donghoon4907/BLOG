@@ -15,6 +15,13 @@ import { removePostMutation } from "../../graphql/post/mutation/remove";
 import SetPostPresenter from "./SetPostPresenter";
 import { useVssState, useVssDispatch, HIDE_POST_MODAL } from "../../context";
 
+/**
+ * Component for set post
+ *
+ * @Container
+ * @Modal
+ * @author frisk
+ */
 const SetPostContainer: FC = () => {
   const { activePost } = useVssState();
   const dispatch = useVssDispatch();

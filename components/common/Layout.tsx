@@ -7,9 +7,19 @@ import AuthModal from "../modal/Auth";
 import { useVssState } from "../../context";
 
 interface Props {
+  /**
+   * * Head title
+   */
   title?: string;
 }
 
+/**
+ * Common layout component
+ *
+ * @Component
+ * @author frisk
+ * @param props.title Head title
+ */
 const Layout: FC<Props> = ({ children, title = "VSS" }) => {
   const {
     isShowNoticeModal,

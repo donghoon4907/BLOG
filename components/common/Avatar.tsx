@@ -1,7 +1,10 @@
-import React, { FC, MouseEvent, ReactNode } from "react";
+import React, { FC, MouseEvent } from "react";
 import styled from "styled-components";
 
 interface AvatarContainer {
+  /**
+   * Container size
+   */
   size: number | string;
 }
 
@@ -26,11 +29,25 @@ const Container = styled.div<AvatarContainer>`
 `;
 
 interface Props extends AvatarContainer {
+  /**
+   * * Image source
+   */
   src: string;
+  /**
+   * * Handler for click
+   */
   onClick?: (event: MouseEvent<HTMLDivElement>) => void;
-  children?: ReactNode;
 }
 
+/**
+ * Common avatar component
+ *
+ * @Component
+ * @author frisk
+ * @param props.size Container size
+ * @param props.src Image source
+ * @param props.onClick Handler for click
+ */
 const Avatar: FC<Props> = ({ size, src, onClick, children }) => (
   <Container onClick={onClick} size={size}>
     <img src={src} alt="avatar" />

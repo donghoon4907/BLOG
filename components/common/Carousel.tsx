@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import { Carousel } from "react-bootstrap";
 import { Next } from "../icon";
@@ -38,11 +38,13 @@ export const CarouselItem = styled.div`
   }
 `;
 
-interface Props {
-  children: ReactNode;
-}
-
-const CarouselContainer: FC<Props> = ({ children }) => (
+/**
+ * Common carousel component
+ *
+ * @Component
+ * @author frisk
+ */
+const CarouselContainer: FC = ({ children }) => (
   <Container
     indicators={false}
     nextIcon={<Next />}

@@ -45,11 +45,30 @@ const Item = styled.li`
 `;
 
 interface Props {
+  /**
+   * * Search keyword for api
+   */
   searchKeyword: string;
+  /**
+   * * Function to change search keyword
+   */
   setSearch: Dispatch<SetStateAction<string>>;
+  /**
+   * * Function to change search keyword for api
+   */
   setSearchKeyword: Dispatch<SetStateAction<string>>;
 }
 
+/**
+ * Recommended search terms component
+ *
+ * @Component
+ * @author frisk
+ * @param searchKeyword Search keyword for api
+ * @param setSearch Search keyword for api
+ * @param setSearchKeyword Function to change search keyword for api
+ * @deprecated
+ */
 const SearchResult: FC<Props> = ({
   searchKeyword,
   setSearch,

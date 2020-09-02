@@ -8,6 +8,13 @@ import SetNoticePresenter from "./SetNoticePresenter";
 import { useInput } from "../../hooks";
 import { useVssState, useVssDispatch, HIDE_NOTICE_MODAL } from "../../context";
 
+/**
+ * Component for set notice
+ *
+ * @Container
+ * @Modal
+ * @author frisk
+ */
 const SetNoticeContainer: FC = () => {
   const dispatch = useVssDispatch();
   const { activeNotice, isMaster } = useVssState();
@@ -35,7 +42,7 @@ const SetNoticeContainer: FC = () => {
     setPreview(marked(modalDescription.value));
   }, [modalDescription.value]);
 
-  const handleRefreshPreview = useCallback(() => {
+  const handleClosePreview = useCallback(() => {
     setPreview("");
   }, []);
 
@@ -137,7 +144,7 @@ const SetNoticeContainer: FC = () => {
       preview={preview}
       onShowEdit={handleShowEdit}
       onPreview={handlePreView}
-      onRefreshPreview={handleRefreshPreview}
+      onClosePreview={handleClosePreview}
       onClose={handleClose}
       onDelete={handleDelete}
       onSubmit={handleSubmit}

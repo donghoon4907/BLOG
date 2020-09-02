@@ -122,23 +122,74 @@ const MoreWrapper = styled.div`
 `;
 
 type Props = {
+  /**
+   * * Post title
+   */
   title: string;
+  /**
+   * * Post description
+   */
   description: string;
+  /**
+   * * Post status
+   */
   status: string;
+  /**
+   * * Post createdAt
+   */
   createdAt: string;
+  /**
+   * * Post user obj
+   */
   user: any;
+  /**
+   * * Post video obj
+   */
   video: any;
+  /**
+   * * Whether user liked post
+   */
   isLiked: boolean;
+  /**
+   * * Post like count
+   */
   likeCount: number;
-  isMyPost: string | boolean;
+  /**
+   * * Whether it is user's post
+   */
+  isMyPost: boolean;
+  /**
+   * * Whether user details are visible
+   */
   isShowUser: boolean;
+  /**
+   * * Handler for click avatar
+   */
   onClickAvatar: any;
+  /**
+   * * Handler for click like icon
+   */
   onLike: any;
+  /**
+   * * Handler for update post
+   */
   onUpdate: any;
+  /**
+   * * Handler for click room
+   */
   onRoom?: any;
+  /**
+   * * Handler for remove post
+   */
   onDelete: any;
 };
 
+/**
+ * Component for render post
+ *
+ * @Presenter
+ * @author frisk
+ */
 const PostPresenter: FC<Props> = ({
   title,
   description,

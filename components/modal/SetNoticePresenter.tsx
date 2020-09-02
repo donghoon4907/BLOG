@@ -30,22 +30,70 @@ const PreviewWrap = styled(ReadOnlyDescription)`
 `;
 
 type Props = {
+  /**
+   * * Loading during set notice request
+   */
   setNoticeLoading: boolean;
+  /**
+   * * Loading during remove notice request
+   */
   removeNoticeLoading: boolean;
+  /**
+   * * Change ui action
+   */
   action: any;
+  /**
+   * * Whether user is master
+   */
   isMaster: boolean;
+  /**
+   * * Title with useInput
+   */
   title: UseInputProps;
+  /**
+   * * Description with useInput
+   */
   description: UseInputProps;
+  /**
+   * * Description converted to markdown
+   */
   mdDescription: string;
+  /**
+   * * Preview converted to markdown
+   */
   preview: string;
+  /**
+   * * Handler for show edit notice ui
+   */
   onShowEdit: any;
+  /**
+   * * Handler for show preview notice ui
+   */
   onPreview: any;
-  onRefreshPreview: any;
+  /**
+   * * Handler for close preview notice ui
+   */
+  onClosePreview: any;
+  /**
+   * * Handler for close set notice modal
+   */
   onClose: any;
+  /**
+   * * Handler for remove notice
+   */
   onDelete: any;
+  /**
+   * * Handler for submit
+   */
   onSubmit: any;
 };
 
+/**
+ * Component for set notice
+ *
+ * @Presenter
+ * @author frisk
+ */
 const SetNoticePresenter: FC<Props> = ({
   setNoticeLoading,
   removeNoticeLoading,
@@ -57,7 +105,7 @@ const SetNoticePresenter: FC<Props> = ({
   preview,
   onShowEdit,
   onPreview,
-  onRefreshPreview,
+  onClosePreview,
   onClose,
   onDelete,
   onSubmit
@@ -113,7 +161,7 @@ const SetNoticePresenter: FC<Props> = ({
                   dangerouslySetInnerHTML={{ __html: preview }}
                   className="markdown-body"
                 ></div>
-                <span aria-hidden="true" onClick={onRefreshPreview}>
+                <span aria-hidden="true" onClick={onClosePreview}>
                   ×
                 </span>
               </PreviewWrap>
@@ -143,7 +191,7 @@ const SetNoticePresenter: FC<Props> = ({
             <Fragment>
               <Button
                 variant="info"
-                onClick={preview ? onRefreshPreview : onPreview}
+                onClick={preview ? onClosePreview : onPreview}
               >
                 {preview ? "미리보기 취소" : "미리보기"}
               </Button>

@@ -13,10 +13,19 @@ const Container = styled.a`
 `;
 
 interface Props {
+  /**
+   * * Hypertext reference
+   */
   href: string;
-  children: any;
 }
 
+/**
+ * Common link component
+ *
+ * @Component
+ * @author frisk
+ * @param props.href Hypertext reference
+ */
 const StyledLink: FC<Props> = ({ href, children }) => (
   <div>
     <Link href={href}>

@@ -9,6 +9,12 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
+/**
+ * Recommand user list component for feed
+ *
+ * @Component
+ * @author frisk
+ */
 const RecommandUserList: FC = () => {
   const { data } = useQuery(recommandUsersQuery);
 

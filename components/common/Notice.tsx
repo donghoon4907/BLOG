@@ -22,10 +22,24 @@ const Contianer = styled.div`
 `;
 
 interface Props {
+  /**
+   * * Notice title
+   */
   title: string;
+  /**
+   * * UpdatedAt
+   */
   updatedAt: string;
 }
 
+/**
+ * Notice component
+ *
+ * @Component
+ * @author frisk
+ * @param props.title Notice title
+ * @param props.updatedAt UpdatedAt
+ */
 const Notice: FC<Props> = ({ title, updatedAt }) => (
   <Contianer>
     <span>{title}</span>
