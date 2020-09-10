@@ -1,69 +1,127 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useRef, useCallback } from "react";
 import styled from "styled-components";
-import { useVssState } from "../../context";
-import HoverUser from "../user/HoverUser";
-import FollowButton from "../common/FollowButton";
+import { Overlay } from "react-bootstrap";
+import { useLocalState } from "../../context";
 import Avatar from "../common/Avatar";
 import { Avatar as AvatarProps } from "../../interfaces";
 
 const Container = styled.div`
-  height: 70px;
+  height: 50px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
-  padding: 10px 0;
+  gap: 5px;
 `;
 
 const AvatarWrapper = styled.div`
   width: 50px;
 `;
 
-const NicknameWrapper = styled.div`
+const Title = styled.h6`
+  width: 150px;
+  font-weight: 500;
+  font-size: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 150px;
+  margin-bottom: 0;
 `;
 
-const FollowWrapper = styled.div`
-  width: 80px;
+const SubTitle = styled.div`
+  font-size: 13px;
 `;
 
 interface Props {
+  /**
+   * 사용자 ID
+   */
   id: string;
+  /**
+   * 사용자 별칭
+   */
   nickname: string;
+  /**
+   * 사용자 프로필 사진
+   */
   avatar: AvatarProps;
-  followedBy: any;
-  following: any;
-  posts: any;
+  /**
+   * 작성한 포스트 수
+   */
+  postCount: number;
 }
 
-const RecommandUserItem: FC<Props> = ({ id, avatar, nickname, followedBy }) => {
-  const { userId } = useVssState();
-  const isFollowing = followedBy.some(v => v.id === userId);
+/**
+ * 추천 사용자 목록 컴포넌트
+ *
+ * @Component
+ * @author frisk
+ */
+const RecommandUserItem: FC<Props> = ({ avatar, nickname, postCount }) => {
+  /**
+   * 로컬 상태 감시 모듈 활성화
+   */
+  const { isCollapseNav } = useLocalState();
+  /**
+   * 튤팁 보이기 상태 모듈 활성화
+   */
+  const [show, setShow] = useState<boolean>(false);
+  /**
+   * avatar element
+   */
+  const $avatar = useRef<HTMLDivElement>(null);
+  /**
+   * 프로필 사진 클릭 이벤트
+   */
+  const handleEnterAvatar = useCallback(() => {
+    if (isCollapseNav === "contract") {
+      setShow(true);
+    }
+  }, [isCollapseNav]);
 
-  const [isShowUser, setIsShowUser] = useState<boolean>(false);
-
-  const handleClickAvatar = useCallback(() => {
-    setIsShowUser(!isShowUser);
-  }, [isShowUser]);
+  const handleLeaveAvatar = useCallback(() => {
+    if (isCollapseNav === "contract") {
+      setShow(false);
+    }
+  }, [isCollapseNav]);
 
   return (
-    <Container key={id}>
-      <AvatarWrapper>
-        <Avatar size="45" src={avatar.url} onClick={handleClickAvatar} />
+    <Container>
+      <AvatarWrapper
+        ref={$avatar}
+        onMouseEnter={handleEnterAvatar}
+        onMouseLeave={handleLeaveAvatar}
+      >
+        <Avatar size="45" src={avatar.url} />
       </AvatarWrapper>
-
-      <NicknameWrapper>{nickname}</NicknameWrapper>
-
-      <FollowWrapper>
-        {userId && id !== userId && (
-          <FollowButton isFollowing={isFollowing} userId={id} />
+      {isCollapseNav === "expand" && (
+        <div>
+          <Title>{nickname}</Title>
+          <SubTitle>{postCount} posts</SubTitle>
+        </div>
+      )}
+      <Overlay target={$avatar.current} show={show} placement="right">
+        {({ placement, arrowProps, show: _show, popper, ...props }) => (
+          <div
+            {...props}
+            style={{
+              ...props.style,
+              backgroundColor: "white",
+              padding: "2px 10px",
+              borderRadius: 3,
+              zIndex: 3,
+              left: 12,
+              boxShadow:
+                "0 1px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            <div>
+              <Title>{nickname}</Title>
+              <SubTitle>{postCount} posts</SubTitle>
+            </div>
+          </div>
         )}
-      </FollowWrapper>
-
-      {isShowUser && <HoverUser userId={id} top={60} />}
+      </Overlay>
     </Container>
   );
 };

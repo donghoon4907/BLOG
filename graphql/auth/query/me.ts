@@ -1,10 +1,14 @@
 import { gql } from "@apollo/client";
+
 /**
- * * 사용자 정보 로드
+ * * 내 정보
+ *
+ * @query
+ * @author frisk
  */
-export const meQuery = gql`
-  query me {
-    getMyProfile {
+export const ME = gql`
+  query Me {
+    me {
       id
       nickname
       email
@@ -12,12 +16,6 @@ export const meQuery = gql`
         url
       }
       isMaster
-      followedBy {
-        id
-      }
-      following {
-        id
-      }
     }
   }
 `;

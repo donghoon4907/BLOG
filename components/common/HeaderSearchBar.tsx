@@ -11,7 +11,7 @@ import styled from "styled-components";
 import Input from "../common/Input";
 import { Label } from "../common/Form";
 
-export const SearchForm = styled.form`
+const SearchForm = styled.form`
   position: relative;
   margin: 0 auto;
   width: 500px;
@@ -21,13 +21,13 @@ export const SearchForm = styled.form`
   }
 `;
 
-export const Wrapper = styled.div`
+const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: space-between;
 `;
 
-export const SearchInput = styled(Input)`
+const SearchInput = styled(Input)`
   background: ${props => props.theme.bgColor};
   padding: 5px;
   font-size: 14px;

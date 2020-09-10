@@ -7,30 +7,26 @@ import { UseInputProps } from "../../hooks";
 
 interface Props {
   /**
-   * * Loading during sign in request
+   * 로그인 요청 진행 여부
    */
   loading: boolean;
   /**
-   * * Email with useInput
+   * 이메일 입력을 위한 Hooks
    */
   email: UseInputProps;
   /**
-   * * Password with useInput
-   */
-  pwd: UseInputProps;
-  /**
-   * * Handler for submit
+   * 로그인 요청 핸들러
    */
   onSubmit: any;
 }
 
 /**
- * Component for sign in
+ * * 로그인 프레젠터 컴포넌트
  *
  * @Presenter
  * @author frisk
  */
-const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => (
+const SignInPresenter: FC<Props> = ({ loading, email, onSubmit }) => (
   <>
     {loading && <Loader />}
     <form onSubmit={onSubmit}>
@@ -45,19 +41,6 @@ const SignInPresenter: FC<Props> = ({ loading, email, pwd, onSubmit }) => (
           autoComplete="off"
           required
           {...email}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <Label htmlFor="password" val={pwd.value}>
-          암호
-        </Label>
-        <Input
-          type="password"
-          placeholder="암호"
-          name="password"
-          autoComplete="off"
-          required
-          {...pwd}
         />
       </InputWrapper>
       <Button text="로그인" type="submit" />

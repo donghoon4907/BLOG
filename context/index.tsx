@@ -1,31 +1,77 @@
 import React, { useReducer, useContext, createContext, Dispatch } from "react";
+import reducer from "./reducer";
+import { Action } from "./action";
 import { Avatar } from "../interfaces";
 
-export type ActivePost = {
-  postId: string;
+/**
+ * * 선택된 게시물 타입
+ *
+ * @author frisk
+ * @property {string} id - 게시물 ID
+ * @property {string} title - 제목
+ * @property {string} description - 내용
+ * @deprecated
+ */
+type ActivePost = {
+  id: string;
   title: string;
   description: string;
-  status: string;
-  url: string;
 };
 
-export type ActiveNotice = {
-  noticeId: string;
+/**
+ * * 선택된 공지사항 타입
+ *
+ * @author frisk
+ * @property {string} id - 공지사항 ID
+ * @property {string} action - 조작 모드(보기전용, 수정, 등록)
+ * @property {string} actionText - 팝업 헤더명
+ * @property {string} title - 제목
+ * @property {string} description - 내용
+ * @deprecated
+ */
+type ActiveNotice = {
+  id: string;
   action: string;
   actionText: string;
   title: string;
   description: string;
 };
 
-export type SearchPostOption = {
+/**
+ * * 검색옵션 타입
+ *
+ * @author frisk
+ * @property {string} orderBy - 정렬
+ * @property {string} query - 검색어
+ * @property {string[]} filter - 필터
+ */
+type SearchPostOption = {
   orderBy: string;
-  searchKeyword: string;
+  query: string;
   filter: string[];
 };
 
-// type for state
-type State = {
-  userId: string | null;
+/**
+ * * 로컬 상태 타입
+ *
+ * @author frist
+ * @property {string|null} id - 사용자 ID
+ * @property {string|null} nickname - 사용자 별칭
+ * @property {string|null} email - 사용자 이메일
+ * @property {Avatar|null} avatar - 사용자 프로필 사진
+ * @property {boolean} isMaster - 운영자 여부
+ * @property {boolean} isShowNoticeModal - 공지사항 팝업 보이기 여부
+ * @property {boolean} isShowAddPostModal - 게시물 추가 팝업 보이기 여부
+ * @property {boolean} isShowSearchBar - 검색바 보이기 여부
+ * @property {boolean} isShowFilterBar - 검색 필터 보이기 여부
+ * @property {boolean} isShowLoginModal - 로그인 팝업 보이기 여부
+ * @property {ActivePost} activePost - 선택한 게시물 정보
+ * @property {ActiveNotice} activeNotice - 선택한 공지사항 정보
+ * @property {SearchPostOption} searchPostOption - 검색 옵션
+ * @property {boolean} isCollapseNav - 네비게이션 확장 여부
+ */
+export type State = {
+  id: string | null;
   nickname: string | null;
   email: string | null;
   avatar: Avatar | null;
@@ -38,182 +84,20 @@ type State = {
   activePost: ActivePost;
   activeNotice: ActiveNotice;
   searchPostOption: SearchPostOption;
+  isCollapseNav: string;
 };
 
-export const SET_ME = "SET_ME";
-export const SHOW_NOTICE_MODAL = "SHOW_NOTICE_MODAL";
-export const HIDE_NOTICE_MODAL = "HIDE_NOTICE_MODAL";
-export const SHOW_POST_MODAL = "SHOW_POST_MODAL";
-export const HIDE_POST_MODAL = "HIDE_POST_MODAL";
-export const SHOW_LOGIN_MODAL = "SHOW_LOGIN_MODAL";
-export const HIDE_LOGIN_MODAL = "HIDE_LOGIN_MODAL";
-export const SHOW_SEARCH_BAR = "SHOW_SEARCH_BAR";
-export const HIDE_SEARCH_BAR = "HIDE_SEARCH_BAR";
-export const SHOW_FILTER_BAR = "SHOW_FILTER_BAR";
-export const HIDE_FILTER_BAR = "HIDE_FILTER_BAR";
-export const SEARCH_POST = "SEARCH_POST";
+type LocalDispatch = Dispatch<Action>;
 
-// type for action
-type Action =
-  | {
-      type: "SET_ME";
-      userId: string | null;
-      nickname: string | null;
-      email: string | null;
-      avatar: Avatar | null;
-      isMaster: boolean;
-    }
-  | {
-      type: "SHOW_NOTICE_MODAL";
-      noticeId: string;
-      action: string;
-      actionText: string;
-      title: string;
-      description: string;
-    }
-  | { type: "HIDE_NOTICE_MODAL" }
-  | {
-      type: "SHOW_POST_MODAL";
-      postId: string;
-      title: string;
-      description: string | null;
-      status: string;
-      url: string;
-    }
-  | { type: "HIDE_POST_MODAL" }
-  | { type: "SHOW_SEARCH_BAR" }
-  | { type: "HIDE_SEARCH_BAR" }
-  | { type: "SHOW_FILTER_BAR" }
-  | { type: "HIDE_FILTER_BAR" }
-  | { type: "SHOW_LOGIN_MODAL" }
-  | { type: "HIDE_LOGIN_MODAL" }
-  | {
-      type: "SEARCH_POST";
-      orderBy?: string;
-      searchKeyword?: string;
-      filter?: string[];
-    };
+const Context = createContext<State | null>(null);
 
-// type for dispatch
-type VssDispatch = Dispatch<Action>;
+const DispatchContext = createContext<LocalDispatch | null>(null);
 
-// create context
-const VssContext = createContext<State | null>(null);
-const VssDispatchContext = createContext<VssDispatch | null>(null);
-
-// define reducer
-function reducer(state: any, action: any) {
-  switch (action.type) {
-    case "SET_ME":
-      return {
-        ...state,
-        userId: action.userId,
-        nickname: action.nickname,
-        email: action.email,
-        avatar: action.avatar,
-        isMaster: action.isMaster
-      };
-    case "SHOW_NOTICE_MODAL":
-      return {
-        ...state,
-        isShowNoticeModal: true,
-        activeNotice: {
-          noticeId: action.noticeId,
-          action: action.action,
-          actionText: action.actionText,
-          title: action.title,
-          description: action.description
-        }
-      };
-    case "HIDE_NOTICE_MODAL":
-      return {
-        ...state,
-        isShowNoticeModal: false,
-        activeNotice: {
-          noticeId: "",
-          action: "wait",
-          actionText: "비활성화",
-          title: "",
-          description: ""
-        }
-      };
-    case "SHOW_POST_MODAL":
-      return {
-        ...state,
-        isShowAddPostModal: true,
-        activePost: {
-          postId: action.postId,
-          title: action.title,
-          description: action.description,
-          status: action.status,
-          url: action.url
-        }
-      };
-
-    case "HIDE_POST_MODAL":
-      return {
-        ...state,
-        isShowAddPostModal: false,
-        activePost: {
-          postId: "",
-          title: "",
-          description: "",
-          status: "",
-          url: ""
-        }
-      };
-    case "SHOW_SEARCH_BAR":
-      return {
-        ...state,
-        isShowSearchBar: true
-      };
-    case "HIDE_SEARCH_BAR":
-      return {
-        ...state,
-        isShowSearchBar: false
-      };
-    case "SHOW_FILTER_BAR":
-      return {
-        ...state,
-        isShowFilterBar: true
-      };
-    case "HIDE_FILTER_BAR":
-      return {
-        ...state,
-        isShowFilterBar: false
-      };
-    case "SHOW_LOGIN_MODAL":
-      return {
-        ...state,
-        isShowLoginModal: true
-      };
-    case "HIDE_LOGIN_MODAL":
-      return {
-        ...state,
-        isShowLoginModal: false
-      };
-    case "SEARCH_POST":
-      return {
-        ...state,
-        searchPostOption: {
-          orderBy: action.hasOwnProperty("orderBy")
-            ? action.orderBy
-            : state.searchPostOption.orderBy,
-          searchKeyword: action.hasOwnProperty("searchKeyword")
-            ? action.searchKeyword
-            : state.searchPostOption.searchKeyword,
-          filter: action.hasOwnProperty("filter")
-            ? action.filter
-            : state.searchPostOption.filter
-        }
-      };
-    default:
-      return { ...state };
-  }
-}
-
+/**
+ * 로컬 상태 기본값
+ */
 const initialState: State = {
-  userId: null,
+  id: null,
   nickname: null,
   email: null,
   avatar: null,
@@ -223,15 +107,14 @@ const initialState: State = {
   isShowSearchBar: false,
   isShowFilterBar: false,
   isShowLoginModal: false,
+  isCollapseNav: "expand",
   activePost: {
-    postId: "",
+    id: "",
     title: "",
-    description: "",
-    status: "",
-    url: ""
+    description: ""
   },
   activeNotice: {
-    noticeId: "",
+    id: "",
     action: "wait",
     actionText: "비활성화",
     title: "",
@@ -239,31 +122,48 @@ const initialState: State = {
   },
   searchPostOption: {
     orderBy: "createdAt_DESC",
-    searchKeyword: "",
+    query: "",
     filter: []
   }
 };
 
-export function VssProvider({ children }) {
+/**
+ * * 로컬 상태 제공 컴포넌트
+ */
+export function ContextProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <VssContext.Provider value={state}>
-      <VssDispatchContext.Provider value={dispatch}>
+    <Context.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
         {children}
-      </VssDispatchContext.Provider>
-    </VssContext.Provider>
+      </DispatchContext.Provider>
+    </Context.Provider>
   );
 }
 
-export function useVssState() {
-  const state = useContext(VssContext);
-  if (!state) throw new Error("not found provider");
+/**
+ * * Hooks - 로컬 상태 감시 모듈
+ */
+export function useLocalState() {
+  const state = useContext(Context);
+
+  if (!state) {
+    throw new Error("not found provider");
+  }
+
   return state;
 }
 
-export function useVssDispatch() {
-  const dispatch = useContext(VssDispatchContext);
-  if (!dispatch) throw new Error("not found provider");
+/**
+ * * Hooks - 로컬 상태 변경 모듈
+ */
+export function useLocalDispatch() {
+  const dispatch = useContext(DispatchContext);
+
+  if (!dispatch) {
+    throw new Error("not found provider");
+  }
+
   return dispatch;
 }

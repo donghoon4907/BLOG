@@ -1,10 +1,17 @@
 import Head from "next/head";
 import React, { FC } from "react";
+import styled from "styled-components";
 import Header from "./Header";
+import Nav from "./Nav";
 import SetNoticeModal from "../modal/SetNoticeContainer";
 import SetPostModal from "../modal/SetPostContainer";
 import AuthModal from "../modal/Auth";
-import { useVssState } from "../../context";
+import { useLocalState } from "../../context";
+
+const Container = styled.main`
+  display: flex;
+  justify-content: flex-start;
+`;
 
 interface Props {
   /**
@@ -14,18 +21,21 @@ interface Props {
 }
 
 /**
- * Common layout component
+ * 공통 레이아웃 컴포넌트
  *
  * @Component
  * @author frisk
  * @param props.title Head title
  */
-const Layout: FC<Props> = ({ children, title = "VSS" }) => {
+const Layout: FC<Props> = ({ children, title = "Frisk" }) => {
+  /**
+   * 로컬 상태 감시 모듈 활성화
+   */
   const {
     isShowNoticeModal,
     isShowAddPostModal,
     isShowLoginModal
-  } = useVssState();
+  } = useLocalState();
   return (
     <div>
       <Head>
@@ -40,11 +50,14 @@ const Layout: FC<Props> = ({ children, title = "VSS" }) => {
         <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         <title>{title}</title>
       </Head>
-      <>{title !== "페이지를 찾을 수 없습니다" && <Header />}</>
-      <>{children}</>
+      <Header />
+      <Container>
+        <Nav />
+        {children}
+      </Container>
       <>
-        {isShowNoticeModal && <SetNoticeModal />}
-        {isShowAddPostModal && <SetPostModal />}
+        {/* {isShowNoticeModal && <SetNoticeModal />}
+        {isShowAddPostModal && <SetPostModal />} */}
         {isShowLoginModal && <AuthModal />}
       </>
     </div>

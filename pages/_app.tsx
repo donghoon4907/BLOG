@@ -5,7 +5,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import React from "react";
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
-import { VssProvider } from "../context";
+import { ContextProvider } from "../context";
 import { useApollo } from "../lib/apollo";
 import GlobalStyle from "../theme/globalStyle";
 import theme from "../theme";
@@ -17,9 +17,9 @@ export default function App({ Component, pageProps }) {
     <ApolloProvider client={apolloClient}>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <VssProvider>
+        <ContextProvider>
           <Component {...pageProps} />
-        </VssProvider>
+        </ContextProvider>
       </ThemeProvider>
     </ApolloProvider>
   );

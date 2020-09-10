@@ -19,14 +19,39 @@ const Container = styled.div`
 `;
 
 interface Props {
+  /**
+   * * User ID
+   */
   id: string;
+  /**
+   * * User nickname
+   */
   nickname: string;
+  /**
+   * * User avatar object
+   */
   avatar: Avatar;
+  /**
+   * * User followers
+   */
   followedBy: any;
+  /**
+   * * User followings
+   */
   following: any;
+  /**
+   * * User-written posts
+   */
   posts: any;
 }
 
+/**
+ * Search user item component
+ *
+ * @Component
+ * @author frisk
+ * @deprecated
+ */
 const SearchUserItem: FC<Props> = ({
   id,
   nickname,

@@ -1,4 +1,4 @@
-import isBrowser from "./isBrowser";
+import isBrowser from "./is_browser";
 
 let accessToken = isBrowser ? localStorage.getItem("token") : "";
 

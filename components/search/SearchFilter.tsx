@@ -10,7 +10,7 @@ import {
 import searchOptions from "./search_options.json";
 
 const FilterWrapper = styled.div`
-  ${(props) => props.theme.whiteBox};
+  ${props => props.theme.whiteBox};
   width: 100%;
   height: auto;
   display: flex;
@@ -46,6 +46,12 @@ const FilterSelector = styled.div`
   }
 `;
 
+/**
+ * Search filter component
+ *
+ * @Component
+ * @author frisk
+ */
 const SearchFilter: FC = () => {
   const dispatch = useVssDispatch();
   const {
@@ -61,9 +67,9 @@ const SearchFilter: FC = () => {
   const handleChangeFilter = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { checked, value } = e.target;
     if (checked) {
-      setFilter((prev) => prev.concat(value));
+      setFilter(prev => prev.concat(value));
     } else {
-      setFilter((prev) => prev.filter((v) => v !== value));
+      setFilter(prev => prev.filter(v => v !== value));
     }
   }, []);
 
@@ -82,7 +88,7 @@ const SearchFilter: FC = () => {
       <FilterColumn>
         <FilterCategory>정렬</FilterCategory>
         <FilterSelector>
-          {searchOptions.sort.map((v) => (
+          {searchOptions.sort.map(v => (
             <span key={v.id}>
               <input
                 type="radio"
@@ -100,7 +106,7 @@ const SearchFilter: FC = () => {
       <FilterColumn>
         <FilterCategory>상태</FilterCategory>
         <FilterSelector>
-          {searchOptions.filter.map((v) => (
+          {searchOptions.filter.map(v => (
             <span key={v.id}>
               <input
                 type="checkbox"

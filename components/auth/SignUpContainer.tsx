@@ -4,64 +4,75 @@ import React, {
   useRef,
   FC,
   FormEvent,
-  ChangeEvent
+  ChangeEvent,
+  Dispatch,
+  SetStateAction
 } from "react";
 import { useMutation } from "@apollo/client";
 import { useInput, useLazyAxios } from "../../hooks";
 import SignUpPresenter from "./SignUpPresenter";
-import { signUpMutation } from "../../graphql/user/mutation/signup";
+import { SIGN_UP } from "../../graphql/user/mutation/sign_up";
 
 interface Props {
   /**
-   * * Function to change mode to sign in and sign up
+   * 인증 화면 전환 모드 (로그인, 회원가입)
    */
-  setAction: any;
+  setAction: Dispatch<SetStateAction<string>>;
 }
 
 /**
- * Component for sign up
+ * * 회원가입 컨테이너 컴포넌트
  *
  * @Container
  * @author frisk
  */
 const SignUpContainer: FC<Props> = ({ setAction }) => {
-  const { loading, call } = useLazyAxios();
+  /**
+   * 업로드 요청을 위한 Axios 활성화
+   */
+  const { loading: uploadLoading, call } = useLazyAxios();
+  /**
+   * file element
+   */
   const $file = useRef<HTMLInputElement>(null);
-  const $confirmPwd = useRef<HTMLInputElement>(null);
-
+  /**
+   * 별칭 입력을 위한 useInput 활성화
+   */
   const nickname = useInput("");
+  /**
+   * 이메일 입력을 위한 useInput 활성화
+   */
   const email = useInput("");
-  const pwd = useInput("");
-  const [confirmPwd, setConfirmPwd] = useState("");
+  /**
+   * 미리보기 상태 관리 모듈 활성화
+   */
   const [preview, setPreview] = useState<string>("");
+  /**
+   * 파일 상태 모듈 활성화
+   */
   const [file, setFile] = useState<string>("");
-
-  const [signUp, { loading: signUpLoading }] = useMutation(signUpMutation);
-
-  const handleChangeConfirmPwd = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      const node = $confirmPwd.current;
-      setConfirmPwd(value);
-
-      if (pwd.value !== value) {
-        if (node) {
-          node.setCustomValidity("비밀번호가 일치하지 않습니다.");
-        }
-      } else {
-        if (node) {
-          node.setCustomValidity("");
-        }
-      }
-    },
-    [pwd.value]
-  );
-
-  const handleChangePreview = useCallback(
+  /**
+   * 회원가입 mutation 활성화
+   */
+  const [signUp, { loading: signUpLoading }] = useMutation(SIGN_UP);
+  /**
+   * 파일 변경 핸들러
+   */
+  const handleChangeFile = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
       const { value, files } = e.target as any;
-      if (!value) return; // prevent cancel action
-      if (loading) return; // prevent same request
+      /**
+       * 취소 버튼을 누른 경우
+       */
+      if (!value) {
+        return;
+      }
+      /**
+       * 업로드 요청 중인 경우
+       */
+      if (uploadLoading) {
+        return;
+      }
 
       const [file] = files;
 
@@ -79,10 +90,18 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
         const reader = new FileReader();
 
         reader.onloadend = () => {
+          /**
+           * 인코딩된 미리보기 저장
+           */
           setPreview(reader.result as string);
+          /**
+           * 응답 받은 파일 URL 저장
+           */
           setFile(data);
         };
-
+        /**
+         * base64로 인코딩
+         */
         reader.readAsDataURL(file);
       }
 
@@ -90,19 +109,26 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
         alert("썸네일 업로드 중 오류가 발생했습니다.");
       }
     },
-    [loading]
+    [uploadLoading]
   );
-
-  const handleClickUpload = useCallback(() => {
+  /**
+   * 파일 클릭 핸들러
+   */
+  const handleClickFile = useCallback(() => {
     const node = $file.current;
     if (node) {
       node.click();
     }
   }, []);
-
+  /**
+   * 회원가입 요청 핸들러
+   */
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      /**
+       * 회원가입 요청 중인 경우
+       */
       if (signUpLoading) {
         return alert("요청 중입니다. 잠시만 기다려주세요.");
       }
@@ -112,16 +138,18 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
       if (tf) {
         try {
           const {
-            data: { addUser }
+            data: { createUser }
           } = await signUp({
             variables: {
               email: email.value,
-              pwd: pwd.value,
               nickname: nickname.value,
               file: file ? file : process.env.DEFAULT_AVATAR
             }
           });
-          if (addUser) {
+          if (createUser) {
+            /**
+             * 로그인 화면 전환
+             */
             setAction("login");
             alert("회원가입이 정상처리되었습니다.");
           }
@@ -131,23 +159,19 @@ const SignUpContainer: FC<Props> = ({ setAction }) => {
         }
       }
     },
-    [email.value, pwd.value, nickname.value, file, signUpLoading]
+    [email.value, nickname.value, file, signUpLoading]
   );
 
   return (
     <SignUpPresenter
-      loading={loading}
+      uploadLoading={uploadLoading}
       signUpLoading={signUpLoading}
       nickname={nickname}
       email={email}
-      pwd={pwd}
-      confirmPwd={confirmPwd}
       preview={preview}
       $file={$file}
-      $confirmPwd={$confirmPwd}
-      onChangePreview={handleChangePreview}
-      onChangeConfirmPwd={handleChangeConfirmPwd}
-      onClickUpload={handleClickUpload}
+      onChangeFile={handleChangeFile}
+      onClickFile={handleClickFile}
       onSubmit={handleSubmit}
     />
   );

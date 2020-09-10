@@ -2,24 +2,20 @@ import { gql } from "@apollo/client";
 
 /**
  * * 포스트 검색
+ *
+ * @query
+ * @author frisk
+ * @param $skip 건너뛸 목록의 수
+ * @param $first 요청 목록의 수
+ * @param $orderBy 정렬
+ * @param $query 검색어
  */
-export const postsQuery = gql`
-  query getPosts(
-    $skip: Int
-    $first: Int
-    $orderBy: String
-    $searchKeyword: String
-  ) {
-    getPosts(
-      skip: $skip
-      first: $first
-      orderBy: $orderBy
-      searchKeyword: $searchKeyword
-    ) {
+export const GET_POSTS = gql`
+  query GetPosts($skip: Int, $first: Int, $orderBy: String, $query: String) {
+    posts(skip: $skip, first: $first, orderBy: $orderBy, query: $query) {
       id
       title
       description
-      createdAt
       user {
         id
         nickname
@@ -27,15 +23,19 @@ export const postsQuery = gql`
           url
         }
       }
-      video {
-        url
-      }
+      likeCount
       likes {
+        id
         user {
           id
         }
       }
-      status
+      createdAt
+      updatedAt
+      viewCount
+      categories {
+        content
+      }
     }
   }
 `;

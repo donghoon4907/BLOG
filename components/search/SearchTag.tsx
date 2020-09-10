@@ -19,9 +19,17 @@ const FilterWrapper = styled.span`
     margin-left: 10px;
   }
 `;
-
+/**
+ * * Concat search sort and filter options
+ */
 const sortAndFilter = searchOptions.sort.concat(searchOptions.filter);
 
+/**
+ * Search tag component
+ *
+ * @Component
+ * @author frisk
+ */
 const SearchTag: FC = () => {
   const dispatch = useVssDispatch();
   const {

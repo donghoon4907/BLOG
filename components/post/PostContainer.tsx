@@ -1,57 +1,57 @@
 import React, { useState, useCallback, useEffect, FC } from "react";
 import { useMutation } from "@apollo/client";
 import PostPresenter from "./PostPresenter";
-import { removePostMutation } from "../../graphql/post/mutation/remove";
-import { likeMutation } from "../../graphql/post/mutation/like";
-import {
-  useVssState,
-  useVssDispatch,
-  SHOW_POST_MODAL,
-  SHOW_LOGIN_MODAL
-} from "../../context";
+import { DELETE_POST } from "../../graphql/post/mutation/delete";
+import { LIKE_POST } from "../../graphql/post/mutation/like";
+import { useLocalState, useLocalDispatch } from "../../context";
+import { SHOW_LOGIN_MODAL } from "../../context/action";
 import { getAccessToken } from "../../lib/token";
 
 export type PostProps = {
   /**
-   * * Post ID
+   * 게시글 ID
    */
   id: string;
   /**
-   * * Post title
+   * 제목
    */
   title: string;
   /**
-   * * Post description
+   * 내용
    */
   description: string;
   /**
-   * * Post video obj
-   */
-  video: any;
-  /**
-   * * Post user obj
+   * 등록자
    */
   user: any;
   /**
-   * * Post likes
+   * Likes
    */
   likes: any;
   /**
-   * * Post createdAt
+   * 좋아요 수
+   */
+  likeCount: number;
+  /**
+   * 조회수
+   */
+  viewCount: number;
+  /**
+   * 등록일
    */
   createdAt: string;
   /**
-   * * Post updatedAt
+   * 수정일
    */
   updatedAt: string;
   /**
-   * * Post status
+   * 카테고리 목록
    */
-  status: string;
+  categories: any;
   /**
-   * * Post room obj
+   * 댓글수
    */
-  room: any;
+  commentCount: number;
 };
 
 /**
@@ -64,59 +64,53 @@ const PostContainer: FC<PostProps> = ({
   id,
   title,
   description,
-  createdAt,
   user,
-  video,
-  status,
-  likes
-  // room
+  createdAt,
+  likes,
+  likeCount,
+  viewCount,
+  categories,
+  commentCount
 }) => {
-  const { userId } = useVssState();
-  const dispatch = useVssDispatch();
-
-  const isMyPost = (userId && userId === user.id) || false;
-  const [ctrlIsLiked, setCtrlIsLiked] = useState<boolean>(
-    likes.some((v: any) => v.user.id === userId)
+  /**
+   * 로컬 상태 변경 모듈 활성화
+   */
+  const dispatch = useLocalDispatch();
+  /**
+   * 로컬 상태 감지 모듈 활성화
+   */
+  const { id: userId } = useLocalState();
+  /**
+   * 내가 작성한 게시물인지 여부
+   */
+  const isMyPost: boolean = (userId && userId === user.id) || false;
+  /**
+   * 좋아요 여부 상태 관리 모듈 활성화
+   */
+  const [isLike, setIsLike] = useState<boolean>(
+    likes.some(v => v.user.id === userId)
   );
-  const [ctrlLikeCount, setCtrlLikeCount] = useState<number>(likes.length);
-  const [isShowUser, setIsShowUser] = useState<boolean>(false);
-
-  const [like, { loading: likeLoading }] = useMutation(likeMutation);
-  const [remove, { loading: removeLoading }] = useMutation(removePostMutation);
-
-  const handleClickAvatar = useCallback(() => {
-    setIsShowUser(!isShowUser);
-  }, [isShowUser]);
-
-  // 포스트 채팅방 접근 이벤트
-  const handleRoom = useCallback(() => {
-    const token = getAccessToken();
-    if (token) {
-    } else {
-      dispatch({
-        type: SHOW_LOGIN_MODAL
-      });
-    }
-  }, []);
-
-  // 포스트 수정 이벤트
-  const handleUpdate = useCallback(() => {
-    dispatch({
-      type: SHOW_POST_MODAL,
-      postId: id,
-      title,
-      description,
-      status,
-      url: video.url
-    });
-  }, []);
-
-  // 좋아요 / 좋아요 취소 이벤트
+  /**
+   * 좋아요 수 상태 관리 모듈 활성화
+   */
+  const [_likeCount, setLikeCount] = useState<number>(likes.length);
+  /**
+   * 좋아요 mutation 활성화
+   */
+  const [like, { loading: likeLoading }] = useMutation(LIKE_POST);
+  /**
+   * 게시물 삭제 mutation 활성화
+   */
+  const [remove, { loading: removeLoading }] = useMutation(DELETE_POST);
+  /**
+   * 좋아요 핸들러
+   */
   const handleLike = useCallback(async () => {
-    const token = getAccessToken();
+    const token: string = getAccessToken() as string;
+
     if (token) {
-      setCtrlIsLiked(!ctrlIsLiked);
-      setCtrlLikeCount(ctrlIsLiked ? ctrlLikeCount - 1 : ctrlLikeCount + 1);
+      setIsLike(!isLike);
+      setLikeCount(isLike ? _likeCount - 1 : _likeCount + 1);
 
       try {
         await like({
@@ -127,13 +121,18 @@ const PostContainer: FC<PostProps> = ({
         alert(message);
       }
     } else {
+      /**
+       * 로그인 팝업 보이기
+       */
       dispatch({
         type: SHOW_LOGIN_MODAL
       });
     }
-  }, [ctrlIsLiked, ctrlLikeCount, likeLoading]);
+  }, [isLike, _likeCount, likeLoading]);
 
-  // 삭제 이벤트
+  /**
+   * 게시물 삭제 핸들러
+   */
   const handleDelete = useCallback(async () => {
     if (removeLoading) {
       return alert("요청중입니다. 잠시만 기다려주세요.");
@@ -161,26 +160,19 @@ const PostContainer: FC<PostProps> = ({
   }, [removeLoading]);
 
   useEffect(() => {
-    setCtrlIsLiked(likes.some((v: any) => v.user.id === userId));
+    setIsLike(likes.some(v => v.user.id === userId));
   }, [userId]);
 
   return (
     <PostPresenter
       title={title}
       description={description}
-      status={status}
       createdAt={createdAt}
       user={user}
-      video={video}
-      isLiked={ctrlIsLiked}
-      likeCount={ctrlLikeCount}
+      isLike={isLike}
+      likeCount={_likeCount}
       isMyPost={isMyPost}
-      isShowUser={isShowUser}
-      onClickAvatar={handleClickAvatar}
       onLike={handleLike}
-      onUpdate={handleUpdate}
-      onRoom={handleRoom}
-      onDelete={handleDelete}
     />
   );
 };

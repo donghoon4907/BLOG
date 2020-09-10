@@ -1,22 +1,10 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 
-const Container = styled.section<{ flexDirection: string }>`
-  width: 912px;
-  height: 100%;
-  display: flex;
-  flex-direction: ${props => props.flexDirection};
-  margin: 0 auto;
-  padding: 10px;
-  padding-top: 5rem;
-
-  ${props => props.theme.media.desktop} {
-    width: 768px;
-  }
-
-  ${props => props.theme.media.tablet} {
-    width: 100%;
-  }
+const Container = styled.section`
+  flex: 1
+  height: calc(100vh - 3rem);
+  padding: 3rem;
 `;
 
 interface Props {
@@ -27,14 +15,12 @@ interface Props {
 }
 
 /**
- * Common section component
+ * 공통 section 컴포넌트
  *
  * @Component
  * @author frisk
  * @param flexDirection Flex direction
  */
-const Section: FC<Props> = ({ children, flexDirection = "column" }) => (
-  <Container flexDirection={flexDirection}>{children}</Container>
-);
+const Section: FC<Props> = ({ children }) => <Container>{children}</Container>;
 
 export default Section;

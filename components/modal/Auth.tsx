@@ -4,7 +4,8 @@ import { Modal } from "react-bootstrap";
 import SignIn from "../auth/SignInContainer";
 import SignUp from "../auth/SignUpContainer";
 import { StateChanger } from "../common/Form";
-import { useVssDispatch, HIDE_LOGIN_MODAL } from "../../context";
+import { useLocalDispatch } from "../../context";
+import { HIDE_LOGIN_MODAL } from "../../context/action";
 
 const Link = styled.span`
   color: ${props => props.theme.blueColor};
@@ -12,16 +13,24 @@ const Link = styled.span`
 `;
 
 /**
- * Auth modal component
+ * 인증 팝업 컴포넌트
  *
  * @Component
  * @Modal
  * @author frisk
  */
 const Auth: FC = () => {
-  const dispatch = useVssDispatch();
+  /**
+   * 로컬 상태 변경 모듈 활성화
+   */
+  const dispatch = useLocalDispatch();
+  /**
+   * 화면 전환 상태 모듈 활성화
+   */
   const [action, setAction] = useState<string>("login");
-
+  /**
+   * 팝업 숨기기 핸들러
+   */
   const handleClose = useCallback(() => {
     dispatch({
       type: HIDE_LOGIN_MODAL

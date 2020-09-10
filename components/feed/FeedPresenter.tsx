@@ -5,7 +5,7 @@ import { Add } from "../icon";
 import Subject from "../common/Subject";
 import NoticeList from "./NoticeList";
 import PostList from "./PostList";
-import RecommandUserList from "./RecommandUserList";
+import RecommandUserList from "../common/RecommandUserList";
 
 const PostWrapper = styled.div`
   width: 600px;
@@ -54,9 +54,9 @@ type Props = {
  * @author frisk
  */
 const FeedPresenter: FC<Props> = ({ isMaster, onAddNotice }) => (
-  <Section flexDirection="row">
+  <Section>
     <PostWrapper>
-      <Subject>최신 포스트</Subject>
+      <Subject>최신 게시물</Subject>
       <PostList />
     </PostWrapper>
     <UserWrapper>

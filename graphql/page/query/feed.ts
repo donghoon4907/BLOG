@@ -1,14 +1,20 @@
 import { gql } from "@apollo/client";
+
 /**
- * * Index Page에서 호출 쿼리 목록
+ * * Feed 페이지에 필요한 정보 로드
+ *
+ * @query
+ * @author frisk
+ * @param $first 요청 목록의 수
+ * @alias recentPosts - 최근 포스트 목록
+ * @alias recommandUsers - 추천 사용자
  */
-export const feedQuery = gql`
-  query feed($skip: Int, $first: Int) {
-    getPosts(skip: $skip, first: $first) {
+export const GET_FEED = gql`
+  query GetFeed($first: Int) {
+    recentPosts: posts(first: $first) {
       id
       title
       description
-      createdAt
       user {
         id
         nickname
@@ -16,43 +22,27 @@ export const feedQuery = gql`
           url
         }
       }
-      video {
-        url
-      }
+      likeCount
       likes {
+        id
         user {
           id
         }
       }
-      status
-      room {
-        id
+      createdAt
+      updatedAt
+      viewCount
+      categories {
+        content
       }
+      commentCount
     }
-    getNotices(skip: $skip, first: $first) {
+    notices(first: $first) {
       id
       title
       description
       createdAt
       updatedAt
-    }
-    getRecommandUsers {
-      id
-      nickname
-      email
-      avatar {
-        url
-      }
-      isMaster
-      followedBy {
-        id
-      }
-      following {
-        id
-      }
-      posts {
-        id
-      }
     }
   }
 `;

@@ -1,19 +1,16 @@
 import { gql } from "@apollo/client";
+
 /**
- * * 포스트 수정
+ * * 공지사항 수정
+ *
+ * @mutation
+ * @author frisk
+ * @param $id 공지사항 ID
+ * @param $title 제목
+ * @param $description 내용
  */
-export const updatePostMutation = gql`
-  mutation updatePost(
-    $postId: String!
-    $title: String!
-    $description: String
-    $status: String!
-  ) {
-    updatePost(
-      postId: $postId
-      title: $title
-      description: $description
-      status: $status
-    )
+export const UPDATE_POST = gql`
+  mutation UpdatePost($id: String!, $title: String!, $description: String!) {
+    updatePost(id: $id, title: $title, description: $description)
   }
 `;

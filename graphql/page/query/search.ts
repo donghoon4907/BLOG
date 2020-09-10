@@ -1,19 +1,26 @@
 import { gql } from "@apollo/client";
+
 /**
- * * Search Page에서 호출 쿼리 목록
+ * * Search 페이지에 필요한 정보 로드
+ *
+ * @query
+ * @author frisk
+ * @param $skip 건너뛸 목록의 수
+ * @param $first 요청 목록의 수
+ * @param $orderBy 정렬
+ * @param $query 검색어
  */
-export const searchQuery = gql`
-  query feed($skip: Int, $first: Int, $keyword: String, $orderBy: String) {
-    getPosts(
+export const GET_SEARCH = gql`
+  query GetSearch($skip: Int, $first: Int, $orderBy: String, $query: String) {
+    searchPost: posts(
       skip: $skip
       first: $first
-      searchKeyword: $keyword
       orderBy: $orderBy
+      query: $query
     ) {
       id
       title
       description
-      createdAt
       user {
         id
         nickname
@@ -21,53 +28,29 @@ export const searchQuery = gql`
           url
         }
       }
-      video {
-        url
-      }
+      likeCount
       likes {
+        id
         user {
           id
         }
       }
-      status
-      room {
-        id
+      createdAt
+      updatedAt
+      viewCount
+      categories {
+        content
       }
+      commentCount
     }
-    getUsers(skip: $skip, first: $first, nickname: $keyword) {
+    searchUser: users(first: $first, query: $query) {
       id
       nickname
-      email
+      isMaster
+      createdAt
+      updatedAt
       avatar {
         url
-      }
-      isMaster
-      followedBy {
-        id
-      }
-      following {
-        id
-      }
-      posts {
-        id
-      }
-    }
-    getRecommandUsers {
-      id
-      nickname
-      email
-      avatar {
-        url
-      }
-      isMaster
-      followedBy {
-        id
-      }
-      following {
-        id
-      }
-      posts {
-        id
       }
     }
   }

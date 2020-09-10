@@ -9,9 +9,9 @@ import React, {
 } from "react";
 import { useMutation } from "@apollo/client";
 import axios from "axios";
-import { addPostMutation } from "../../graphql/post/mutation/add";
+import { addPostMutation } from "../../graphql/post/mutation/create";
 import { updatePostMutation } from "../../graphql/post/mutation/update";
-import { removePostMutation } from "../../graphql/post/mutation/remove";
+import { removePostMutation } from "../../graphql/post/mutation/delete";
 import SetPostPresenter from "./SetPostPresenter";
 import { useVssState, useVssDispatch, HIDE_POST_MODAL } from "../../context";
 

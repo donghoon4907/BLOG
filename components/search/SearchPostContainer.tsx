@@ -9,6 +9,12 @@ import {
 import SearchPostPresenter from "./SearchPostPresenter";
 import { postsQuery } from "../../graphql/post/query";
 
+/**
+ * Component for search post
+ *
+ * @Container
+ * @author frisk
+ */
 const SearchPostContainer: FC = () => {
   const {
     searchPostOption: { searchKeyword, orderBy },

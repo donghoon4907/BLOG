@@ -17,9 +17,19 @@ const Container = styled.div`
 `;
 
 interface Props {
+  /**
+   * User[]
+   */
   users: any;
 }
 
+/**
+ * Search user component
+ *
+ * @Component
+ * @author frisk
+ * @deprecated
+ */
 const SearchUser: FC<Props> = ({ users }) => (
   <Container>
     {users.map(user => (

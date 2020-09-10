@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useEffect, FC, FormEvent } from "react";
 import { useMutation } from "@apollo/client";
 import marked from "marked";
-import { addNoticeMutation } from "../../graphql/notice/mutation/add";
+import { addNoticeMutation } from "../../graphql/notice/mutation/create";
 import { updateNoticeMutation } from "../../graphql/notice/mutation/update";
-import { removeNoticeMutation } from "../../graphql/notice/mutation/remove";
+import { removeNoticeMutation } from "../../graphql/notice/mutation/delete";
 import SetNoticePresenter from "./SetNoticePresenter";
 import { useInput } from "../../hooks";
 import { useVssState, useVssDispatch, HIDE_NOTICE_MODAL } from "../../context";

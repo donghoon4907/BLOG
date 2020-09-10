@@ -19,10 +19,23 @@ const Container = styled.div`
 `;
 
 type Props = {
+  /**
+   * * User[]
+   */
   users: any;
+  /**
+   * * Search keyword
+   */
   keyword: string;
 };
 
+/**
+ * Component for search user
+ *
+ * @Presenter
+ * @author frisk
+ * @deprecated
+ */
 const SearchUserPresenter: FC<Props> = ({ users, keyword }) => (
   <>
     <Subject>"{keyword}"에 대한 검색결과</Subject>

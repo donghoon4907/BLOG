@@ -8,17 +8,36 @@ import SearchTag from "./SearchTag";
 import { Filter } from "../icon";
 
 interface Props {
+  /**
+   * * Loading during search post
+   */
   loading: boolean;
-  // loadingMorePosts: boolean;
+  /**
+   * * Post[]
+   */
   posts: any;
+  /**
+   * * Search keyword
+   */
   keyword: string;
+  /**
+   * * Whether the search filter bar is exposed
+   */
   isShowFilterBar: boolean;
+  /**
+   * * Handler for click search filter
+   */
   onClickFilter: any;
 }
 
+/**
+ * Component for search post
+ *
+ * @Presenter
+ * @author frisk
+ */
 const SearchPostPresenter: FC<Props> = ({
   loading,
-  // loadingMorePosts,
   posts,
   keyword,
   isShowFilterBar,

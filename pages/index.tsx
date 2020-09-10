@@ -4,19 +4,33 @@ import { useQuery } from "@apollo/client";
 import Layout from "../components/common/Layout";
 import Feed from "../components/feed/FeedContainer";
 import { initializeApollo } from "../lib/apollo";
-import { feedQuery } from "../graphql/page/query/feed";
-import { meQuery } from "../graphql/auth/query/me";
-import { useVssDispatch, SET_ME } from "../context";
+import { GET_FEED } from "../graphql/page/query/feed";
+import { GET_RECOMAND_USERS } from "../graphql/user/query";
+import { ME } from "../graphql/auth/query/me";
+import { useLocalDispatch } from "../context";
+import { SET_ME } from "../context/action";
 
+/**
+ * 메인 화면 컴포넌트
+ *
+ * @Nextpage
+ * @author frist
+ */
 const Index: NextPage = () => {
-  const dispatch = useVssDispatch();
-  useQuery(meQuery, {
+  /**
+   * 로컬 상태 변경 모듈 활성화
+   */
+  const dispatch = useLocalDispatch();
+  /**
+   * 사용자 정보 로드
+   */
+  useQuery(ME, {
     ssr: false,
-    onCompleted: ({ getMyProfile }) => {
-      const { id, nickname, email, avatar, isMaster } = getMyProfile;
+    onCompleted: ({ me }) => {
+      const { id, nickname, email, avatar, isMaster } = me;
       dispatch({
         type: SET_ME,
-        userId: id,
+        id,
         nickname,
         email,
         avatar,
@@ -35,7 +49,13 @@ const Index: NextPage = () => {
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
   await apolloClient.query({
-    query: feedQuery,
+    query: GET_FEED,
+    variables: {
+      first: 30
+    }
+  });
+  await apolloClient.query({
+    query: GET_RECOMAND_USERS,
     variables: {
       first: 10
     }

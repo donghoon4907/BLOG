@@ -3,7 +3,7 @@ import React, { FC, MouseEvent } from "react";
 /**
  * * Default svg size
  */
-const size = 24;
+const size = 20;
 
 type Props = {
   /**
@@ -360,6 +360,28 @@ export const Filter: FC<Props> = ({ style }) => (
     <g>
       <path d="M0 0h24v24H0z" fill="none"></path>
       <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path>
+    </g>
+  </svg>
+);
+
+/**
+ * Collapse icon component
+ *
+ * @Svg
+ * @param props.style Svg style
+ */
+export const Collapse: FC<Props> = ({ style }) => (
+  <svg
+    width={size}
+    height={size}
+    style={style}
+    version="1.1"
+    viewBox="0 0 20 20"
+    x="0px"
+    y="0px"
+  >
+    <g>
+      <path d="M16 16V4h2v12h-2zM6 9l2.501-2.5-1.5-1.5-5 5 5 5 1.5-1.5-2.5-2.5h8V9H6z"></path>
     </g>
   </svg>
 );

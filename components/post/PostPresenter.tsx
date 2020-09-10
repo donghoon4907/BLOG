@@ -10,14 +10,15 @@ import HoverUser from "../user/HoverUser";
 
 const Container = styled.div`
   ${props => props.theme.whiteBox};
-  width: 100%;
+  display: flex;
+  justify-content: flex-start;
   margin-bottom: 30px;
 `;
 
 const Header = styled.div`
   padding: 2%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   background: white;
 `;
@@ -123,65 +124,37 @@ const MoreWrapper = styled.div`
 
 type Props = {
   /**
-   * * Post title
+   * 제목
    */
   title: string;
   /**
-   * * Post description
+   * 내용
    */
   description: string;
   /**
-   * * Post status
-   */
-  status: string;
-  /**
-   * * Post createdAt
+   * 등록일
    */
   createdAt: string;
   /**
-   * * Post user obj
+   * 등록자
    */
   user: any;
   /**
-   * * Post video obj
+   * 좋아요 여부
    */
-  video: any;
+  isLike: boolean;
   /**
-   * * Whether user liked post
-   */
-  isLiked: boolean;
-  /**
-   * * Post like count
+   * 좋아요 수
    */
   likeCount: number;
   /**
-   * * Whether it is user's post
+   * 내가 작성했는지 여부
    */
   isMyPost: boolean;
   /**
-   * * Whether user details are visible
-   */
-  isShowUser: boolean;
-  /**
-   * * Handler for click avatar
-   */
-  onClickAvatar: any;
-  /**
-   * * Handler for click like icon
+   * 좋아요 핸들러
    */
   onLike: any;
-  /**
-   * * Handler for update post
-   */
-  onUpdate: any;
-  /**
-   * * Handler for click room
-   */
-  onRoom?: any;
-  /**
-   * * Handler for remove post
-   */
-  onDelete: any;
 };
 
 /**
@@ -193,54 +166,20 @@ type Props = {
 const PostPresenter: FC<Props> = ({
   title,
   description,
-  status,
   createdAt,
   user,
-  video,
-  isLiked,
+  isLike,
   likeCount,
   isMyPost,
-  isShowUser,
-  onClickAvatar,
-  onLike,
-  onUpdate,
-  // onRoom,
-  onDelete
+  onLike
 }) => (
   <Container>
     <Header>
       <User>
-        <Avatar size="30" src={user.avatar.url} onClick={onClickAvatar} />
+        <Avatar size="30" src={user.avatar.url} />
         <Nick>{user.nickname}</Nick>
-        {isShowUser && <HoverUser userId={user.id} top={30} />}
       </User>
-      <div style={{ width: 100, textAlign: "right" }}>
-        {isMyPost && (
-          <Dropdown>
-            <MoreWrapper>
-              <Dropdown.Toggle
-                id="dropdown-custom-2"
-                style={{
-                  position: "absolute",
-                  top: -20,
-                  right: 0,
-                  opacity: 0,
-                  zIndex: 1
-                }}
-              />
-              <More />
-            </MoreWrapper>
-
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={onUpdate}>포스트 수정</Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item onClick={onDelete}>포스트 삭제</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        )}
-      </div>
     </Header>
-    <Video src={video.url} />
     <Body>
       <Title>{title}</Title>
       <Description>{description}</Description>
@@ -249,7 +188,7 @@ const PostPresenter: FC<Props> = ({
       <IconWrapper>
         <div>
           <Icon onClick={onLike}>
-            {isLiked ? <HeartFull /> : <HeartEmpty />}
+            {isLike ? <HeartFull /> : <HeartEmpty />}
           </Icon>
           <Icon>{likeCount.toLocaleString()}</Icon>
           {status === "PUBLIC" && (

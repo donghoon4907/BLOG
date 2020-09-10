@@ -25,85 +25,65 @@ const UploadWrapper = styled.div`
 
 interface Props {
   /**
-   * * Loading during upload request
+   * 업로드 요청 진행 여부
    */
-  loading: boolean;
+  uploadLoading: boolean;
   /**
-   * * Loading during sign up request
+   * 회원가입 요청 진행 여부
    */
   signUpLoading: boolean;
   /**
-   * * Nickname with useInput
+   * 별칭 입력을 위한 Hooks
    */
   nickname: UseInputProps;
   /**
-   * * Email with useInput
+   * 이메일 입력을 위한 Hooks
    */
   email: UseInputProps;
   /**
-   * Password with useInput
-   */
-  pwd: UseInputProps;
-  /**
-   * * Confirm password with useInput
-   */
-  confirmPwd: string;
-  /**
-   * * Preview image
+   * 이미지 미리보기
    */
   preview: string;
   /**
-   * * File Element
+   * file element
    */
   $file: any;
   /**
-   * * Confirm password Element
+   * 파일 변경 핸들러
    */
-  $confirmPwd: any;
+  onChangeFile: any;
   /**
-   * * Handler for change preview image
+   * 파일 클릭 핸들러
    */
-  onChangePreview: any;
+  onClickFile: any;
   /**
-   * * Handler for change confirm password
-   */
-  onChangeConfirmPwd: any;
-  /**
-   * * Handler for click file element
-   */
-  onClickUpload: any;
-  /**
-   * * Handler for submit
+   * 회원가입 요청 핸들러
    */
   onSubmit: any;
 }
 
 /**
- * Component for sign up
+ * * 회원가입 프레젠터 컴포넌트
  *
  * @Presenter
  * @author frisk
  */
 const SignUpPresenter: FC<Props> = ({
-  loading,
+  uploadLoading,
   signUpLoading,
   nickname,
   email,
-  pwd,
-  confirmPwd,
   preview,
   $file,
-  $confirmPwd,
-  onChangePreview,
-  onChangeConfirmPwd,
-  onClickUpload,
+  onChangeFile,
+  onClickFile,
   onSubmit
 }) => {
   return (
     <>
-      {(loading || signUpLoading) && <Loader />}
+      {(uploadLoading || signUpLoading) && <Loader />}
       <form onSubmit={onSubmit}>
-        <UploadWrapper onClick={onClickUpload}>
+        <UploadWrapper onClick={onClickFile} role="button">
           {preview ? (
             <img src={preview} alt="avatar" title="변경하려면 클릭하세요." />
           ) : (
@@ -112,10 +92,10 @@ const SignUpPresenter: FC<Props> = ({
 
           <input
             type="file"
-            onChange={onChangePreview}
+            onChange={onChangeFile}
             ref={$file}
             hidden
-            accept="image/jpg, image/jpeg, image/png"
+            accept="image/jpg, image/jpeg, image/png, .gif"
           />
         </UploadWrapper>
         <InputWrapper>
@@ -129,34 +109,6 @@ const SignUpPresenter: FC<Props> = ({
             autoComplete="off"
             required
             {...email}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor="password" val={pwd.value}>
-            암호
-          </Label>
-          <Input
-            type="password"
-            placeholder="암호"
-            name="password"
-            autoComplete="off"
-            required
-            {...pwd}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor="conform_password" val={confirmPwd}>
-            암호 확인
-          </Label>
-          <Input
-            type="password"
-            placeholder="암호 확인"
-            name="conform_password"
-            autoComplete="off"
-            required
-            value={confirmPwd}
-            onChange={onChangeConfirmPwd}
-            ref={$confirmPwd}
           />
         </InputWrapper>
         <InputWrapper>

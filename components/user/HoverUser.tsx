@@ -35,10 +35,22 @@ const Loading = styled.div<{ top: number }>`
 `;
 
 interface Props {
+  /**
+   * * User ID
+   */
   userId: string;
+  /**
+   * * Position top
+   */
   top: number;
 }
 
+/**
+ * Hover user component
+ *
+ * @Component
+ * @author frisk
+ */
 const HoverUser: FC<Props> = ({ userId, top }) => {
   const { userId: myUserId } = useVssState();
   const { data, loading } = useQuery(userQuery, {

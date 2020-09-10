@@ -29,5 +29,7 @@ export default {
     background: white;
   `,
   maxWidth: "730px",
+  headerShadow: "0 1px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.1)",
+  headerActiveColor: "#468999",
   media
 };

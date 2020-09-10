@@ -5,7 +5,7 @@ module.exports = {
     config.plugins = [
       ...config.plugins,
       new Dotenv({
-        path: "./.env",
+        path: `./.env.${dev ? "development" : "production"}`,
         systemvars: true
       })
     ];

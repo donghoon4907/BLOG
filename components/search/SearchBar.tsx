@@ -78,9 +78,15 @@ const FilterSelector = styled.div`
   }
 `;
 
+/**
+ * Search bar component
+ *
+ * @Component
+ * @author frisk
+ */
 const SearchBar = () => {
   const router = useRouter();
-  let keyword, orderBy;
+  let keyword: any, orderBy: any;
 
   if (router.query.keyword && router.query.keyword.length > 0) {
     (router.query.keyword as any).forEach(v => {
