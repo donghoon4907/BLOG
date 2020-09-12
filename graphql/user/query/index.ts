@@ -11,8 +11,8 @@ import { gql } from "@apollo/client";
  * @param $query 검색어
  */
 export const GET_USERS = gql`
-  query GetUsers($skip: Int, $first: Int, $query: String, $orderBy: String) {
-    users(skip: $skip, first: $first, query: $query, orderBy: $orderBy) {
+  query GetUsers($skip: Int, $first: Int, $orderBy: String) {
+    users(skip: $skip, first: $first, orderBy: $orderBy) {
       id
       nickname
       isMaster
@@ -40,34 +40,6 @@ export const GET_USER = gql`
       isMaster
       createdAt
       updatedAt
-      avatar {
-        url
-      }
-    }
-  }
-`;
-
-/**
- * * 추천 사용자 목록 조회
- *
- * @query
- * @author frisk
- * @param $skip 건너뛸 목록의 수
- * @param $first 요청 목록의 수
- */
-export const GET_RECOMAND_USERS = gql`
-  query GetRecommandUsers($skip: Int, $first: Int!) {
-    recommandUsers: users(
-      skip: $skip
-      first: $first
-      orderBy: "postCount_DESC"
-    ) {
-      id
-      nickname
-      isMaster
-      createdAt
-      updatedAt
-      postCount
       avatar {
         url
       }

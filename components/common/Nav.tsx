@@ -8,17 +8,21 @@ import RecommandUserList from "./RecommandUserList";
 
 const Container = styled.div<{ collapse: string }>`
   background: #efeff1;
-  margin-top: 3rem;
   width: ${props => (props.collapse === "expand" ? 230 : 60)}px;
   height: calc(100vh - 3rem);
   z-index: 1;
   display: flex;
   flex-direction: column;
   padding: 8px;
-  overflow-y: auto;
+  position: fixed;
+  top: 3rem;
 
   & svg {
     transform: rotate(${props => (props.collapse === "expand" ? 0 : 180)}deg);
+  }
+
+  ${props => props.theme.media.desktop} {
+    display: none;
   }
 `;
 
@@ -68,7 +72,7 @@ const Nav: FC = () => {
     }
   }, [isCollapseNav]);
   /**
-   * 마운트 콜백
+   * 마운트 콜백 모듈 활성화
    */
   useEffect(() => {
     const isCollapse = getCollapse() as string;

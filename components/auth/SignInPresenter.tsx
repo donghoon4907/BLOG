@@ -43,7 +43,7 @@ const SignInPresenter: FC<Props> = ({ loading, email, onSubmit }) => (
           {...email}
         />
       </InputWrapper>
-      <Button text="로그인" type="submit" />
+      <Button type="submit">로그인</Button>
     </form>
   </>
 );

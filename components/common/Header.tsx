@@ -5,6 +5,7 @@ import Link from "./Link";
 import ProfileButton from "../common/ProfileButton";
 import SearchButton from "../common/SearchButton";
 import HeaderSearchBar from "./HeaderSearchBar";
+import AddPostButton from "../common/AddPostButton";
 
 const Container = styled.header`
   height: 3rem;
@@ -16,7 +17,7 @@ const Container = styled.header`
   box-shadow: ${props => props.theme.headerShadow};
 
   svg {
-    fill: #1f2633;
+    fill: ${props => props.theme.blueColor};
   }
 `;
 
@@ -54,7 +55,7 @@ const SearchWrapper = styled.div`
   top: calc(3rem - 3px);
   left: 0;
   width: 100%;
-  height: 60px;
+  height: auto;
   padding: 10px;
   box-shadow: ${props => props.theme.headerShadow};
 `;
@@ -70,6 +71,7 @@ const Header: FC = () => {
    * 로컬 상태 감시 모듈 활성화
    */
   const { isShowSearchBar } = useLocalState();
+
   return (
     <Container>
       <Wrapper>
@@ -84,6 +86,7 @@ const Header: FC = () => {
         </Column>
         <Column>
           <SearchButton />
+          <AddPostButton />
           <ProfileButton />
         </Column>
       </Wrapper>

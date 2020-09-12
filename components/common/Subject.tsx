@@ -9,7 +9,7 @@ const Container = styled.div<{ activeBorder?: boolean }>`
   padding: 8px 5px;
   font-size: 20px;
   margin-bottom: 10px;
-  font-weight: 500;
+  font-weight: bold;
 
   & svg {
     width: 20px;

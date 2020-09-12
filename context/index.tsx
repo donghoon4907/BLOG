@@ -7,9 +7,9 @@ import { Avatar } from "../interfaces";
  * * 선택된 게시물 타입
  *
  * @author frisk
- * @property {string} id - 게시물 ID
- * @property {string} title - 제목
- * @property {string} description - 내용
+ * @property id          - ID
+ * @property title       - 제목
+ * @property description - 내용
  * @deprecated
  */
 type ActivePost = {
@@ -22,11 +22,11 @@ type ActivePost = {
  * * 선택된 공지사항 타입
  *
  * @author frisk
- * @property {string} id - 공지사항 ID
- * @property {string} action - 조작 모드(보기전용, 수정, 등록)
- * @property {string} actionText - 팝업 헤더명
- * @property {string} title - 제목
- * @property {string} description - 내용
+ * @property id          - ID
+ * @property action      - 조작 모드(보기전용, 수정, 등록)
+ * @property actionText  - 팝업 헤더명
+ * @property title       - 제목
+ * @property description - 내용
  * @deprecated
  */
 type ActiveNotice = {
@@ -41,9 +41,9 @@ type ActiveNotice = {
  * * 검색옵션 타입
  *
  * @author frisk
- * @property {string} orderBy - 정렬
- * @property {string} query - 검색어
- * @property {string[]} filter - 필터
+ * @property orderBy - 정렬
+ * @property query   - 검색어
+ * @property filter  - 필터
  */
 type SearchPostOption = {
   orderBy: string;
@@ -55,20 +55,20 @@ type SearchPostOption = {
  * * 로컬 상태 타입
  *
  * @author frist
- * @property {string|null} id - 사용자 ID
- * @property {string|null} nickname - 사용자 별칭
- * @property {string|null} email - 사용자 이메일
- * @property {Avatar|null} avatar - 사용자 프로필 사진
- * @property {boolean} isMaster - 운영자 여부
- * @property {boolean} isShowNoticeModal - 공지사항 팝업 보이기 여부
- * @property {boolean} isShowAddPostModal - 게시물 추가 팝업 보이기 여부
- * @property {boolean} isShowSearchBar - 검색바 보이기 여부
- * @property {boolean} isShowFilterBar - 검색 필터 보이기 여부
- * @property {boolean} isShowLoginModal - 로그인 팝업 보이기 여부
- * @property {ActivePost} activePost - 선택한 게시물 정보
- * @property {ActiveNotice} activeNotice - 선택한 공지사항 정보
- * @property {SearchPostOption} searchPostOption - 검색 옵션
- * @property {boolean} isCollapseNav - 네비게이션 확장 여부
+ * @property id                 - 사용자 ID
+ * @property nickname           - 사용자 별칭
+ * @property email              - 사용자 이메일
+ * @property avatar             - 사용자 프로필 사진
+ * @property isMaster           - 운영자 여부
+ * @property isShowNoticeModal  - 공지사항 팝업 보이기 여부
+ * @property isShowAddPostModal - 게시물 추가 팝업 보이기 여부
+ * @property isShowSearchBar    - 검색바 보이기 여부
+ * @property isShowFilterBar    - 검색 필터 보이기 여부
+ * @property isShowLoginModal   - 로그인 팝업 보이기 여부
+ * @property activePost         - 선택한 게시물 정보
+ * @property activeNotice       - 선택한 공지사항 정보
+ * @property searchPostOption   - 검색 옵션
+ * @property isCollapseNav      - 네비게이션 확장 여부
  */
 export type State = {
   id: string | null;

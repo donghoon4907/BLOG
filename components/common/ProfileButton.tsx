@@ -24,7 +24,7 @@ const ProfileButton: FC = () => {
      */
     const token = getAccessToken();
     if (token) {
-      const tf = confirm("로그아웃 하시겠습니까?");
+      const tf = confirm("로그아웃 하시겠어요?");
       if (tf) {
         /**
          * 토큰 삭제

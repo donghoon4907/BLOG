@@ -38,10 +38,10 @@ export const StateChanger = styled.div`
   padding: 20px 0px;
 `;
 
-export const TextArea = styled.textarea`
+export const TextArea = styled.textarea<{ height: number | string }>`
   ${props => props.theme.whiteBox};
   width: 100%;
-  height: 300px;
+  height: ${props => props.height}px;
   resize: none;
   font-size: 12px;
   overflow: auto;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 interface AvatarContainer {
   /**
-   * Container size
+   * 프로필 사진 크기
    */
   size: number | string;
 }
@@ -12,7 +12,7 @@ const Container = styled.div<AvatarContainer>`
   width: ${props => props.size}px;
   height: ${props => props.size}px;
   border: ${props => props.theme.boxBorder};
-  border-radius: 50%;
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   position: relative;
@@ -22,36 +22,31 @@ const Container = styled.div<AvatarContainer>`
     width: 100%;
     height: 100%;
   }
-
-  & #dropdown-custom-2 {
-    opacity: 0;
-  }
 `;
 
 interface Props extends AvatarContainer {
   /**
-   * * Image source
+   * 이미지 자원
    */
   src: string;
   /**
-   * * Handler for click
+   * 클릭 핸들러
    */
   onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
 /**
- * Common avatar component
+ * * 공통 프로필 사진 컴포넌트
  *
  * @Component
  * @author frisk
- * @param props.size Container size
- * @param props.src Image source
- * @param props.onClick Handler for click
+ * @param props.size 프로필 사진 크기
+ * @param props.src 이미지 자원
+ * @param props.onClick 클릭 핸들러
  */
-const Avatar: FC<Props> = ({ size, src, onClick, children }) => (
-  <Container onClick={onClick} size={size}>
+const Avatar: FC<Props> = ({ size, src, onClick }) => (
+  <Container onClick={onClick} size={size} role="button">
     <img src={src} alt="avatar" />
-    {children}
   </Container>
 );
 

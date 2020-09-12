@@ -89,7 +89,7 @@ type Props = {
 };
 
 /**
- * Component for set notice
+ * 공지사항 팝업 프레젠터 컴포넌트
  *
  * @Presenter
  * @author frisk
@@ -147,6 +147,7 @@ const SetNoticePresenter: FC<Props> = ({
               name="description"
               required
               autoComplete="off"
+              height={300}
               {...description}
             />
             {(action.code === "readonly" || action.code === "modifiable") && (

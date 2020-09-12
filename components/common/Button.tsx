@@ -21,17 +21,9 @@ const Container = styled.button`
 
 interface Props {
   /**
-   * * Button text
-   */
-  text: string;
-  /**
    * * Handler for click
    */
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-  /**
-   * * Class
-   */
-  className?: string;
   /**
    * * Button type
    */
@@ -39,18 +31,16 @@ interface Props {
 }
 
 /**
- * Common button component
+ * * 공통 버튼 컴포넌트
  *
  * @Component
  * @author frisk
- * @param props.text Button text
- * @param props.className Class
  * @param props.onClick Handler for click
  * @param props.type Button type
  */
-const Button: FC<Props> = ({ text, className, onClick, type = "button" }) => (
-  <Container className={className} onClick={onClick} type={type}>
-    {text}
+const Button: FC<Props> = ({ onClick, type = "button", children }) => (
+  <Container onClick={onClick} type={type}>
+    {children}
   </Container>
 );
 export default Button;

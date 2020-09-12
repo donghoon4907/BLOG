@@ -77,16 +77,7 @@ function createApolloClient() {
       authLink,
       isBrowser ? httpLink : splitLink
     ]),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            recentPosts: concatPagination(),
-            recommandUsers: concatPagination()
-          }
-        }
-      }
-    })
+    cache: new InMemoryCache()
   });
 }
 

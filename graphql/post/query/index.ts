@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 /**
- * * 포스트 검색
+ * * 게시물 검색
  *
  * @query
  * @author frisk
@@ -33,9 +33,63 @@ export const GET_POSTS = gql`
       createdAt
       updatedAt
       viewCount
-      categories {
-        content
+      commentCount
+      category
+    }
+  }
+`;
+
+/**
+ * * 게시물 상세 로드
+ *
+ * @query
+ * @author frisk
+ * @param $id 건너뛸 목록의 수
+ */
+export const GET_POST = gql`
+  query GetPost($id: String!) {
+    post(id: $id) {
+      id
+      title
+      description
+      content
+      user {
+        id
+        nickname
+        avatar {
+          url
+        }
       }
+      likeCount
+      likes {
+        id
+        user {
+          id
+        }
+      }
+      createdAt
+      updatedAt
+      viewCount
+      category
+    }
+  }
+`;
+
+/**
+ * * 카테고리 검색
+ *
+ * @query
+ * @author frisk
+ * @param $skip 건너뛸 목록의 수
+ * @param $first 요청 목록의 수
+ * @param $orderBy 정렬
+ */
+export const GET_CATEGORIES = gql`
+  query GetCategories($skip: Int, $first: Int, $orderBy: String) {
+    categories(skip: $skip, first: $first, orderBy: $orderBy) {
+      id
+      content
+      useCount
     }
   }
 `;

@@ -1,6 +1,17 @@
 const Dotenv = require("dotenv-webpack");
+const withImages = require("next-images");
 
-module.exports = {
+/**
+ * Next 환경 설정
+ *
+ * 1. next-images
+ * - 로컬 환경에서 이미지 로드 활성화
+ * - base64로 인코딩
+ * - 이미지 캐싱
+ *
+ * 2. next-offline 서비스 워커
+ */
+module.exports = withImages({
   webpack: (config, { dev }) => {
     config.plugins = [
       ...config.plugins,
@@ -11,47 +22,4 @@ module.exports = {
     ];
     return config;
   }
-};
-
-// const withCSS = require("@zeit/next-css");
-// const path = require("path");
-// const Dotenv = require("dotenv-webpack");
-// const withImages = require("next-images");
-// const withTypescript = require("@zeit/next-typescript");
-// const withOffline = require("next-offline");
-// const {
-//   PHASE_DEVELOPMENT_SERVER,
-//   PHASE_PRODUCTION_BUILD
-// } = require("next/constants");
-
-// /* Without CSS Modules, with PostCSS */
-// module.exports = phase => {
-//   const isDev = phase === PHASE_DEVELOPMENT_SERVER;
-//   const isProd = phase === PHASE_PRODUCTION_BUILD;
-//   return withTypescript(
-//     withCSS(
-//       withImages(
-//         withOffline({
-//           //assetPrefix: isProd ? 'http://d30k733rzexkhf.cloudfront.net' : '',
-//           inlineImageLimit: 16384,
-//           serverRuntimeConfig: {
-//             // Will only be available on the server side
-//           },
-//           publicRuntimeConfig: {
-//             // will only be abailable on the client side
-//           },
-//           webpack(config, options) {
-//             config.plugins = [
-//               ...config.plugins,
-//               new Dotenv({
-//                 path: path.join(__dirname, `.env.${process.env.NODE_ENV}`),
-//                 systemvars: true
-//               })
-//             ];
-//             return config;
-//           }
-//         })
-//       )
-//     )
-//   );
-// };
+});

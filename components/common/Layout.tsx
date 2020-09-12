@@ -1,21 +1,23 @@
 import Head from "next/head";
-import React, { FC } from "react";
+import React, { FC, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import Header from "./Header";
 import Nav from "./Nav";
-import SetNoticeModal from "../modal/SetNoticeContainer";
-import SetPostModal from "../modal/SetPostContainer";
+import Main from "./Main";
 import AuthModal from "../modal/Auth";
-import { useLocalState } from "../../context";
+import SetNoticeModal from "../modal/SetNoticeContainer";
+import { useLocalDispatch, useLocalState } from "../../context";
+import { CONTRACT_NAVIGATION } from "../../context/action";
+import { setCollapse } from "../../lib/collapse";
 
-const Container = styled.main`
+const Section = styled.section`
   display: flex;
   justify-content: flex-start;
 `;
 
 interface Props {
   /**
-   * * Head title
+   * 페이지 제목
    */
   title?: string;
 }
@@ -29,13 +31,51 @@ interface Props {
  */
 const Layout: FC<Props> = ({ children, title = "Frisk" }) => {
   /**
+   * 로컬 상태 변경 모듈 활성화
+   */
+  const dispatch = useLocalDispatch();
+  /**
    * 로컬 상태 감시 모듈 활성화
    */
   const {
+    isShowLoginModal,
     isShowNoticeModal,
-    isShowAddPostModal,
-    isShowLoginModal
+    isCollapseNav
   } = useLocalState();
+  /**
+   * 리사이징 핸들러
+   */
+  const handleResize = useCallback(
+    e => {
+      const { innerWidth } = e.target;
+      /**
+       * 네비게이션이 축소된 경우
+       */
+      if (isCollapseNav === "contract") {
+        return;
+      }
+
+      if (innerWidth >= 922) {
+        /**
+         * 네비게이션 축소
+         */
+        setCollapse("contract");
+        dispatch({
+          type: CONTRACT_NAVIGATION
+        });
+      }
+    },
+    [isCollapseNav]
+  );
+  /**
+   * 마운트 콜백 모듈 활성화
+   */
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div>
       <Head>
@@ -50,16 +90,22 @@ const Layout: FC<Props> = ({ children, title = "Frisk" }) => {
         <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         <title>{title}</title>
       </Head>
-      <Header />
-      <Container>
-        <Nav />
-        {children}
-      </Container>
-      <>
-        {/* {isShowNoticeModal && <SetNoticeModal />}
-        {isShowAddPostModal && <SetPostModal />} */}
-        {isShowLoginModal && <AuthModal />}
-      </>
+      <div>
+        {title === "페이지를 찾을 수 없습니다" ? (
+          children
+        ) : (
+          <>
+            <Header />
+            <Section>
+              <Nav />
+              <Main>{children}</Main>
+            </Section>
+          </>
+        )}
+      </div>
+
+      {isShowLoginModal && <AuthModal />}
+      {isShowNoticeModal && <SetNoticeModal />}
     </div>
   );
 };

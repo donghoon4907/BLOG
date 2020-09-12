@@ -206,16 +206,9 @@ const SearchBar = () => {
           </FilterSelector>
         </FilterColumn>
         <FilterColumn>
-          <Button text="적용" type="submit" />
+          <Button type="submit">적용</Button>
         </FilterColumn>
       </FilterWrapper>
-      {/* {searchKeyword && (
-        <SearchResult
-          searchKeyword={searchKeyword}
-          setSearch={setSearch}
-          setSearchKeyword={setSearchKeyword}
-        />
-      )} */}
     </SearchForm>
   );
 };

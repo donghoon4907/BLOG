@@ -122,7 +122,7 @@ const SearchFilter: FC = () => {
         </FilterSelector>
       </FilterColumn>
       <FilterColumn>
-        <Button text="적용" onClick={handleSubmit} />
+        <Button onClick={handleSubmit}>적용</Button>
       </FilterColumn>
     </FilterWrapper>
   );

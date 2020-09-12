@@ -54,7 +54,7 @@ const ErrorPage: NextPage = () => {
           <Title>페이지를 찾을 수 없습니다.</Title>
           <SubTitle>404, Not Found</SubTitle>
           <ButtonWrapper>
-            <Button text="돌아가기" onClick={() => history.back()} />
+            <Button onClick={() => history.back()}>돌아가기</Button>
           </ButtonWrapper>
         </Wrapper>
       </Container>
