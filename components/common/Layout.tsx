@@ -55,7 +55,7 @@ const Layout: FC<Props> = ({ children, title = "Frisk" }) => {
         return;
       }
 
-      if (innerWidth >= 922) {
+      if (innerWidth <= 922) {
         /**
          * 네비게이션 축소
          */
