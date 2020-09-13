@@ -1,4 +1,4 @@
-# FriskLog
+# Frisklog
 <blockquote>자기계발 기록 및 포트폴리오 목적으로 만든 블로그 입니다.</blockquote>
 
 
