@@ -1,9 +1,9 @@
-import React, { FC, useState, useRef, useCallback } from "react";
+import React, { FC, useState, useRef, useCallback, memo } from "react";
 import styled from "styled-components";
 import { Overlay } from "react-bootstrap";
 import { useLocalState } from "../../context";
 import Avatar from "../common/Avatar";
-import { Avatar as AvatarProps } from "../../interfaces";
+import { UserProps } from "../../interfaces";
 
 const Container = styled.div`
   height: 50px;
@@ -32,32 +32,19 @@ const SubTitle = styled.div`
   font-size: 13px;
 `;
 
-interface Props {
-  /**
-   * 사용자 ID
-   */
-  id: string;
-  /**
-   * 사용자 별칭
-   */
-  nickname: string;
-  /**
-   * 사용자 프로필 사진
-   */
-  avatar: AvatarProps;
-  /**
-   * 작성한 포스트 수
-   */
-  postCount: number;
-}
-
 /**
- * 추천 사용자 목록 컴포넌트
+ * * 추천 사용자 목록 컴포넌트
  *
  * @Component
  * @author frisk
+ *
  */
-const RecommandUserItem: FC<Props> = ({ avatar, nickname, postCount }) => {
+const RecommandUserItem: FC<UserProps> = ({
+  id,
+  avatar,
+  nickname,
+  postCount
+}) => {
   /**
    * 로컬 상태 감시 모듈 활성화
    */
@@ -71,14 +58,16 @@ const RecommandUserItem: FC<Props> = ({ avatar, nickname, postCount }) => {
    */
   const $avatar = useRef<HTMLDivElement>(null);
   /**
-   * 프로필 사진 클릭 이벤트
+   * 프로필 사진 mouse enter 핸들러
    */
   const handleEnterAvatar = useCallback(() => {
     if (isCollapseNav === "contract") {
       setShow(true);
     }
   }, [isCollapseNav]);
-
+  /**
+   * 프로필 사진 mouse leave 핸들러
+   */
   const handleLeaveAvatar = useCallback(() => {
     if (isCollapseNav === "contract") {
       setShow(false);
@@ -92,7 +81,7 @@ const RecommandUserItem: FC<Props> = ({ avatar, nickname, postCount }) => {
         onMouseEnter={handleEnterAvatar}
         onMouseLeave={handleLeaveAvatar}
       >
-        <Avatar size="45" src={avatar.url} />
+        <Avatar size="45" src={avatar.url} userId={id} />
       </AvatarWrapper>
       {isCollapseNav === "expand" && (
         <div>
@@ -126,4 +115,4 @@ const RecommandUserItem: FC<Props> = ({ avatar, nickname, postCount }) => {
   );
 };
 
-export default RecommandUserItem;
+export default memo(RecommandUserItem);

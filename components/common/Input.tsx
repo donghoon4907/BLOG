@@ -48,10 +48,11 @@ interface Props extends HTMLAttributes<HTMLInputElement> {
 }
 
 /**
- * Common input component
+ * * 공통 input 컴포넌트
  *
  * @Component
  * @author frisk
+ * @param props.onSubmit 로그인 요청 핸들러
  */
 const Input = forwardRef<HTMLInputElement, Props>((props, ref) => (
   <Container ref={ref} {...props} />

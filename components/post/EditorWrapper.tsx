@@ -6,7 +6,7 @@ export interface EditorWithForwardedProps extends EditorProps {
 }
 
 /**
- * 게시물 에디터 wrapper 컴포넌트
+ * * 게시물 에디터 wrap 컴포넌트
  *
  * @Component
  * @author frisk

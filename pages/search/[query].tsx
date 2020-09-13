@@ -1,24 +1,28 @@
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { NextPage, GetServerSideProps } from "next";
 import { useQuery } from "@apollo/client";
-import Layout from "../components/common/Layout";
-import Subject from "../components/common/Subject";
-import PostList from "../components/post/FeedPostList";
-import { initializeApollo } from "../lib/apollo";
-import { GET_POSTS, GET_CATEGORIES } from "../graphql/post/query";
-import { GET_USERS } from "../graphql/user/query";
-import { GET_NOTICES } from "../graphql/notice/query";
-import { ME } from "../graphql/auth/query/me";
-import { useLocalDispatch } from "../context";
-import { SET_ME } from "../context/action";
+import { initializeApollo } from "../../lib/apollo";
+import { ME } from "../../graphql/auth/query/me";
+import { GET_CATEGORIES } from "../../graphql/post/query";
+import { GET_USERS } from "../../graphql/user/query";
+import { GET_NOTICES } from "../../graphql/notice/query";
+import { useLocalDispatch } from "../../context";
+import { SET_ME, SEARCH_POST } from "../../context/action";
+import Layout from "../../components/common/Layout";
+import SearchPost from "../../components/search/SearchPostContainer";
 
 /**
- * 메인 화면 컴포넌트
+ * 게시물 검색 컴포넌트
  *
  * @Nextpage
  * @author frist
  */
-const Index: NextPage = () => {
+const SearchKeyword: NextPage = () => {
+  /**
+   * 라우터 모듈 활성화
+   */
+  const router = useRouter();
   /**
    * 로컬 상태 변경 모듈 활성화
    */
@@ -40,11 +44,19 @@ const Index: NextPage = () => {
       });
     }
   });
+  /**
+   * 라이프 사이클 모듈 활성화
+   */
+  useEffect(() => {
+    dispatch({
+      type: SEARCH_POST,
+      query: router.query.query as string
+    });
+  }, [router.query]);
 
   return (
-    <Layout title="피드">
-      <Subject>최근 게시물</Subject>
-      <PostList />
+    <Layout title="검색결과">
+      <SearchPost />
     </Layout>
   );
 };
@@ -56,16 +68,6 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
    */
   const apolloClient = initializeApollo();
   try {
-    /**
-     * 최근 게시물을 로드 및 캐시에 저장합니다.
-     */
-    await apolloClient.query({
-      query: GET_POSTS,
-      variables: {
-        first: 30,
-        orderBy: "createdAt_DESC"
-      }
-    });
     /**
      * 추천 블로그를 로드 및 캐시에 저장합니다.
      */
@@ -115,4 +117,4 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   }
 };
 
-export default Index;
+export default SearchKeyword;

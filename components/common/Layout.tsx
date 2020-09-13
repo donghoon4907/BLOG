@@ -68,11 +68,16 @@ const Layout: FC<Props> = ({ children, title = "Frisk" }) => {
     [isCollapseNav]
   );
   /**
-   * 마운트 콜백 모듈 활성화
+   * 라이프 사이클 모듈 활성화
    */
   useEffect(() => {
+    /**
+     * 브라우저 크기 변경 이벤트 바인딩
+     */
     window.addEventListener("resize", handleResize);
-
+    /**
+     * 브라우저 크기 변경 이벤트 언바인딩
+     */
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

@@ -13,7 +13,7 @@ const Link = styled.span`
 `;
 
 /**
- * 인증 팝업 컴포넌트
+ * * 인증 팝업 컴포넌트
  *
  * @Component
  * @Modal

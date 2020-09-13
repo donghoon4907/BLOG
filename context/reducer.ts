@@ -21,7 +21,7 @@ export default function reducer(state: any, action: any) {
         ...state,
         isShowNoticeModal: true,
         activeNotice: {
-          noticeId: action.noticeId,
+          id: action.id,
           action: action.action,
           actionText: action.actionText,
           title: action.title,
@@ -33,38 +33,14 @@ export default function reducer(state: any, action: any) {
         ...state,
         isShowNoticeModal: false,
         activeNotice: {
-          noticeId: "",
+          id: "",
           action: "wait",
           actionText: "비활성화",
           title: "",
           description: ""
         }
       };
-    case "SHOW_POST_MODAL":
-      return {
-        ...state,
-        isShowAddPostModal: true,
-        activePost: {
-          postId: action.postId,
-          title: action.title,
-          description: action.description,
-          status: action.status,
-          url: action.url
-        }
-      };
 
-    case "HIDE_POST_MODAL":
-      return {
-        ...state,
-        isShowAddPostModal: false,
-        activePost: {
-          postId: "",
-          title: "",
-          description: "",
-          status: "",
-          url: ""
-        }
-      };
     case "SHOW_SEARCH_BAR":
       return {
         ...state,
@@ -102,9 +78,9 @@ export default function reducer(state: any, action: any) {
           orderBy: action.hasOwnProperty("orderBy")
             ? action.orderBy
             : state.searchPostOption.orderBy,
-          searchKeyword: action.hasOwnProperty("searchKeyword")
-            ? action.searchKeyword
-            : state.searchPostOption.searchKeyword,
+          query: action.hasOwnProperty("query")
+            ? action.query
+            : state.searchPostOption.query,
           filter: action.hasOwnProperty("filter")
             ? action.filter
             : state.searchPostOption.filter

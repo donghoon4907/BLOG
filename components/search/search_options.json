@@ -3,24 +3,64 @@
     {
       "id": "createdAtDesc",
       "value": "createdAt_DESC",
-      "text": "등록일 순"
+      "text": "등록일 순",
+      "enable": true
     },
     {
       "id": "createdAtAsc",
       "value": "createdAt_ASC",
-      "text": "등록일 역순"
+      "text": "등록일 역순",
+      "enable": true
+    },
+    {
+      "id": "viewCountDesc",
+      "value": "viewCount_DESC",
+      "text": "조회수 순",
+      "enable": true
+    },
+    {
+      "id": "viewCountAsc",
+      "value": "viewCount_ASC",
+      "text": "조회수 역순",
+      "enable": true
+    },
+    {
+      "id": "likeCountDesc",
+      "value": "likeCount_DESC",
+      "text": "좋아요 순",
+      "enable": true
+    },
+    {
+      "id": "likeCountAsc",
+      "value": "likeCount_ASC",
+      "text": "좋아요 역순",
+      "enable": true
+    },
+    {
+      "id": "commentCountDesc",
+      "value": "commentCount_DESC",
+      "text": "댓글수 순",
+      "enable": true
+    },
+    {
+      "id": "commentCountAsc",
+      "value": "commentCount_ASC",
+      "text": "댓글수 역순",
+      "enable": true
     }
   ],
   "filter": [
     {
       "id": "pub_status",
       "value": "PUBLIC",
-      "text": "공개"
+      "text": "공개",
+      "enable": false
     },
     {
       "id": "pri_status",
       "value": "PRIVATE",
-      "text": "비공개"
+      "text": "비공개",
+      "enable": false
     }
   ]
 }

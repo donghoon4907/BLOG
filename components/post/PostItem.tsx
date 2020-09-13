@@ -3,7 +3,6 @@ import React, { FC, useCallback } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import Avatar from "../common/Avatar";
-import Timestamp from "../common/Timestamp";
 import { HeartFull, Comment, View } from "../icon";
 import Button from "../common/Button";
 import { PostProps } from "../../interfaces";
@@ -17,51 +16,6 @@ const Container = styled.div`
   &:hover {
     background: rgba(0, 0, 0, 0.05);
   }
-`;
-
-const TimelineWrapper = styled.div`
-  width: 200px;
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 50px;
-`;
-
-const Timeline = styled.div`
-  position: relative;
-  border: 1px solid lightgray;
-`;
-
-const TimestampWrapper = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 5px;
-  text-align: right;
-  left: -150px;
-  width: 130px;
-`;
-
-const Stamp = styled.div`
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 8px;
-  left: -8px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: #f7f7f7;
-  z-index: 1;
-`;
-
-const ChildStamp = styled.div`
-  background: ${props => props.theme.blueColor};
-  opacity: 0.7;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  position: relative;
 `;
 
 const TitleWrapper = styled.div`
@@ -111,12 +65,12 @@ const MetaColumn = styled.div`
 `;
 
 /**
- * * 타임라인 형식 게시물 렌더링 컴포넌트
+ * * 게시물 렌더링 컴포넌트
  *
  * @Component
  * @author frisk
  */
-const TimelinePostItem: FC<PostProps> = ({
+const PostItem: FC<PostProps> = ({
   id,
   title,
   description,
@@ -140,17 +94,6 @@ const TimelinePostItem: FC<PostProps> = ({
 
   return (
     <Container onClick={handleClick}>
-      <TimelineWrapper>
-        <Timeline>
-          <Stamp>
-            <ChildStamp />
-          </Stamp>
-          <TimestampWrapper>
-            <time>{moment(createdAt).format("YYYY년 MM월 DD일")}</time>
-            <Timestamp>{moment(createdAt).format("HH시 mm분")}</Timestamp>
-          </TimestampWrapper>
-        </Timeline>
-      </TimelineWrapper>
       <MetaWrapper>
         <TitleWrapper>
           <Category>
@@ -165,6 +108,10 @@ const TimelinePostItem: FC<PostProps> = ({
           <MetaColumn>
             <Avatar src={user.avatar.url} size="30" userId={user.id} />
             <span>{user.nickname}</span>
+            <span>·</span>
+            <time>
+              {moment(createdAt).format("YYYY년 MM월 DD일 HH시 mm분")}
+            </time>
           </MetaColumn>
           <MetaColumn>
             <div title="좋아요 수">
@@ -186,4 +133,4 @@ const TimelinePostItem: FC<PostProps> = ({
   );
 };
 
-export default TimelinePostItem;
+export default PostItem;

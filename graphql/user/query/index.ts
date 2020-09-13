@@ -18,6 +18,7 @@ export const GET_USERS = gql`
       isMaster
       createdAt
       updatedAt
+      postCount
       avatar {
         url
       }
@@ -40,6 +41,7 @@ export const GET_USER = gql`
       isMaster
       createdAt
       updatedAt
+      postCount
       avatar {
         url
       }

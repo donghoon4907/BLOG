@@ -1,4 +1,5 @@
-import React, { FC, MouseEvent } from "react";
+import { useRouter } from "next/router";
+import React, { FC, MouseEvent, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 const Container = styled.button`
@@ -20,14 +21,9 @@ const Container = styled.button`
 `;
 
 interface Props {
-  /**
-   * * Handler for click
-   */
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-  /**
-   * * Button type
-   */
   type?: "button" | "submit" | "reset";
+  action?: "category";
 }
 
 /**
@@ -35,12 +31,32 @@ interface Props {
  *
  * @Component
  * @author frisk
- * @param props.onClick Handler for click
- * @param props.type Button type
+ * @param props.onClick 클릭 핸들러
+ * @param props.type 버튼 타입
  */
-const Button: FC<Props> = ({ onClick, type = "button", children }) => (
-  <Container onClick={onClick} type={type}>
-    {children}
-  </Container>
-);
+const Button: FC<Props> = ({ onClick, type = "button", children, action }) => {
+  /**
+   * 라우터 모듈 활성화
+   */
+  const router = useRouter();
+  /**
+   * 클릭 핸들러
+   */
+  const handleClick = useCallback(() => {
+    if (action === "category" && typeof children === "string") {
+      router.push(`/category/${children}`);
+    }
+  }, [action]);
+
+  useEffect(() => {
+    if (onClick && action) {
+      throw new Error("Both onClick and action cannot be input.");
+    }
+  }, []);
+  return (
+    <Container onClick={action ? handleClick : onClick} type={type}>
+      {children}
+    </Container>
+  );
+};
 export default Button;

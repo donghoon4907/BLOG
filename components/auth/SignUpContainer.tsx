@@ -14,9 +14,6 @@ import SignUpPresenter from "./SignUpPresenter";
 import { SIGN_UP } from "../../graphql/user/mutation/sign_up";
 
 interface Props {
-  /**
-   * 인증 화면 전환 모드 (로그인, 회원가입)
-   */
   setAction: Dispatch<SetStateAction<string>>;
 }
 
@@ -25,6 +22,7 @@ interface Props {
  *
  * @Container
  * @author frisk
+ * @param props.setAction 인증 화면 전환 모드 (로그인, 회원가입)
  */
 const SignUpContainer: FC<Props> = ({ setAction }) => {
   /**

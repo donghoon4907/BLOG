@@ -56,7 +56,7 @@ const CategoryWrapper = styled.div`
 `;
 
 /**
- * 검색 바 컴포넌트
+ * * 검색 바 컴포넌트
  *
  * @Component
  * @author frisk
@@ -112,7 +112,7 @@ const HeaderSearchBar = () => {
     [searchKeyword]
   );
   /**
-   * 마운트 콜백 모듈 활성화
+   * 라이프 사이클 모듈 활성화
    */
   useEffect(() => {
     const node = $search.current;
@@ -143,7 +143,7 @@ const HeaderSearchBar = () => {
         <h6>추천 카테고리</h6>
         {data.categories.map(category => (
           <span key={category.id}>
-            <Button>{category.content}</Button>
+            <Button action="category">{category.content}</Button>
           </span>
         ))}
       </CategoryWrapper>

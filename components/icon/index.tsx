@@ -320,3 +320,17 @@ export const Modify: FC<Props> = ({ style }) => (
     style={style}
   />
 );
+
+/**
+ * Notice icon component
+ *
+ * @Img
+ * @param props.style style
+ */
+export const Notice: FC<Props> = ({ style }) => (
+  <img
+    src={require("../../static/icons/speaker.png")}
+    alt="notice icon"
+    style={style}
+  />
+);

@@ -208,7 +208,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
   const handleUpdate = useCallback(() => {
     const tf = confirm("게시물을 수정하러 가시겠어요?");
     if (tf) {
-      router.push("/update");
+      router.push(`/update/${id}`);
     }
   }, []);
 
@@ -218,7 +218,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
       <Container>
         <h1>{title}</h1>
         <InfoWrapper>
-          <Avatar src={user.avatar.url} size="30" />
+          <Avatar src={user.avatar.url} size="30" userId={user.id} />
           <span>{user.nickname}</span>
           <span>·</span>
           <time>{moment(createdAt).format("YYYY년 MM월 DD일 HH시 mm분")}</time>
@@ -250,17 +250,17 @@ const PostDetail: NextPage<Props> = ({ post }) => {
 export const getServerSideProps: GetServerSideProps = async context => {
   const { query, res } = context;
   /**
-   * 아이디가 없는 경우 redirect
-   */
-  if (!query.id) {
-    throw new Error();
-  }
-  /**
    * 아폴로 클라이언트 활성화
    */
   const apolloClient = initializeApollo();
 
   try {
+    /**
+     * 아이디가 없는 경우 redirect
+     */
+    if (!query.id) {
+      throw new Error();
+    }
     /**
      * 게시물 상세 로드 및 캐시에 저장합니다.
      */

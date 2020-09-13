@@ -6,8 +6,6 @@ import Button from "../common/Button";
 import { Label } from "../common/Form";
 import { Search, Filter } from "../icon";
 import searchOptions from "./search_options.json";
-// import SearchResult from "../common/SearchResult";
-// import { useDebounce } from "../../hooks";
 
 const SearchForm = styled.form`
   position: relative;

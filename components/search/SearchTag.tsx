@@ -1,6 +1,7 @@
 import React, { useCallback, FC } from "react";
 import styled from "styled-components";
-import { useVssState, useVssDispatch, SEARCH_POST } from "../../context";
+import { useLocalState, useLocalDispatch } from "../../context";
+import { SEARCH_POST } from "../../context/action";
 import searchOptions from "./search_options.json";
 
 const Container = styled.div`
@@ -20,22 +21,31 @@ const FilterWrapper = styled.span`
   }
 `;
 /**
- * * Concat search sort and filter options
+ * 검색 옵션 로드
  */
 const sortAndFilter = searchOptions.sort.concat(searchOptions.filter);
 
 /**
- * Search tag component
+ * * 검색 태그 컴포넌트
  *
  * @Component
  * @author frisk
  */
 const SearchTag: FC = () => {
-  const dispatch = useVssDispatch();
+  /**
+   * 로컬 상태 변경 모듈 활성화
+   */
+  const dispatch = useLocalDispatch();
+  /**
+   * 로컬 상태 관리 모듈 활성화
+   */
   const {
     searchPostOption: { orderBy, filter = [] }
-  } = useVssState();
-
+  } = useLocalState();
+  /**
+   * 검색 태그 삭제 핸들러
+   * @param v 검색 옵션
+   */
   const handleRemoveFilter = useCallback(
     v => {
       dispatch({

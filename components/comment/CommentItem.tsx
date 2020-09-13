@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, memo } from "react";
 import styled from "styled-components";
 import { useMutation } from "@apollo/client";
 import { Dropdown } from "react-bootstrap";
@@ -195,7 +195,7 @@ const CommentItem: FC<CommentProps> = ({ id, content, user, createdAt }) => {
     <CommentWrapper>
       {(updateLoading || deleteLoading) && <Loader />}
       <InfoWrapper>
-        <Avatar src={user.avatar.url} size="50" />
+        <Avatar src={user.avatar.url} size="50" userId={user.id} />
         <span>{user.nickname}</span>
         <span>·</span>
         <time>{moment(createdAt).format("YYYY년 MM월 DD일 HH시 mm분")}</time>
@@ -235,10 +235,10 @@ const CommentItem: FC<CommentProps> = ({ id, content, user, createdAt }) => {
           </BtnWrapper>
         </>
       ) : (
-        <pre>{disabled ? "삭제된 댓글입니다" : contentState}</pre>
+        <pre>{disabled ? <em>삭제된 댓글입니다.</em> : contentState}</pre>
       )}
     </CommentWrapper>
   );
 };
 
-export default CommentItem;
+export default memo(CommentItem);

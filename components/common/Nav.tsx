@@ -72,7 +72,7 @@ const Nav: FC = () => {
     }
   }, [isCollapseNav]);
   /**
-   * 마운트 콜백 모듈 활성화
+   * 라이프 사이클 모듈 활성화
    */
   useEffect(() => {
     const isCollapse = getCollapse() as string;

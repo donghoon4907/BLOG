@@ -14,13 +14,18 @@ export interface UseInputProps {
   setValue: Dispatch<SetStateAction<string>>;
 }
 
-export const useInput: (T: string) => UseInputProps = (
-  defaultValue: string
+export const useInput: (T: string, K?: string) => UseInputProps = (
+  defaultValue: string,
+  where?: "no_space" | string
 ) => {
   const [value, setValue] = useState<string>(defaultValue);
 
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    if (where === "no_space") {
+      setValue(e.target.value.replace(/(^\s*)|(\s*$)/g, ""));
+    } else {
+      setValue(e.target.value);
+    }
   }, []);
 
   return { value, onChange, setValue };

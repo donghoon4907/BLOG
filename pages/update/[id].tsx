@@ -2,21 +2,22 @@ import React, { useState, useCallback } from "react";
 import { NextPage, GetServerSideProps } from "next";
 import { useQuery, useMutation } from "@apollo/client";
 import styled from "styled-components";
-import Layout from "../components/common/Layout";
-import { initializeApollo } from "../lib/apollo";
-import { CREATE_POST } from "../graphql/post/mutation/create";
-import { GET_CATEGORIES } from "../graphql/post/query";
-import { GET_USERS } from "../graphql/user/query";
-import { GET_NOTICES } from "../graphql/notice/query";
-import { ME } from "../graphql/auth/query/me";
-import { useLocalDispatch } from "../context";
-import { SET_ME } from "../context/action";
-import Editor from "../components/post/Editor";
-import { InputWrapper, Label } from "../components/common/Form";
-import Input from "../components/common/Input";
-import Button from "../components/common/Button";
-import { useInput } from "../hooks";
-import Loader from "../components/common/Loader";
+import Layout from "../../components/common/Layout";
+import { initializeApollo } from "../../lib/apollo";
+import { UPDATE_POST } from "../../graphql/post/mutation/update";
+import { GET_CATEGORIES, GET_POST } from "../../graphql/post/query";
+import { GET_USERS } from "../../graphql/user/query";
+import { GET_NOTICES } from "../../graphql/notice/query";
+import { ME } from "../../graphql/auth/query/me";
+import { useLocalDispatch } from "../../context";
+import { SET_ME } from "../../context/action";
+import Editor from "../../components/post/Editor";
+import { InputWrapper, Label } from "../../components/common/Form";
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
+import { useInput } from "../../hooks";
+import Loader from "../../components/common/Loader";
+import { PostProps } from "../../interfaces";
 
 const Container = styled.div`
   & input {
@@ -36,13 +37,17 @@ const SubmitWrapper = styled.div`
   margin-top: 1rem;
 `;
 
+interface Props {
+  post: PostProps;
+}
+
 /**
- * 게시물 등록 화면 컴포넌트
+ * 게시물 수정 화면 컴포넌트
  *
  * @Nextpage
  * @author frist
  */
-const Create: NextPage = () => {
+const Update: NextPage<Props> = ({ post }) => {
   /**
    * 로컬 상태 변경 모듈 활성화
    */
@@ -65,25 +70,25 @@ const Create: NextPage = () => {
     }
   });
   /**
-   * 게시물 등록 mutation 활성화
+   * 게시물 수정 mutation 활성화
    */
-  const [create, { loading }] = useMutation(CREATE_POST);
+  const [upd, { loading }] = useMutation(UPDATE_POST);
   /**
    * 제목 입력을 위한 useInput 활성화
    */
-  const title = useInput("");
+  const title = useInput(post.title);
   /**
    * 소개 입력을 위한 useInput 활성화
    */
-  const description = useInput("");
+  const description = useInput(post.description);
   /**
    * 카테고리 입력을 위한 useInput 활성화
    */
-  const category = useInput("", "no_space");
+  const category = useInput(post.category, "no_space");
   /**
    * 내용 상태 관리 모듈 활성화
    */
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<string>(post.content);
   /**
    * 등록 핸들러
    */
@@ -107,27 +112,28 @@ const Create: NextPage = () => {
       return alert("카테고리는 10자 미만으로 입력하세요.");
     }
 
-    const tf = confirm("입력한 내용으로 게시물을 등록하시겠어요?");
+    const tf = confirm("입력한 내용으로 게시물을 수정하시겠어요?");
 
     if (tf) {
       const {
-        data: { createPost }
-      } = await create({
+        data: { updatePost }
+      } = await upd({
         variables: {
+          id: post.id,
           title: title.value,
           description: description.value,
           content,
           category: category.value
         }
       });
-      if (createPost) {
-        alert("게시물이 등록되었습니다.");
+      if (updatePost) {
+        alert("게시물이 수정되었습니다.");
       }
     }
   }, [title.value, description.value, category.value, content]);
 
   return (
-    <Layout title="게시물 등록">
+    <Layout title="게시물 수정">
       {loading && <Loader />}
       <Container>
         <CategoryWrapper>
@@ -171,9 +177,12 @@ const Create: NextPage = () => {
             {...description}
           />
         </InputWrapper>
-        <Editor onChange={content => setContent(content)} />
+        <Editor
+          onChange={content => setContent(content)}
+          initialValue={post.content}
+        />
         <SubmitWrapper>
-          <Button onClick={handleSubmit}>등록</Button>
+          <Button onClick={handleSubmit}>수정</Button>
         </SubmitWrapper>
       </Container>
     </Layout>
@@ -181,13 +190,28 @@ const Create: NextPage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { res } = ctx;
+  const { res, query } = ctx;
   /**
    * 아폴로 클라이언트 활성화
    */
   const apolloClient = initializeApollo();
 
   try {
+    /**
+     * 아이디가 없는 경우 redirect
+     */
+    if (!query.id) {
+      throw new Error();
+    }
+    /**
+     * 게시물 로드 및 캐시에 저장합니다.
+     */
+    const { data } = await apolloClient.query({
+      query: GET_POST,
+      variables: {
+        id: query.id
+      }
+    });
     /**
      * 추천 블로그를 로드 및 캐시에 저장합니다.
      */
@@ -220,6 +244,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     });
     return {
       props: {
+        post: data.post,
         initialApolloState: apolloClient.cache.extract()
       }
     };
@@ -236,4 +261,4 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   }
 };
 
-export default Create;
+export default Update;

@@ -9,32 +9,51 @@ import { gql } from "@apollo/client";
  * @param $first 요청 목록의 수
  * @param $orderBy 정렬
  * @param $query 검색어
+ * @param $category 카테고리
+ * @param $userId 사용자 ID
  */
 export const GET_POSTS = gql`
-  query GetPosts($skip: Int, $first: Int, $orderBy: String, $query: String) {
-    posts(skip: $skip, first: $first, orderBy: $orderBy, query: $query) {
-      id
-      title
-      description
-      user {
+  query GetPosts(
+    $skip: Int
+    $first: Int
+    $orderBy: String
+    $query: String
+    $category: String
+    $userId: String
+  ) {
+    posts(
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+      query: $query
+      category: $category
+      userId: $userId
+    ) {
+      data {
         id
-        nickname
-        avatar {
-          url
-        }
-      }
-      likeCount
-      likes {
-        id
+        title
+        description
         user {
           id
+          nickname
+          avatar {
+            url
+          }
         }
+        likeCount
+        likes {
+          id
+          user {
+            id
+          }
+        }
+        createdAt
+        updatedAt
+        viewCount
+        commentCount
+        category
       }
-      createdAt
-      updatedAt
-      viewCount
-      commentCount
-      category
+      total
     }
   }
 `;

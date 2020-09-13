@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, RefObject, ChangeEvent, FormEvent } from "react";
 import styled from "styled-components";
 import { Label, InputWrapper } from "../common/Form";
 import Input from "../common/Input";
@@ -24,42 +24,15 @@ const UploadWrapper = styled.div`
 `;
 
 interface Props {
-  /**
-   * 업로드 요청 진행 여부
-   */
   uploadLoading: boolean;
-  /**
-   * 회원가입 요청 진행 여부
-   */
   signUpLoading: boolean;
-  /**
-   * 별칭 입력을 위한 Hooks
-   */
   nickname: UseInputProps;
-  /**
-   * 이메일 입력을 위한 Hooks
-   */
   email: UseInputProps;
-  /**
-   * 이미지 미리보기
-   */
   preview: string;
-  /**
-   * file element
-   */
-  $file: any;
-  /**
-   * 파일 변경 핸들러
-   */
-  onChangeFile: any;
-  /**
-   * 파일 클릭 핸들러
-   */
-  onClickFile: any;
-  /**
-   * 회원가입 요청 핸들러
-   */
-  onSubmit: any;
+  $file: RefObject<HTMLInputElement>;
+  onChangeFile: (e: ChangeEvent<HTMLInputElement>) => void;
+  onClickFile: () => void;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 /**
@@ -67,6 +40,15 @@ interface Props {
  *
  * @Presenter
  * @author frisk
+ * @param props.uploadLoading 업로드 요청 진행 여부
+ * @param props.signUpLoading 회원가입 요청 진행 여부
+ * @param props.nickname 별칭 입력을 위한 Hooks
+ * @param props.email 이메일 입력을 위한 Hooks
+ * @param props.preview 이미지 미리보기
+ * @param props.$file file element
+ * @param props.onChangeFile 파일 변경 핸들러
+ * @param props.onClickFile 파일 클릭 핸들러
+ * @param props.onSubmit 회원가입 요청 핸들러
  */
 const SignUpPresenter: FC<Props> = ({
   uploadLoading,

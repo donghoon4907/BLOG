@@ -1,4 +1,4 @@
-import { Avatar } from "../interfaces";
+import { AvatarProps } from "../interfaces";
 
 /**
  * 내정보 업데이트
@@ -21,20 +21,6 @@ export const SHOW_NOTICE_MODAL = "SHOW_NOTICE_MODAL";
  * @author frisk
  */
 export const HIDE_NOTICE_MODAL = "HIDE_NOTICE_MODAL";
-/**
- * 게시물 팝업 보이기
- *
- * @action
- * @author frisk
- */
-export const SHOW_POST_MODAL = "SHOW_POST_MODAL";
-/**
- * 게시물 팝업 숨기기
- *
- * @action
- * @author frisk
- */
-export const HIDE_POST_MODAL = "HIDE_POST_MODAL";
 /**
  * 로그인 팝업 보이기
  *
@@ -108,27 +94,18 @@ export type Action =
       id: string | null;
       nickname: string | null;
       email: string | null;
-      avatar: Avatar | null;
+      avatar: AvatarProps | null;
       isMaster: boolean;
     }
   | {
       type: "SHOW_NOTICE_MODAL";
-      noticeId: string;
+      id: string;
       action: string;
       actionText: string;
       title: string;
       description: string;
     }
   | { type: "HIDE_NOTICE_MODAL" }
-  | {
-      type: "SHOW_POST_MODAL";
-      postId: string;
-      title: string;
-      description: string | null;
-      status: string;
-      url: string;
-    }
-  | { type: "HIDE_POST_MODAL" }
   | { type: "SHOW_SEARCH_BAR" }
   | { type: "HIDE_SEARCH_BAR" }
   | { type: "SHOW_FILTER_BAR" }
@@ -138,7 +115,7 @@ export type Action =
   | {
       type: "SEARCH_POST";
       orderBy?: string;
-      searchKeyword?: string;
+      query?: string;
       filter?: string[];
     }
   | { type: "EXPAND_NAVIGATION" }

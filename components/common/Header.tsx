@@ -6,6 +6,7 @@ import ProfileButton from "../common/ProfileButton";
 import SearchButton from "../common/SearchButton";
 import HeaderSearchBar from "./HeaderSearchBar";
 import AddPostButton from "../common/AddPostButton";
+import HeaderNotice from "../common/HeaderNotice";
 
 const Container = styled.header`
   height: 3rem;
@@ -61,7 +62,7 @@ const SearchWrapper = styled.div`
 `;
 
 /**
- * 공통 헤더 컴포넌트
+ * * 공통 헤더 컴포넌트
  *
  * @Component
  * @author frisk
@@ -83,6 +84,7 @@ const Header: FC = () => {
               role="link"
             />
           </Link>
+          <HeaderNotice />
         </Column>
         <Column>
           <SearchButton />

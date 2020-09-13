@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, FormEvent } from "react";
 import { InputWrapper, Label } from "../common/Form";
 import Input from "../common/Input";
 import Button from "../common/Button";
@@ -6,18 +6,9 @@ import Loader from "../common/Loader";
 import { UseInputProps } from "../../hooks";
 
 interface Props {
-  /**
-   * 로그인 요청 진행 여부
-   */
   loading: boolean;
-  /**
-   * 이메일 입력을 위한 Hooks
-   */
   email: UseInputProps;
-  /**
-   * 로그인 요청 핸들러
-   */
-  onSubmit: any;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 /**
@@ -25,6 +16,9 @@ interface Props {
  *
  * @Presenter
  * @author frisk
+ * @param props.loading 로그인 요청 진행 여부
+ * @param props.email 이메일 입력을 위한 Hooks
+ * @param props.onSubmit 로그인 요청 핸들러
  */
 const SignInPresenter: FC<Props> = ({ loading, email, onSubmit }) => (
   <>

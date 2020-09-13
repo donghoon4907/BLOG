@@ -1,10 +1,8 @@
-import React, { FC, MouseEvent } from "react";
+import { useRouter } from "next/router";
+import React, { FC } from "react";
 import styled from "styled-components";
 
 interface AvatarContainer {
-  /**
-   * 프로필 사진 크기
-   */
   size: number | string;
 }
 
@@ -25,14 +23,8 @@ const Container = styled.div<AvatarContainer>`
 `;
 
 interface Props extends AvatarContainer {
-  /**
-   * 이미지 자원
-   */
+  userId: string;
   src: string;
-  /**
-   * 클릭 핸들러
-   */
-  onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
 /**
@@ -40,14 +32,27 @@ interface Props extends AvatarContainer {
  *
  * @Component
  * @author frisk
+ * @param props.userId 사용자 ID
  * @param props.size 프로필 사진 크기
  * @param props.src 이미지 자원
- * @param props.onClick 클릭 핸들러
  */
-const Avatar: FC<Props> = ({ size, src, onClick }) => (
-  <Container onClick={onClick} size={size} role="button">
-    <img src={src} alt="avatar" />
-  </Container>
-);
+const Avatar: FC<Props> = ({ userId, size, src }) => {
+  /**
+   * 라우터 모듈 활성화
+   */
+  const router = useRouter();
+  /**
+   * 클릭 핸들러
+   */
+  return (
+    <Container
+      size={size}
+      role="button"
+      onClick={() => router.push(`/user/${userId}`)}
+    >
+      <img src={src} alt="avatar" />
+    </Container>
+  );
+};
 
 export default Avatar;

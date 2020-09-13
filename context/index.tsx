@@ -1,7 +1,7 @@
 import React, { useReducer, useContext, createContext, Dispatch } from "react";
 import reducer from "./reducer";
 import { Action } from "./action";
-import { Avatar } from "../interfaces";
+import { AvatarProps } from "../interfaces";
 
 /**
  * * 선택된 게시물 타입
@@ -74,7 +74,7 @@ export type State = {
   id: string | null;
   nickname: string | null;
   email: string | null;
-  avatar: Avatar | null;
+  avatar: AvatarProps | null;
   isMaster: boolean;
   isShowNoticeModal: boolean;
   isShowAddPostModal: boolean;

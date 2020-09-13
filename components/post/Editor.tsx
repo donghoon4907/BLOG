@@ -1,7 +1,14 @@
 import dynamic from "next/dynamic";
 import React, { FC, MutableRefObject, useCallback, useRef } from "react";
+import styled from "styled-components";
 import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
 import { EditorWithForwardedProps } from "./EditorWrapper";
+
+const Container = styled.div`
+  & .tui-image {
+    display: none !important;
+  }
+`;
 
 interface EditorPropsWithHandlers extends EditorProps {
   onChange?(value: string): void;
@@ -28,7 +35,7 @@ interface Props extends EditorProps {
 }
 
 /**
- * 게시물 에디터 컴포넌트
+ * * 게시물 에디터 컴포넌트
  *
  * @Component
  * @author frisk
@@ -63,7 +70,7 @@ const PostEditor: FC<Props> = props => {
   }, [props]);
 
   return (
-    <div>
+    <Container>
       <EditorWithForwardedRef
         {...props}
         initialValue={initialValue || ""}
@@ -74,7 +81,7 @@ const PostEditor: FC<Props> = props => {
         ref={$editor}
         onChange={handleChange}
       />
-    </div>
+    </Container>
   );
 };
 

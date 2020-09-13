@@ -1,4 +1,4 @@
-import React, { Fragment, FC } from "react";
+import React, { FC, FormEvent } from "react";
 import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
 import Input from "../common/Input";
@@ -30,62 +30,20 @@ const PreviewWrap = styled(ReadOnlyDescription)`
 `;
 
 type Props = {
-  /**
-   * * Loading during set notice request
-   */
   setNoticeLoading: boolean;
-  /**
-   * * Loading during remove notice request
-   */
   removeNoticeLoading: boolean;
-  /**
-   * * Change ui action
-   */
   action: any;
-  /**
-   * * Whether user is master
-   */
   isMaster: boolean;
-  /**
-   * * Title with useInput
-   */
   title: UseInputProps;
-  /**
-   * * Description with useInput
-   */
   description: UseInputProps;
-  /**
-   * * Description converted to markdown
-   */
   mdDescription: string;
-  /**
-   * * Preview converted to markdown
-   */
   preview: string;
-  /**
-   * * Handler for show edit notice ui
-   */
-  onShowEdit: any;
-  /**
-   * * Handler for show preview notice ui
-   */
-  onPreview: any;
-  /**
-   * * Handler for close preview notice ui
-   */
-  onClosePreview: any;
-  /**
-   * * Handler for close set notice modal
-   */
-  onClose: any;
-  /**
-   * * Handler for remove notice
-   */
-  onDelete: any;
-  /**
-   * * Handler for submit
-   */
-  onSubmit: any;
+  onShowEdit: () => void;
+  onPreview: () => void;
+  onClosePreview: () => void;
+  onClose: () => void;
+  onDelete: () => void;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 };
 
 /**
@@ -93,6 +51,20 @@ type Props = {
  *
  * @Presenter
  * @author frisk
+ * @param props.setNoticeLoading 등록 및 수정 요청 중 여부
+ * @param props.removeNoticeLoading 삭제 요청 중 여부
+ * @param props.action 팝업 모드
+ * @param props.isMaster 운영자 여부
+ * @param props.title 제목 입력을 위한 Hooks
+ * @param props.description 내용 입력을 위한 Hooks
+ * @param props.mdDescription 마크다운 내용
+ * @param props.preview 미리보기
+ * @param props.onShowEdit 수정 모드 전환 핸들러
+ * @param props.onPreview 미리보기 핸들러
+ * @param props.onClosePreview 미리보기 숨기기 핸들러
+ * @param props.onClose 팝업 숨기기 핸들러
+ * @param props.onDelete 삭제 요청 핸들러
+ * @param props.onSubmit 등록 및 수정 요청 핸들러
  */
 const SetNoticePresenter: FC<Props> = ({
   setNoticeLoading,
@@ -110,101 +82,96 @@ const SetNoticePresenter: FC<Props> = ({
   onDelete,
   onSubmit
 }) => (
-  <Fragment>
+  <Modal onHide={onClose} show animation={false}>
     {(setNoticeLoading || removeNoticeLoading) && <Loader />}
-    <Modal onHide={onClose} show animation={false}>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {action.code === "readonly" || action.code === "modifiable"
-            ? title.value
-            : `공지사항 ${action.modalTitle}`}
-        </Modal.Title>
-      </Modal.Header>
-      <form onSubmit={onSubmit}>
-        <Modal.Body>
-          <InputWrapper>
-            {(action.code === "add" || action.code === "modify") && (
-              <Fragment>
-                <Label htmlFor="title" val={title.value}>
-                  제목을 입력하세요.
-                </Label>
-                <Input
-                  placeholder="제목을 입력하세요."
-                  name="title"
-                  required
-                  autoComplete="off"
-                  {...title}
-                />
-              </Fragment>
-            )}
-          </InputWrapper>
-          <InputWrapper>
-            <Label htmlFor="description" val={description.value}>
-              내용을 입력하세요.
-            </Label>
-            <TextArea
-              placeholder="내용을 입력하세요."
-              name="description"
-              required
-              autoComplete="off"
-              height={300}
-              {...description}
-            />
-            {(action.code === "readonly" || action.code === "modifiable") && (
-              <ReadOnlyDescription
-                dangerouslySetInnerHTML={{ __html: mdDescription }}
-                className="markdown-body"
-              ></ReadOnlyDescription>
-            )}
-            {preview && (
-              <PreviewWrap>
-                <div
-                  dangerouslySetInnerHTML={{ __html: preview }}
-                  className="markdown-body"
-                ></div>
-                <span aria-hidden="true" onClick={onClosePreview}>
-                  ×
-                </span>
-              </PreviewWrap>
-            )}
-          </InputWrapper>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onClose}>
-            취소
-          </Button>
+    <Modal.Header closeButton>
+      <Modal.Title>
+        {action.code === "readonly" || action.code === "modifiable"
+          ? title.value
+          : `공지사항 ${action.modalTitle}`}
+      </Modal.Title>
+    </Modal.Header>
+    <form onSubmit={onSubmit}>
+      <Modal.Body>
+        <InputWrapper>
+          {(action.code === "add" || action.code === "modify") && (
+            <>
+              <Label htmlFor="title" val={title.value}>
+                제목
+              </Label>
+              <Input
+                placeholder="제목을 입력하세요."
+                name="title"
+                required
+                autoComplete="off"
+                {...title}
+              />
+            </>
+          )}
+        </InputWrapper>
+        <InputWrapper>
+          <Label htmlFor="description" val={description.value}>
+            내용
+          </Label>
+          <TextArea
+            placeholder="내용을 입력하세요."
+            name="description"
+            required
+            autoComplete="off"
+            height={300}
+            {...description}
+          />
           {(action.code === "readonly" || action.code === "modifiable") && (
-            <Fragment>
-              {isMaster && (
-                <Button variant="danger" onClick={onDelete}>
-                  삭제
-                </Button>
-              )}
-              <Button
-                variant="primary"
-                onClick={isMaster ? onShowEdit : onClose}
-              >
-                {isMaster ? "수정" : "확인"}
-              </Button>
-            </Fragment>
+            <ReadOnlyDescription
+              dangerouslySetInnerHTML={{ __html: mdDescription }}
+              className="markdown-body"
+            ></ReadOnlyDescription>
           )}
-          {(action.code === "modify" || action.code === "add") && (
-            <Fragment>
-              <Button
-                variant="info"
-                onClick={preview ? onClosePreview : onPreview}
-              >
-                {preview ? "미리보기 취소" : "미리보기"}
-              </Button>
-              <Button variant="primary" type="submit">
-                {action.code === "add" ? "등록" : "수정"}
-              </Button>
-            </Fragment>
+          {preview && (
+            <PreviewWrap>
+              <div
+                dangerouslySetInnerHTML={{ __html: preview }}
+                className="markdown-body"
+              ></div>
+              <span aria-hidden="true" onClick={onClosePreview}>
+                ×
+              </span>
+            </PreviewWrap>
           )}
-        </Modal.Footer>
-      </form>
-    </Modal>
-  </Fragment>
+        </InputWrapper>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onClose}>
+          취소
+        </Button>
+        {(action.code === "readonly" || action.code === "modifiable") && (
+          <>
+            {isMaster && (
+              <Button variant="danger" onClick={onDelete}>
+                삭제
+              </Button>
+            )}
+            <Button variant="primary" onClick={isMaster ? onShowEdit : onClose}>
+              {isMaster ? "수정" : "확인"}
+            </Button>
+          </>
+        )}
+        {(action.code === "modify" || action.code === "add") && (
+          <>
+            <Button
+              variant="info"
+              onClick={preview ? onClosePreview : onPreview}
+            >
+              {preview ? "미리보기 취소" : "미리보기"}
+            </Button>
+            <Button variant="primary" type="submit">
+              {action.code === "add" ? "등록" : "수정"}
+            </Button>
+          </>
+        )}
+      </Modal.Footer>
+    </form>
+  </Modal>
 );
 
 export default SetNoticePresenter;

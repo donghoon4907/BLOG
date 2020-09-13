@@ -62,6 +62,9 @@ const SetNoticeContainer: FC = () => {
    * 미리보기 핸들러
    */
   const handlePreView = useCallback(async () => {
+    /**
+     * 내용을 입력하지 않은 경우
+     */
     if (!modalDescription.value) {
       return alert("내용을 입력하세요.");
     }
@@ -174,9 +177,12 @@ const SetNoticeContainer: FC = () => {
     ]
   );
   /**
-   * 마운트 콜백 모듈 활성화
+   * 라이프 사이클 모듈 활성화
    */
   useEffect(() => {
+    /**
+     * 내용 마크다운 형식으로 변환
+     */
     if (activeNotice.description) {
       setMdDescription(marked(activeNotice.description));
     }

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, { FC, memo, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_COMMENTS } from "../../graphql/comment/query";
@@ -154,13 +154,17 @@ const CommentList: FC = () => {
       }
     }
   };
-
   /**
-   * 스크롤 이벤트 바인딩
+   * 라이프 사이클 모듈 활성화
    */
   useEffect(() => {
+    /**
+     * 스크롤 이벤트 바인딩
+     */
     window.addEventListener("scroll", handleScrollFetchMore);
-
+    /**
+     * 스크롤 이벤트 언바인딩
+     */
     return () => window.removeEventListener("scroll", handleScrollFetchMore);
   }, [comments.data, loading]);
 
