@@ -76,7 +76,7 @@ const PostEditor: FC<Props> = props => {
         initialValue={initialValue || ""}
         previewStyle={previewStyle || "vertical"}
         height={height || "500px"}
-        initialEditType={initialEditType || "markdown"}
+        initialEditType={initialEditType || "wysiwyg"}
         useCommandShortcut={useCommandShortcut || true}
         ref={$editor}
         onChange={handleChange}

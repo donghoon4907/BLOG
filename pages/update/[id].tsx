@@ -180,6 +180,7 @@ const Update: NextPage<Props> = ({ post }) => {
         <Editor
           onChange={content => setContent(content)}
           initialValue={post.content}
+          initialEditType="wysiwyg"
         />
         <SubmitWrapper>
           <Button onClick={handleSubmit}>수정</Button>
