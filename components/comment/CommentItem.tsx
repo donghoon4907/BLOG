@@ -110,7 +110,7 @@ const CommentItem: FC<CommentProps> = ({ id, content, user, createdAt }) => {
   /**
    * 내가 작성한 댓글 여부
    */
-  const isMyComment = userId || userId === user.id;
+  const isMyComment = userId ? userId === user.id : false;
   /**
    * 수정 모드 전환 핸들러
    */

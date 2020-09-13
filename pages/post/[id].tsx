@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { NextPage, GetServerSideProps } from "next";
 import { useQuery, useMutation } from "@apollo/client";
 import styled from "styled-components";
@@ -131,7 +131,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
   /**
    * 내가 작성했는지 여부
    */
-  const isMyPost = userId || userId === user.id;
+  const isMyPost = userId ? userId === user.id : false;
   /**
    * 좋아요 여부 상태 관리 모듈 활성화
    */
@@ -211,6 +211,16 @@ const PostDetail: NextPage<Props> = ({ post }) => {
       router.push(`/update/${id}`);
     }
   }, []);
+
+  /**
+   * 라이프 사이클 모듈 활성화
+   */
+  useEffect(() => {
+    /**
+     * 스크롤 이벤트 바인딩
+     */
+    setIsLike(isLikePost);
+  }, [isLikePost]);
 
   return (
     <Layout title={title}>

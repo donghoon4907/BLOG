@@ -29,7 +29,7 @@ interface Props {
  * @author frisk
  * @param props.title Head title
  */
-const Layout: FC<Props> = ({ children, title = "Frisk" }) => {
+const Layout: FC<Props> = ({ children, title = "Frisklog" }) => {
   /**
    * 로컬 상태 변경 모듈 활성화
    */
