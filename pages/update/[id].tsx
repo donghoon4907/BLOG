@@ -10,7 +10,7 @@ import { GET_USERS } from "../../graphql/user/query";
 import { GET_NOTICES } from "../../graphql/notice/query";
 import { ME } from "../../graphql/auth/query/me";
 import { useLocalDispatch } from "../../context";
-import { SET_ME } from "../../context/action";
+import { SET_ME, SHOW_LOGIN_MODAL } from "../../context/action";
 import Editor from "../../components/post/Editor";
 import { InputWrapper, Label } from "../../components/common/Form";
 import Input from "../../components/common/Input";
@@ -18,6 +18,7 @@ import Button from "../../components/common/Button";
 import { useInput } from "../../hooks";
 import Loader from "../../components/common/Loader";
 import { PostProps } from "../../interfaces";
+import { getAccessToken } from "../../lib/token";
 
 const Container = styled.div`
   & input {
@@ -94,41 +95,55 @@ const Update: NextPage<Props> = ({ post }) => {
    */
   const handleSubmit = useCallback(async () => {
     /**
-     * 등록 요청 중인 경우
+     * 토큰
      */
-    if (loading) {
-      return alert("요청 중입니다");
-    }
-    if (!title.value) {
-      return alert("제목을 입력하세요.");
-    }
-    if (title.value.length > 50) {
-      return alert("제목은 50자 미만으로 입력하세요.");
-    }
-    if (description.value.length > 200) {
-      return alert("소개는 200자 미만으로 입력하세요.");
-    }
-    if (category.value.length > 10) {
-      return alert("카테고리는 10자 미만으로 입력하세요.");
-    }
+    const token = getAccessToken();
 
-    const tf = confirm("입력한 내용으로 게시물을 수정하시겠어요?");
-
-    if (tf) {
-      const {
-        data: { updatePost }
-      } = await upd({
-        variables: {
-          id: post.id,
-          title: title.value,
-          description: description.value,
-          content,
-          category: category.value
-        }
-      });
-      if (updatePost) {
-        alert("게시물이 수정되었습니다.");
+    if (token) {
+      /**
+       * 등록 요청 중인 경우
+       */
+      if (loading) {
+        return alert("요청 중입니다");
       }
+      if (!title.value) {
+        return alert("제목을 입력하세요.");
+      }
+      if (title.value.length > 50) {
+        return alert("제목은 50자 미만으로 입력하세요.");
+      }
+      if (description.value.length > 200) {
+        return alert("소개는 200자 미만으로 입력하세요.");
+      }
+      if (category.value.length > 10) {
+        return alert("카테고리는 10자 미만으로 입력하세요.");
+      }
+
+      const tf = confirm("입력한 내용으로 게시물을 수정하시겠어요?");
+
+      if (tf) {
+        const {
+          data: { updatePost }
+        } = await upd({
+          variables: {
+            id: post.id,
+            title: title.value,
+            description: description.value,
+            content,
+            category: category.value
+          }
+        });
+        if (updatePost) {
+          alert("게시물이 수정되었습니다.");
+        }
+      }
+    } else {
+      /**
+       * 로그인 팝업 보이기
+       */
+      dispatch({
+        type: SHOW_LOGIN_MODAL
+      });
     }
   }, [title.value, description.value, category.value, content]);
 
