@@ -10,7 +10,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition, concatPagination } from "@apollo/client/utilities";
+import { getMainDefinition } from "@apollo/client/utilities";
 import fetch from "isomorphic-unfetch";
 import isBrowser from "./is_browser";
 import { getAccessToken } from "./token";

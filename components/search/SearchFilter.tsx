@@ -65,7 +65,7 @@ const SearchFilter: FC = () => {
   /**
    * 필터 상태 관리 모듈 활성화
    */
-  const [filter, setFilter] = useState<string[]>([]);
+  const [filter] = useState<string[]>([]);
   /**
    * 정렬 변경 핸들러
    */
@@ -75,14 +75,14 @@ const SearchFilter: FC = () => {
   /**
    * 필터 변경 핸들러
    */
-  const handleChangeFilter = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const { checked, value } = e.target;
-    if (checked) {
-      setFilter(prev => prev.concat(value));
-    } else {
-      setFilter(prev => prev.filter(v => v !== value));
-    }
-  }, []);
+  // const handleChangeFilter = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   const { checked, value } = e.target;
+  //   if (checked) {
+  //     setFilter(prev => prev.concat(value));
+  //   } else {
+  //     setFilter(prev => prev.filter(v => v !== value));
+  //   }
+  // }, []);
   /**
    * 검색 핸들러
    */
