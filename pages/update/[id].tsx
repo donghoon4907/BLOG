@@ -193,9 +193,9 @@ const Update: NextPage<Props> = ({ post }) => {
           />
         </InputWrapper>
         <Editor
-          onChange={content => setContent(content)}
+          onChange={(content) => setContent(content)}
           initialValue={post.content}
-          initialEditType="wysiwyg"
+          initialEditType="markdown"
         />
         <SubmitWrapper>
           <Button onClick={handleSubmit}>수정</Button>
@@ -205,7 +205,7 @@ const Update: NextPage<Props> = ({ post }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res, query } = ctx;
   /**
    * 아폴로 클라이언트 활성화

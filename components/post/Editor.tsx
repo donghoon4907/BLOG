@@ -40,7 +40,7 @@ interface Props extends EditorProps {
  * @Component
  * @author frisk
  */
-const PostEditor: FC<Props> = props => {
+const PostEditor: FC<Props> = (props) => {
   const {
     initialValue,
     previewStyle,
@@ -65,7 +65,7 @@ const PostEditor: FC<Props> = props => {
        * 1. instance.getMarkdown(): markdown type
        * 2. instance.getHtml(): html type
        */
-      props.onChange(instance.getHtml());
+      props.onChange(instance.getMarkdown());
     }
   }, [props]);
 
@@ -76,7 +76,7 @@ const PostEditor: FC<Props> = props => {
         initialValue={initialValue || ""}
         previewStyle={previewStyle || "vertical"}
         height={height || "500px"}
-        initialEditType={initialEditType || "wysiwyg"}
+        initialEditType={initialEditType || "markdown"}
         useCommandShortcut={useCommandShortcut || true}
         ref={$editor}
         onChange={handleChange}

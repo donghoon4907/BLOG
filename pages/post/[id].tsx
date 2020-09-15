@@ -21,12 +21,13 @@ import { HeartEmpty, HeartFull, Trash, Modify } from "../../components/icon";
 import { getAccessToken } from "../../lib/token";
 import CommentList from "../../components/comment/CommentList";
 import Loader from "../../components/common/Loader";
+import marked from "marked";
 
 const Container = styled.div`
   padding: 3rem;
 
   & .tui-editor-contents pre {
-    ${props => props.theme.whiteBox};
+    ${(props) => props.theme.whiteBox};
   }
 `;
 
@@ -42,7 +43,7 @@ const InfoWrapper = styled.div`
 `;
 
 const SubmitWrapper = styled.div`
-  ${props => props.theme.whiteBox};
+  ${(props) => props.theme.whiteBox};
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -58,7 +59,7 @@ const SubmitWrapper = styled.div`
 const IconWrapper = styled.div`
   width: 40px;
   height: 40px;
-  border: ${props => props.theme.boxBorder};
+  border: ${(props) => props.theme.boxBorder};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -127,7 +128,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
   /**
    * 내가 좋아요 했는지 여부
    */
-  const isLikePost = likes.some(like => like.user.id === userId);
+  const isLikePost = likes.some((like) => like.user.id === userId);
   /**
    * 내가 작성했는지 여부
    */
@@ -249,7 +250,9 @@ const PostDetail: NextPage<Props> = ({ post }) => {
           )}
         </SubmitWrapper>
         <div className="tui-editor-contents">
-          <div dangerouslySetInnerHTML={{ __html: content as string }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: marked(content as string) }}
+          />
         </div>
         <CommentList />
       </Container>
@@ -257,7 +260,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async context => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, res } = context;
   /**
    * 아폴로 클라이언트 활성화

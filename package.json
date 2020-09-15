@@ -15,7 +15,6 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.5.2",
     "dotenv-webpack": "^2.0.0",
-    "draft-js": "^0.11.7",
     "github-markdown-css": "^4.0.0",
     "graphql": "^15.3.0",
     "isomorphic-unfetch": "^3.0.0",
@@ -33,7 +32,6 @@
     "subscriptions-transport-ws": "^0.9.17"
   },
   "devDependencies": {
-    "@types/draft-js": "^0.10.44",
     "@types/graphql": "^14.5.0",
     "@types/next": "^9.0.0",
     "@types/react": "^16.9.46",

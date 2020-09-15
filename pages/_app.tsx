@@ -3,8 +3,8 @@ import "github-markdown-css/github-markdown.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "codemirror/lib/codemirror.css";
 import "@toast-ui/editor/dist/toastui-editor.css";
-import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 
+import type { AppProps } from "next/app";
 import React from "react";
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
@@ -13,7 +13,7 @@ import { useApollo } from "../lib/apollo";
 import GlobalStyle from "../theme/globalStyle";
 import theme from "../theme";
 
-export default function App({ Component, pageProps }) {
+const App = ({ Component, pageProps }: AppProps) => {
   const apolloClient = useApollo(pageProps.initialApolloState);
 
   return (
@@ -26,4 +26,6 @@ export default function App({ Component, pageProps }) {
       </ThemeProvider>
     </ApolloProvider>
   );
-}
+};
+
+export default App;

@@ -41,11 +41,7 @@ export const Thumbnail: FC<Props> = ({ style }) => (
  * @param props.style Svg style
  */
 export const HeartEmpty: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/heart.png")}
-    alt="like icon"
-    style={style}
-  />
+  <img src="/icons/heart.png" alt="like icon" style={style} />
 );
 
 /**
@@ -55,11 +51,7 @@ export const HeartEmpty: FC<Props> = ({ style }) => (
  * @param props.style Svg style
  */
 export const HeartFull: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/heart_full.png")}
-    alt="like icon"
-    style={style}
-  />
+  <img src="/icons/heart_full.png" alt="like icon" style={style} />
 );
 
 /**
@@ -69,11 +61,7 @@ export const HeartFull: FC<Props> = ({ style }) => (
  * @param props.style style
  */
 export const Comment: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/comment.png")}
-    alt="comment icon"
-    style={style}
-  />
+  <img src="/icons/comment.png" alt="comment icon" style={style} />
 );
 
 /**
@@ -286,11 +274,7 @@ export const Collapse: FC<Props> = ({ style }) => (
  * @param props.style style
  */
 export const View: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/eye.png")}
-    alt="view icon"
-    style={style}
-  />
+  <img src="/icons/eye.png" alt="view icon" style={style} />
 );
 
 /**
@@ -300,11 +284,7 @@ export const View: FC<Props> = ({ style }) => (
  * @param props.style style
  */
 export const Trash: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/trash.png")}
-    alt="trash icon"
-    style={style}
-  />
+  <img src="/icons/trash.png" alt="trash icon" style={style} />
 );
 
 /**
@@ -314,11 +294,7 @@ export const Trash: FC<Props> = ({ style }) => (
  * @param props.style style
  */
 export const Modify: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/modify.png")}
-    alt="modify icon"
-    style={style}
-  />
+  <img src="/icons/modify.png" alt="modify icon" style={style} />
 );
 
 /**
@@ -328,9 +304,5 @@ export const Modify: FC<Props> = ({ style }) => (
  * @param props.style style
  */
 export const Notice: FC<Props> = ({ style }) => (
-  <img
-    src={require("../../static/icons/speaker.png")}
-    alt="notice icon"
-    style={style}
-  />
+  <img src="/icons/speaker.png" alt="notice icon" style={style} />
 );

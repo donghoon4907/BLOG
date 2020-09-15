@@ -49,7 +49,7 @@ const Index: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res } = ctx;
   /**
    * 아폴로 클라이언트 활성화

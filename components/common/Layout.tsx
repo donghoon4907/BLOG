@@ -46,7 +46,7 @@ const Layout: FC<Props> = ({ children, title = "Frisklog" }) => {
    * 리사이징 핸들러
    */
   const handleResize = useCallback(
-    e => {
+    (e) => {
       const { innerWidth } = e.target;
       /**
        * 네비게이션이 축소된 경우
@@ -92,7 +92,7 @@ const Layout: FC<Props> = ({ children, title = "Frisklog" }) => {
         <meta name="description" content="Video sharing system" />
         <meta name="google" content="notranslate" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-        <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <title>{title}</title>
       </Head>
       <div>
