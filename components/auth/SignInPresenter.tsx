@@ -1,6 +1,5 @@
 import React, { FC, FormEvent } from "react";
-import { InputWrapper, Label } from "../common/Form";
-import Input from "../common/Input";
+import { FormInput } from "../common/Form";
 import Button from "../common/Button";
 import Loader from "../common/Loader";
 import { UseInputProps } from "../../hooks";
@@ -24,19 +23,15 @@ const SignInPresenter: FC<Props> = ({ loading, email, onSubmit }) => (
   <>
     {loading && <Loader />}
     <form onSubmit={onSubmit}>
-      <InputWrapper>
-        <Label htmlFor="email" val={email.value}>
-          이메일
-        </Label>
-        <Input
-          type="email"
-          placeholder="이메일"
-          name="email"
-          autoComplete="off"
-          required
-          {...email}
-        />
-      </InputWrapper>
+      <FormInput
+        type="email"
+        placeholder="이메일을 입력하세요."
+        name="email"
+        autoComplete="off"
+        required
+        label="이메일"
+        {...email}
+      />
       <Button type="submit">로그인</Button>
     </form>
   </>

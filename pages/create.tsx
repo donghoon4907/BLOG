@@ -12,8 +12,7 @@ import { ME } from "../graphql/auth/query/me";
 import { useLocalDispatch } from "../context";
 import { SET_ME, SHOW_LOGIN_MODAL } from "../context/action";
 import Editor from "../components/post/Editor";
-import { InputWrapper, Label } from "../components/common/Form";
-import Input from "../components/common/Input";
+import { FormInput } from "../components/common/Form";
 import Button from "../components/common/Button";
 import { useInput } from "../hooks";
 import Loader from "../components/common/Loader";
@@ -146,47 +145,35 @@ const Create: NextPage = () => {
       {loading && <Loader />}
       <Container>
         <CategoryWrapper>
-          <InputWrapper>
-            <Label htmlFor="category" val={category.value}>
-              카테고리
-            </Label>
-            <Input
-              type="text"
-              placeholder="카테고리를 입력하세요"
-              name="category"
-              autoComplete="off"
-              required
-              {...category}
-            />
-          </InputWrapper>
+          <FormInput
+            type="text"
+            placeholder="카테고리를 입력하세요"
+            name="category"
+            autoComplete="off"
+            required
+            {...category}
+            label="카테고리"
+          />
         </CategoryWrapper>
-        <InputWrapper>
-          <Label htmlFor="title" val={title.value}>
-            제목
-          </Label>
-          <Input
-            type="text"
-            placeholder="제목을 입력하세요"
-            name="title"
-            autoComplete="off"
-            required
-            {...title}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor="description" val={description.value}>
-            소개
-          </Label>
-          <Input
-            type="text"
-            placeholder="간단한 소개를 입력하세요."
-            name="description"
-            autoComplete="off"
-            required
-            {...description}
-          />
-        </InputWrapper>
-        <Editor onChange={content => setContent(content)} />
+        <FormInput
+          type="text"
+          placeholder="제목을 입력하세요"
+          name="title"
+          autoComplete="off"
+          required
+          {...title}
+          label="제목"
+        />
+        <FormInput
+          type="text"
+          placeholder="간단한 소개를 입력하세요."
+          name="description"
+          autoComplete="off"
+          required
+          {...description}
+          label="소개"
+        />
+        <Editor onChange={(content) => setContent(content)} />
         <SubmitWrapper>
           <Button onClick={handleSubmit}>등록</Button>
         </SubmitWrapper>
@@ -195,7 +182,7 @@ const Create: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res } = ctx;
   /**
    * 아폴로 클라이언트 활성화

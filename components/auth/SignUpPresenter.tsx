@@ -1,14 +1,13 @@
 import React, { FC, RefObject, ChangeEvent, FormEvent } from "react";
 import styled from "styled-components";
-import { Label, InputWrapper } from "../common/Form";
-import Input from "../common/Input";
+import { FormInput } from "../common/Form";
 import Button from "../common/Button";
 import Loader from "../common/Loader";
 import { Thumbnail } from "../icon";
 import { UseInputProps } from "../../hooks";
 
 const UploadWrapper = styled.div`
-  ${props => props.theme.whiteBox}
+  ${(props) => props.theme.whiteBox}
   width: 100%;
   height: 150px;
   display: flex;
@@ -80,31 +79,23 @@ const SignUpPresenter: FC<Props> = ({
             accept="image/jpg, image/jpeg, image/png, .gif"
           />
         </UploadWrapper>
-        <InputWrapper>
-          <Label htmlFor="email" val={email.value}>
-            이메일
-          </Label>
-          <Input
-            type="email"
-            placeholder="이메일"
-            name="email"
-            autoComplete="off"
-            required
-            {...email}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor="nickname" val={nickname.value}>
-            닉네임
-          </Label>
-          <Input
-            placeholder="닉네임"
-            required
-            name="nickname"
-            {...nickname}
-            autoComplete="off"
-          />
-        </InputWrapper>
+        <FormInput
+          type="email"
+          placeholder="이메일을 입력하세요."
+          name="email"
+          autoComplete="off"
+          required
+          {...email}
+          label="이메일"
+        />
+        <FormInput
+          placeholder="닉네임을 입력하세요"
+          required
+          name="nickname"
+          {...nickname}
+          autoComplete="off"
+          label="닉네임"
+        />
         <Button type="submit">회원가입</Button>
       </form>
     </>

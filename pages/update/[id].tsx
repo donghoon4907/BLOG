@@ -12,13 +12,12 @@ import { ME } from "../../graphql/auth/query/me";
 import { useLocalDispatch } from "../../context";
 import { SET_ME, SHOW_LOGIN_MODAL } from "../../context/action";
 import Editor from "../../components/post/Editor";
-import { InputWrapper, Label } from "../../components/common/Form";
-import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { useInput } from "../../hooks";
 import Loader from "../../components/common/Loader";
 import { PostProps } from "../../interfaces";
 import { getAccessToken } from "../../lib/token";
+import { FormInput } from "../../components/common/Form";
 
 const Container = styled.div`
   & input {
@@ -152,46 +151,34 @@ const Update: NextPage<Props> = ({ post }) => {
       {loading && <Loader />}
       <Container>
         <CategoryWrapper>
-          <InputWrapper>
-            <Label htmlFor="category" val={category.value}>
-              카테고리
-            </Label>
-            <Input
-              type="text"
-              placeholder="카테고리를 입력하세요"
-              name="category"
-              autoComplete="off"
-              required
-              {...category}
-            />
-          </InputWrapper>
+          <FormInput
+            type="text"
+            placeholder="카테고리를 입력하세요"
+            name="category"
+            autoComplete="off"
+            required
+            label="카테고리"
+            {...category}
+          />
         </CategoryWrapper>
-        <InputWrapper>
-          <Label htmlFor="title" val={title.value}>
-            제목
-          </Label>
-          <Input
-            type="text"
-            placeholder="제목을 입력하세요"
-            name="title"
-            autoComplete="off"
-            required
-            {...title}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor="description" val={description.value}>
-            소개
-          </Label>
-          <Input
-            type="text"
-            placeholder="간단한 소개를 입력하세요."
-            name="description"
-            autoComplete="off"
-            required
-            {...description}
-          />
-        </InputWrapper>
+        <FormInput
+          type="text"
+          placeholder="제목을 입력하세요"
+          name="title"
+          autoComplete="off"
+          required
+          label="제목"
+          {...title}
+        />
+        <FormInput
+          type="text"
+          placeholder="간단한 소개를 입력하세요."
+          name="description"
+          autoComplete="off"
+          label="소개"
+          required
+          {...description}
+        />
         <Editor
           onChange={(content) => setContent(content)}
           initialValue={post.content}

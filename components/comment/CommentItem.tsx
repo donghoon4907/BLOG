@@ -6,7 +6,7 @@ import { UPDATE_COMMENT } from "../../graphql/comment/mutation/update";
 import { DELETE_COMMENT } from "../../graphql/comment/mutation/delete";
 import { CommentProps } from "../../interfaces";
 import { useInput } from "../../hooks";
-import { InputWrapper, Label, TextArea } from "../common/Form";
+import { FormTextArea } from "../common/Form";
 import Avatar from "../common/Avatar";
 import Button from "../common/Button";
 import moment from "moment";
@@ -17,7 +17,7 @@ import Loader from "../common/Loader";
 const CommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: ${props => props.theme.boxBorder};
+  border-top: ${(props) => props.theme.boxBorder};
   padding-top: 1rem;
   padding-bottom: 1rem;
 `;
@@ -42,8 +42,8 @@ const BtnWrapper = styled.div`
   }
 
   & > button:nth-child(1) {
-    background: ${props => props.theme.infoColor};
-    border: 1px solid ${props => props.theme.infoColor};
+    background: ${(props) => props.theme.infoColor};
+    border: 1px solid ${(props) => props.theme.infoColor};
   }
 `;
 
@@ -217,18 +217,14 @@ const CommentItem: FC<CommentProps> = ({ id, content, user, createdAt }) => {
       </InfoWrapper>
       {active ? (
         <>
-          <InputWrapper>
-            <Label htmlFor="comment" val={comment.value}>
-              댓글
-            </Label>
-            <TextArea
-              placeholder="댓글을 입력하세요."
-              name="comment"
-              autoComplete="off"
-              height={100}
-              {...comment}
-            />
-          </InputWrapper>
+          <FormTextArea
+            placeholder="댓글을 입력하세요."
+            name="comment"
+            autoComplete="off"
+            height={100}
+            label="댓글"
+            {...comment}
+          />
           <BtnWrapper>
             <Button onClick={handleCancel}>취소</Button>
             <Button onClick={handleUpdate}>댓글 수정</Button>

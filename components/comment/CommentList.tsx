@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_COMMENTS } from "../../graphql/comment/query";
 import { CREATE_COMMENT } from "../../graphql/comment/mutation/create";
 import { useInput } from "../../hooks";
-import { InputWrapper, Label, TextArea } from "../common/Form";
+import { FormTextArea } from "../common/Form";
 import Button from "../common/Button";
 import { getAccessToken } from "../../lib/token";
 import { useLocalDispatch } from "../../context";
@@ -62,7 +62,7 @@ const CommentList: FC = () => {
    * 댓글 추가 핸들러
    */
   const handleSubmit = useCallback(
-    async e => {
+    async (e) => {
       e.preventDefault();
       /**
        * 요청 중인 경우
@@ -172,21 +172,17 @@ const CommentList: FC = () => {
     <CommentContainer onSubmit={handleSubmit}>
       {(loading || createLoading) && <Loader />}
       <h4>{comments.total} 개의 댓글</h4>
-      <InputWrapper>
-        <Label htmlFor="comment" val={comment.value}>
-          댓글
-        </Label>
-        <TextArea
-          placeholder="댓글을 입력하세요."
-          name="comment"
-          autoComplete="off"
-          height={100}
-          {...comment}
-          required
-        />
-      </InputWrapper>
+      <FormTextArea
+        placeholder="댓글을 입력하세요."
+        name="comment"
+        autoComplete="off"
+        height={100}
+        {...comment}
+        required
+        label="댓글"
+      />
       <Button type="submit">댓글 작성</Button>
-      {comments.data.map(comment => (
+      {comments.data.map((comment) => (
         <CommentItem key={comment.id} {...comment} />
       ))}
     </CommentContainer>

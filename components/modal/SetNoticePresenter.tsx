@@ -1,13 +1,12 @@
 import React, { FC, FormEvent } from "react";
 import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
-import Input from "../common/Input";
-import { InputWrapper, Label, TextArea } from "../common/Form";
+import { FormInput, FormTextArea } from "../common/Form";
 import { UseInputProps } from "../../hooks";
 import Loader from "../common/Loader";
 
 const ReadOnlyDescription = styled.div`
-  ${props => props.theme.whiteBox};
+  ${(props) => props.theme.whiteBox};
   position: absolute;
   top: 0;
   left: 0;
@@ -93,34 +92,25 @@ const SetNoticePresenter: FC<Props> = ({
     </Modal.Header>
     <form onSubmit={onSubmit}>
       <Modal.Body>
-        <InputWrapper>
-          {(action.code === "add" || action.code === "modify") && (
-            <>
-              <Label htmlFor="title" val={title.value}>
-                제목
-              </Label>
-              <Input
-                placeholder="제목을 입력하세요."
-                name="title"
-                required
-                autoComplete="off"
-                {...title}
-              />
-            </>
-          )}
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor="description" val={description.value}>
-            내용
-          </Label>
-          <TextArea
-            placeholder="내용을 입력하세요."
-            name="description"
+        {(action.code === "add" || action.code === "modify") && (
+          <FormInput
+            placeholder="제목을 입력하세요."
+            name="title"
             required
             autoComplete="off"
-            height={300}
-            {...description}
+            {...title}
+            label="제목"
           />
+        )}
+        <FormTextArea
+          placeholder="내용을 입력하세요."
+          name="description"
+          required
+          autoComplete="off"
+          height={300}
+          {...description}
+          label="내용"
+        >
           {(action.code === "readonly" || action.code === "modifiable") && (
             <ReadOnlyDescription
               dangerouslySetInnerHTML={{ __html: mdDescription }}
@@ -138,7 +128,7 @@ const SetNoticePresenter: FC<Props> = ({
               </span>
             </PreviewWrap>
           )}
-        </InputWrapper>
+        </FormTextArea>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
