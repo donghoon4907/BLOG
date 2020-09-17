@@ -18,7 +18,7 @@ import { useInput } from "../hooks";
 import Loader from "../components/common/Loader";
 import { getAccessToken } from "../lib/token";
 
-const Container = styled.div`
+const Container = styled.form`
   & input {
     background: white;
   }
@@ -87,63 +87,64 @@ const Create: NextPage = () => {
   /**
    * 등록 핸들러
    */
-  const handleSubmit = useCallback(async () => {
-    /**
-     * 토큰
-     */
-    const token = getAccessToken();
-
-    if (token) {
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
       /**
-       * 등록 요청 중인 경우
+       * 토큰
        */
-      if (loading) {
-        return alert("요청 중입니다");
-      }
-      if (!title.value) {
-        return alert("제목을 입력하세요.");
-      }
-      if (title.value.length > 50) {
-        return alert("제목은 50자 미만으로 입력하세요.");
-      }
-      if (description.value.length > 200) {
-        return alert("소개는 200자 미만으로 입력하세요.");
-      }
-      if (category.value.length > 10) {
-        return alert("카테고리는 10자 미만으로 입력하세요.");
-      }
+      const token = getAccessToken();
 
-      const tf = confirm("입력한 내용으로 게시물을 등록하시겠어요?");
-
-      if (tf) {
-        const {
-          data: { createPost }
-        } = await create({
-          variables: {
-            title: title.value,
-            description: description.value,
-            content,
-            category: category.value
-          }
-        });
-        if (createPost) {
-          alert("게시물이 등록되었습니다.");
+      if (token) {
+        /**
+         * 등록 요청 중인 경우
+         */
+        if (loading) {
+          return alert("요청 중입니다");
         }
+        if (title.value.length > 50) {
+          return alert("제목은 50자 미만으로 입력하세요.");
+        }
+        if (description.value.length > 200) {
+          return alert("소개는 200자 미만으로 입력하세요.");
+        }
+        if (category.value.length > 10) {
+          return alert("카테고리는 10자 미만으로 입력하세요.");
+        }
+
+        const tf = confirm("입력한 내용으로 게시물을 등록하시겠어요?");
+
+        if (tf) {
+          const {
+            data: { createPost }
+          } = await create({
+            variables: {
+              title: title.value,
+              description: description.value,
+              content,
+              category: category.value
+            }
+          });
+          if (createPost) {
+            alert("게시물이 등록되었습니다.");
+          }
+        }
+      } else {
+        /**
+         * 로그인 팝업 보이기
+         */
+        dispatch({
+          type: SHOW_LOGIN_MODAL
+        });
       }
-    } else {
-      /**
-       * 로그인 팝업 보이기
-       */
-      dispatch({
-        type: SHOW_LOGIN_MODAL
-      });
-    }
-  }, [title.value, description.value, category.value, content]);
+    },
+    [title.value, description.value, category.value, content]
+  );
 
   return (
     <Layout title="게시물 등록">
       {loading && <Loader />}
-      <Container>
+      <Container onSubmit={handleSubmit}>
         <CategoryWrapper>
           <FormInput
             type="text"
@@ -175,7 +176,7 @@ const Create: NextPage = () => {
         />
         <Editor onChange={(content) => setContent(content)} />
         <SubmitWrapper>
-          <Button onClick={handleSubmit}>등록</Button>
+          <Button type="submit">등록</Button>
         </SubmitWrapper>
       </Container>
     </Layout>

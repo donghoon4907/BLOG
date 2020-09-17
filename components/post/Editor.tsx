@@ -3,6 +3,7 @@ import React, { FC, MutableRefObject, useCallback, useRef } from "react";
 import styled from "styled-components";
 import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
 import { EditorWithForwardedProps } from "./EditorWrapper";
+import Loader from "../common/Loader";
 
 const Container = styled.div`
   & .tui-image {
@@ -16,7 +17,10 @@ interface EditorPropsWithHandlers extends EditorProps {
 
 const Editor = dynamic<EditorWithForwardedProps>(
   () => import("./EditorWrapper"),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <Loader />
+  }
 );
 
 const EditorWithForwardedRef = React.forwardRef<
