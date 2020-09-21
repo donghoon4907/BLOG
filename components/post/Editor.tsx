@@ -80,6 +80,7 @@ const PostEditor: FC<Props> = (props) => {
 
   return (
     <Container>
+      {loading && <Loader />}
       <EditorWithForwardedRef
         {...props}
         initialValue={initialValue || ""}
@@ -95,6 +96,7 @@ const PostEditor: FC<Props> = (props) => {
              * 업로드 요청 중인 경우
              */
             if (loading) {
+              alert("업로드 요청 중입니다.");
               return;
             }
 
