@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
 import { EditorWithForwardedProps } from "./EditorWrapper";
 import Loader from "../common/Loader";
+import { useLazyAxios } from "../../hooks";
 
 const Container = styled.div`
-  & .tui-image {
+  & .te-mode-switch-section {
     display: none !important;
   }
 `;
@@ -53,6 +54,10 @@ const PostEditor: FC<Props> = (props) => {
     useCommandShortcut
   } = props;
   /**
+   * 업로드 요청을 위한 Axios 활성화
+   */
+  const { loading, call } = useLazyAxios();
+  /**
    * editor element
    */
   const $editor = useRef<EditorType>();
@@ -84,6 +89,36 @@ const PostEditor: FC<Props> = (props) => {
         useCommandShortcut={useCommandShortcut || true}
         ref={$editor}
         onChange={handleChange}
+        hooks={{
+          addImageBlobHook: async (blob, callback) => {
+            /**
+             * 업로드 요청 중인 경우
+             */
+            if (loading) {
+              return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", blob);
+
+            const { data, error } = await call({
+              method: "post",
+              url: `${process.env.BACKEND_API_PATH}/api/upload`,
+              data: formData,
+              headers: { "content-type": "multipart/form-data" }
+            });
+
+            if (data) {
+              callback(data, "");
+            }
+
+            if (error) {
+              alert("썸네일 업로드 중 오류가 발생했습니다.");
+            }
+
+            return false;
+          }
+        }}
       />
     </Container>
   );

@@ -78,6 +78,7 @@ const IconWrapper = styled.div`
 
 interface Props {
   post: PostProps;
+  url: string;
 }
 
 /**
@@ -85,9 +86,11 @@ interface Props {
  *
  * @Nextpage
  * @author frist
+ * @param props.post 게시물 정보
+ * @param props.url 페이지 url
  */
-const PostDetail: NextPage<Props> = ({ post }) => {
-  const { id, title, content, user, createdAt, likes } = post;
+const PostDetail: NextPage<Props> = ({ post, url }) => {
+  const { id, title, description, content, user, createdAt, likes } = post;
   /**
    * 라우터 모듈 활성화
    */
@@ -224,7 +227,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
   }, [isLikePost]);
 
   return (
-    <Layout title={title}>
+    <Layout title={title} description={description} url={url}>
       {deleteLoading && <Loader />}
       <Container>
         <h1>{title}</h1>
@@ -261,7 +264,7 @@ const PostDetail: NextPage<Props> = ({ post }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { query, res } = context;
+  const { query, res, req } = context;
   /**
    * 아폴로 클라이언트 활성화
    */
@@ -326,6 +329,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         post: data.post,
+        url: req.headers.referer,
         initialApolloState: apolloClient.cache.extract()
       }
     };

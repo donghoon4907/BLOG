@@ -16,10 +16,9 @@ const Section = styled.section`
 `;
 
 interface Props {
-  /**
-   * 페이지 제목
-   */
   title?: string;
+  description?: string;
+  url?: string;
 }
 
 /**
@@ -27,9 +26,16 @@ interface Props {
  *
  * @Component
  * @author frisk
- * @param props.title Head title
+ * @param props.title 페이지 제목
+ * @param props.description 페이지 내용
+ * @param props.url 페이지 주소
  */
-const Layout: FC<Props> = ({ children, title = "Frisklog" }) => {
+const Layout: FC<Props> = ({
+  children,
+  title = "Frisklog",
+  description = "Frisklog에 오신 것을 환영합니다.",
+  url = "https://frisklog.vercel.app/"
+}) => {
   /**
    * 로컬 상태 변경 모듈 활성화
    */
@@ -85,13 +91,19 @@ const Layout: FC<Props> = ({ children, title = "Frisklog" }) => {
     <div>
       <Head>
         <meta charSet="UTF-8" name="format-detection" content="telephone=no" />
+        {/** 전화번호 링크 제거 */}
+        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        {/** 호환성 보기 버튼 활성화 */}
         <meta
           name="viewport"
-          content="initial-scale=1.0, width=device-width, user-scalable=no"
+          content="initial-scale=1.0, width=device-width, user-scalable=yes, minimum-scale=1.0, maximum-scale=1.0"
         />
-        <meta name="description" content="Video sharing system" />
-        <meta name="google" content="notranslate" />
-        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="description" content={description} />
+        <meta name="og:url" content={url} />
+        <meta name="og:type" content="blog" />
+        <meta name="og:title" content={title} />
+        <meta name="og:description" content={description} />
+        <link rel="canonical" href={url} />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <title>{title}</title>
       </Head>
