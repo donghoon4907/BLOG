@@ -105,6 +105,21 @@ const Layout: FC<Props> = ({
         <meta name="og:description" content={description} />
         <link rel="canonical" href={url} />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=UA-178659482-1"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-178659482-1');
+            `
+          }}
+        />
         <title>{title}</title>
       </Head>
       <div>
